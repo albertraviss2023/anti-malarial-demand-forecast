@@ -1,0 +1,597 @@
+[
+  {
+    "district": "Abim",
+    "latitude": 2.7032,
+    "longitude": 33.6732
+  },
+  {
+    "district": "Adjumani",
+    "latitude": 3.3869,
+    "longitude": 31.7909
+  },
+  {
+    "district": "Agago",
+    "latitude": 2.8394,
+    "longitude": 33.3486
+  },
+  {
+    "district": "Alebtong",
+    "latitude": 2.254,
+    "longitude": 33.3486
+  },
+  {
+    "district": "Amolatar",
+    "latitude": 1.6346,
+    "longitude": 32.8286
+  },
+  {
+    "district": "Amudat",
+    "latitude": 1.95,
+    "longitude": 34.95
+  },
+  {
+    "district": "Amuria",
+    "latitude": 2.015,
+    "longitude": 33.6422
+  },
+  {
+    "district": "Amuru",
+    "latitude": 2.95,
+    "longitude": 32.05
+  },
+  {
+    "district": "Apac",
+    "latitude": 1.9847,
+    "longitude": 32.5385
+  },
+  {
+    "district": "Arua",
+    "latitude": 3.0191,
+    "longitude": 30.911
+  },
+  {
+    "district": "Budaka",
+    "latitude": 1.0833,
+    "longitude": 33.9333
+  },
+  {
+    "district": "Bududa",
+    "latitude": 1.0,
+    "longitude": 34.3333
+  },
+  {
+    "district": "Bugiri",
+    "latitude": 0.5714,
+    "longitude": 33.7412
+  },
+  {
+    "district": "Bugweri",
+    "latitude": 0.5785,
+    "longitude": 33.5378
+  },
+  {
+    "district": "Buhweju",
+    "latitude": -0.3142,
+    "longitude": 30.3717
+  },
+  {
+    "district": "Buikwe",
+    "latitude": 0.3292,
+    "longitude": 33.0806
+  },
+  {
+    "district": "Bukedea",
+    "latitude": 1.35,
+    "longitude": 34.05
+  },
+  {
+    "district": "Bukomansimbi",
+    "latitude": -0.15,
+    "longitude": 31.65
+  },
+  {
+    "district": "Bukwo",
+    "latitude": 1.2925,
+    "longitude": 34.7425
+  },
+  {
+    "district": "Bulambuli",
+    "latitude": 1.375,
+    "longitude": 34.1667
+  },
+  {
+    "district": "Buliisa",
+    "latitude": 2.0833,
+    "longitude": 31.4167
+  },
+  {
+    "district": "Bundibugyo",
+    "latitude": 0.7306,
+    "longitude": 30.0419
+  },
+  {
+    "district": "Bunyangabu",
+    "latitude": 0.5,
+    "longitude": 30.1667
+  },
+  {
+    "district": "Busia",
+    "latitude": 0.46,
+    "longitude": 34.1
+  },
+  {
+    "district": "Butaleja",
+    "latitude": 0.9419,
+    "longitude": 33.9556
+  },
+  {
+    "district": "Butambala",
+    "latitude": 0.1711,
+    "longitude": 32.1044
+  },
+  {
+    "district": "Butebo",
+    "latitude": 1.2346,
+    "longitude": 33.9087
+  },
+  {
+    "district": "Buvuma",
+    "latitude": 0.244,
+    "longitude": 33.2364
+  },
+  {
+    "district": "Buyende",
+    "latitude": 1.2739,
+    "longitude": 33.5158
+  },
+  {
+    "district": "Dokolo",
+    "latitude": 1.9167,
+    "longitude": 33.1667
+  },
+  {
+    "district": "Gulu",
+    "latitude": 2.7746,
+    "longitude": 32.298
+  },
+  {
+    "district": "Hoima",
+    "latitude": 1.4356,
+    "longitude": 31.352
+  },
+  {
+    "district": "Ibanda",
+    "latitude": -0.1191,
+    "longitude": 30.4994
+  },
+  {
+    "district": "Iganga",
+    "latitude": 0.6092,
+    "longitude": 33.4686
+  },
+  {
+    "district": "Isingiro",
+    "latitude": -0.8194,
+    "longitude": 30.8039
+  },
+  {
+    "district": "Jinja",
+    "latitude": 0.4242,
+    "longitude": 33.2047
+  },
+  {
+    "district": "Kabale",
+    "latitude": -1.2486,
+    "longitude": 29.992
+  },
+  {
+    "district": "Kabarole",
+    "latitude": 0.6667,
+    "longitude": 30.275
+  },
+  {
+    "district": "Kaberamaido",
+    "latitude": 1.7667,
+    "longitude": 33.15
+  },
+  {
+    "district": "Kagadi",
+    "latitude": 0.9397,
+    "longitude": 30.7987
+  },
+  {
+    "district": "Kakumiro",
+    "latitude": 0.7803,
+    "longitude": 31.3244
+  },
+  {
+    "district": "Kalangala",
+    "latitude": -0.3073,
+    "longitude": 32.225
+  },
+  {
+    "district": "Kaliro",
+    "latitude": 0.8945,
+    "longitude": 33.4789
+  },
+  {
+    "district": "Kalungu",
+    "latitude": -0.21,
+    "longitude": 31.765
+  },
+  {
+    "district": "Kampala",
+    "latitude": 0.3136,
+    "longitude": 32.5811
+  },
+  {
+    "district": "Kamuli",
+    "latitude": 0.9472,
+    "longitude": 33.1197
+  },
+  {
+    "district": "Kamwenge",
+    "latitude": 0.19,
+    "longitude": 30.4533
+  },
+  {
+    "district": "Kanungu",
+    "latitude": -0.95,
+    "longitude": 29.75
+  },
+  {
+    "district": "Kapchorwa",
+    "latitude": 1.4,
+    "longitude": 34.45
+  },
+  {
+    "district": "Kasese",
+    "latitude": 0.1833,
+    "longitude": 30.0833
+  },
+  {
+    "district": "Katakwi",
+    "latitude": 1.9167,
+    "longitude": 34.0
+  },
+  {
+    "district": "Kayunga",
+    "latitude": 0.7025,
+    "longitude": 32.8886
+  },
+  {
+    "district": "Kibaale",
+    "latitude": 0.8,
+    "longitude": 31.0833
+  },
+  {
+    "district": "Kiboga",
+    "latitude": 0.9167,
+    "longitude": 31.7667
+  },
+  {
+    "district": "Kibuku",
+    "latitude": 1.0623,
+    "longitude": 33.85
+  },
+  {
+    "district": "Kiruhura",
+    "latitude": -0.2,
+    "longitude": 30.8
+  },
+  {
+    "district": "Kiryandongo",
+    "latitude": 1.9167,
+    "longitude": 32.0833
+  },
+  {
+    "district": "Kisoro",
+    "latitude": -1.2833,
+    "longitude": 29.6833
+  },
+  {
+    "district": "Kitgum",
+    "latitude": 3.2783,
+    "longitude": 32.8867
+  },
+  {
+    "district": "Koboko",
+    "latitude": 3.4106,
+    "longitude": 30.96
+  },
+  {
+    "district": "Kole",
+    "latitude": 2.4333,
+    "longitude": 32.8
+  },
+  {
+    "district": "Kotido",
+    "latitude": 3.0333,
+    "longitude": 34.1167
+  },
+  {
+    "district": "Kumi",
+    "latitude": 1.4856,
+    "longitude": 33.9361
+  },
+  {
+    "district": "Kwania",
+    "latitude": 2.1492,
+    "longitude": 32.7092
+  },
+  {
+    "district": "Kween",
+    "latitude": 1.4286,
+    "longitude": 34.5439
+  },
+  {
+    "district": "Kyankwanzi",
+    "latitude": 1.2,
+    "longitude": 31.8
+  },
+  {
+    "district": "Kyegegwa",
+    "latitude": 0.5,
+    "longitude": 31.0417
+  },
+  {
+    "district": "Kyenjojo",
+    "latitude": 0.6111,
+    "longitude": 30.635
+  },
+  {
+    "district": "Lamwo",
+    "latitude": 3.5317,
+    "longitude": 32.8039
+  },
+  {
+    "district": "Lira",
+    "latitude": 2.2481,
+    "longitude": 32.8998
+  },
+  {
+    "district": "Luuka",
+    "latitude": 0.7652,
+    "longitude": 33.3024
+  },
+  {
+    "district": "Luwero",
+    "latitude": 0.8333,
+    "longitude": 32.5
+  },
+  {
+    "district": "Lwengo",
+    "latitude": -0.4167,
+    "longitude": 31.4167
+  },
+  {
+    "district": "Lyantonde",
+    "latitude": -0.4033,
+    "longitude": 31.1575
+  },
+  {
+    "district": "Manafwa",
+    "latitude": 0.9333,
+    "longitude": 34.2833
+  },
+  {
+    "district": "Maracha",
+    "latitude": 3.2878,
+    "longitude": 30.9403
+  },
+  {
+    "district": "Masaka",
+    "latitude": -0.3333,
+    "longitude": 31.7167
+  },
+  {
+    "district": "Masindi",
+    "latitude": 1.6833,
+    "longitude": 31.7167
+  },
+  {
+    "district": "Mayuge",
+    "latitude": 0.45,
+    "longitude": 33.4833
+  },
+  {
+    "district": "Mbale",
+    "latitude": 1.0806,
+    "longitude": 34.175
+  },
+  {
+    "district": "Mbarara",
+    "latitude": -0.6057,
+    "longitude": 30.6485
+  },
+  {
+    "district": "Mitooma",
+    "latitude": -0.6094,
+    "longitude": 30.0036
+  },
+  {
+    "district": "Mityana",
+    "latitude": 0.417,
+    "longitude": 32.0423
+  },
+  {
+    "district": "Moroto",
+    "latitude": 2.5387,
+    "longitude": 34.6666
+  },
+  {
+    "district": "Moyo",
+    "latitude": 3.66,
+    "longitude": 31.73
+  },
+  {
+    "district": "Mpigi",
+    "latitude": 0.225,
+    "longitude": 32.3136
+  },
+  {
+    "district": "Mubende",
+    "latitude": 0.5578,
+    "longitude": 31.3956
+  },
+  {
+    "district": "Mukono",
+    "latitude": 0.3533,
+    "longitude": 32.7553
+  },
+  {
+    "district": "Nakapiripirit",
+    "latitude": 1.85,
+    "longitude": 34.7167
+  },
+  {
+    "district": "Nakaseke",
+    "latitude": 0.9531,
+    "longitude": 32.0833
+  },
+  {
+    "district": "Nakasongola",
+    "latitude": 1.3167,
+    "longitude": 32.45
+  },
+  {
+    "district": "Namayingo",
+    "latitude": 0.2353,
+    "longitude": 33.8667
+  },
+  {
+    "district": "Namisindwa",
+    "latitude": 0.9124,
+    "longitude": 34.3904
+  },
+  {
+    "district": "Namutumba",
+    "latitude": 0.85,
+    "longitude": 33.6833
+  },
+  {
+    "district": "Napak",
+    "latitude": 2.5233,
+    "longitude": 34.2442
+  },
+  {
+    "district": "Nebbi",
+    "latitude": 2.465,
+    "longitude": 31.0886
+  },
+  {
+    "district": "Ngora",
+    "latitude": 1.46,
+    "longitude": 33.7772
+  },
+  {
+    "district": "Ntoroko",
+    "latitude": 1.0364,
+    "longitude": 30.5316
+  },
+  {
+    "district": "Ntungamo",
+    "latitude": -0.8833,
+    "longitude": 30.2667
+  },
+  {
+    "district": "Nwoya",
+    "latitude": 2.63,
+    "longitude": 32.0
+  },
+  {
+    "district": "Omoro",
+    "latitude": 2.71,
+    "longitude": 32.6
+  },
+  {
+    "district": "Otuke",
+    "latitude": 2.5167,
+    "longitude": 33.5
+  },
+  {
+    "district": "Oyam",
+    "latitude": 2.2781,
+    "longitude": 32.4461
+  },
+  {
+    "district": "Pader",
+    "latitude": 2.8667,
+    "longitude": 33.1667
+  },
+  {
+    "district": "Pakwach",
+    "latitude": 2.4722,
+    "longitude": 31.4944
+  },
+  {
+    "district": "Pallisa",
+    "latitude": 1.1667,
+    "longitude": 33.7167
+  },
+  {
+    "district": "Rubanda",
+    "latitude": -1.1833,
+    "longitude": 29.8
+  },
+  {
+    "district": "Rubirizi",
+    "latitude": -0.2667,
+    "longitude": 30.1
+  },
+  {
+    "district": "Rukiga",
+    "latitude": -1.1528,
+    "longitude": 30.0067
+  },
+  {
+    "district": "Rukungiri",
+    "latitude": -0.8411,
+    "longitude": 29.9278
+  },
+  {
+    "district": "Sembabule",
+    "latitude": -0.0775,
+    "longitude": 31.4592
+  },
+  {
+    "district": "Serere",
+    "latitude": 1.5,
+    "longitude": 33.5667
+  },
+  {
+    "district": "Sheema",
+    "latitude": -0.5727,
+    "longitude": 30.3786
+  },
+  {
+    "district": "Sironko",
+    "latitude": 1.23,
+    "longitude": 34.25
+  },
+  {
+    "district": "Soroti",
+    "latitude": 1.7167,
+    "longitude": 33.6167
+  },
+  {
+    "district": "Tororo",
+    "latitude": 0.6922,
+    "longitude": 34.18
+  },
+  {
+    "district": "Wakiso",
+    "latitude": 0.4057,
+    "longitude": 32.478
+  },
+  {
+    "district": "Yumbe",
+    "latitude": 3.465,
+    "longitude": 31.2481
+  },
+  {
+    "district": "Zombo",
+    "latitude": 2.5333,
+    "longitude": 30.9167
+  }
+]
