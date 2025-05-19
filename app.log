@@ -1,0 +1,232 @@
+2025-05-19 15:05:01,864 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
+2025-05-19 15:05:01,923 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
+2025-05-19 15:05:01,964 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
+2025-05-19 15:05:01,965 - main - INFO - Loaded normalization parameters
+2025-05-19 15:05:01,966 - main - INFO - Loaded test metrics
+2025-05-19 15:05:01,973 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
+2025-05-19 15:05:01,973 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
+2025-05-19 15:05:01,974 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
+2025-05-19 15:05:01,974 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
+2025-05-19 15:05:01,974 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
+2025-05-19 15:05:01,974 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
+2025-05-19 15:05:01,974 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
+2025-05-19 15:05:01,974 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
+2025-05-19 15:05:01,974 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
+2025-05-19 15:05:01,974 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
+2025-05-19 15:05:01,974 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
+2025-05-19 15:05:01,974 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
+2025-05-19 15:05:01,974 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
+2025-05-19 15:05:01,974 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
+2025-05-19 15:05:01,974 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
+2025-05-19 15:05:01,975 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
+2025-05-19 15:05:01,975 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
+2025-05-19 15:05:01,975 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
+2025-05-19 15:05:01,975 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
+2025-05-19 15:05:01,975 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
+2025-05-19 15:05:01,976 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
+2025-05-19 15:05:01,979 - main - INFO - Loaded predictions successfully
+2025-05-19 15:05:01,979 - main - INFO - Predictions: {'Dense': {'April 2025': 1.745678901234, 'May 2025': 1.2456789012345, 'June 2025': 2.2567890123456}, 'GRU': {'April 2025': 1.2234567890123, 'May 2025': 1.8345678901234, 'June 2025': 1.9456789012345}, 'LSTM': {'April 2025': 1.7456789012345, 'May 2025': 1.9567890123456, 'June 2025': 1.2678901234567}}
+2025-05-19 15:05:01,979 - main - INFO - ModelManager initialized successfully
+2025-05-19 15:08:41,062 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
+2025-05-19 15:08:41,312 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
+2025-05-19 15:08:41,462 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
+2025-05-19 15:08:41,476 - main - INFO - Loaded normalization parameters
+2025-05-19 15:08:41,500 - main - INFO - Loaded test metrics
+2025-05-19 15:08:41,540 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
+2025-05-19 15:08:41,541 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
+2025-05-19 15:08:41,541 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
+2025-05-19 15:08:41,541 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
+2025-05-19 15:08:41,541 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
+2025-05-19 15:08:41,541 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
+2025-05-19 15:08:41,542 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
+2025-05-19 15:08:41,542 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
+2025-05-19 15:08:41,542 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
+2025-05-19 15:08:41,542 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
+2025-05-19 15:08:41,542 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
+2025-05-19 15:08:41,542 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
+2025-05-19 15:08:41,543 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
+2025-05-19 15:08:41,543 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
+2025-05-19 15:08:41,543 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
+2025-05-19 15:08:41,543 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
+2025-05-19 15:08:41,543 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
+2025-05-19 15:08:41,543 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
+2025-05-19 15:08:41,543 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
+2025-05-19 15:08:41,544 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
+2025-05-19 15:08:41,561 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
+2025-05-19 15:08:41,574 - main - INFO - Loaded predictions successfully
+2025-05-19 15:08:41,575 - main - INFO - Predictions: {'Dense': {'April 2025': 1.745678901234, 'May 2025': 1.2456789012345, 'June 2025': 2.2567890123456}, 'GRU': {'April 2025': 1.2234567890123, 'May 2025': 1.8345678901234, 'June 2025': 1.9456789012345}, 'LSTM': {'April 2025': 1.7456789012345, 'May 2025': 1.9567890123456, 'June 2025': 1.2678901234567}}
+2025-05-19 15:08:41,575 - main - INFO - ModelManager initialized successfully
+2025-05-19 15:11:55,143 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
+2025-05-19 15:11:55,215 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
+2025-05-19 15:11:55,277 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
+2025-05-19 15:11:55,277 - main - INFO - Loaded normalization parameters
+2025-05-19 15:11:55,279 - main - INFO - Loaded test metrics
+2025-05-19 15:11:55,287 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
+2025-05-19 15:11:55,287 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
+2025-05-19 15:11:55,287 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
+2025-05-19 15:11:55,287 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
+2025-05-19 15:11:55,288 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
+2025-05-19 15:11:55,288 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
+2025-05-19 15:11:55,288 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
+2025-05-19 15:11:55,288 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
+2025-05-19 15:11:55,288 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
+2025-05-19 15:11:55,288 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
+2025-05-19 15:11:55,288 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
+2025-05-19 15:11:55,288 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
+2025-05-19 15:11:55,288 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
+2025-05-19 15:11:55,289 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
+2025-05-19 15:11:55,289 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
+2025-05-19 15:11:55,289 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
+2025-05-19 15:11:55,289 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
+2025-05-19 15:11:55,289 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
+2025-05-19 15:11:55,289 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
+2025-05-19 15:11:55,289 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
+2025-05-19 15:11:55,290 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
+2025-05-19 15:11:55,294 - main - INFO - Loaded predictions successfully
+2025-05-19 15:11:55,294 - main - INFO - Predictions: {'Dense': {'April 2025': 1.745678901234, 'May 2025': 1.2456789012345, 'June 2025': 2.2567890123456}, 'GRU': {'April 2025': 1.2234567890123, 'May 2025': 1.8345678901234, 'June 2025': 1.9456789012345}, 'LSTM': {'April 2025': 1.7456789012345, 'May 2025': 1.9567890123456, 'June 2025': 1.2678901234567}}
+2025-05-19 15:11:55,294 - main - INFO - ModelManager initialized successfully
+2025-05-19 15:13:24,443 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
+2025-05-19 15:13:24,510 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
+2025-05-19 15:13:24,554 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
+2025-05-19 15:13:24,554 - main - INFO - Loaded normalization parameters
+2025-05-19 15:13:24,556 - main - INFO - Loaded test metrics
+2025-05-19 15:13:24,561 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
+2025-05-19 15:13:24,561 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
+2025-05-19 15:13:24,561 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
+2025-05-19 15:13:24,561 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
+2025-05-19 15:13:24,561 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
+2025-05-19 15:13:24,561 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
+2025-05-19 15:13:24,561 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
+2025-05-19 15:13:24,561 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
+2025-05-19 15:13:24,561 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
+2025-05-19 15:13:24,562 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
+2025-05-19 15:13:24,562 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
+2025-05-19 15:13:24,562 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
+2025-05-19 15:13:24,562 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
+2025-05-19 15:13:24,562 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
+2025-05-19 15:13:24,562 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
+2025-05-19 15:13:24,562 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
+2025-05-19 15:13:24,562 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
+2025-05-19 15:13:24,562 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
+2025-05-19 15:13:24,562 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
+2025-05-19 15:13:24,562 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
+2025-05-19 15:13:24,563 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
+2025-05-19 15:13:24,566 - main - INFO - Loaded predictions successfully
+2025-05-19 15:13:24,566 - main - INFO - Predictions: {'Dense': {'April 2025': 1.745678901234, 'May 2025': 1.2456789012345, 'June 2025': 2.2567890123456}, 'GRU': {'April 2025': 1.2234567890123, 'May 2025': 1.8345678901234, 'June 2025': 1.9456789012345}, 'LSTM': {'April 2025': 1.7456789012345, 'May 2025': 1.9567890123456, 'June 2025': 1.2678901234567}}
+2025-05-19 15:13:24,566 - main - INFO - ModelManager initialized successfully
+2025-05-19 15:14:54,132 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
+2025-05-19 15:14:54,206 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
+2025-05-19 15:14:54,257 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
+2025-05-19 15:14:54,258 - main - INFO - Loaded normalization parameters
+2025-05-19 15:14:54,260 - main - INFO - Loaded test metrics
+2025-05-19 15:14:54,267 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
+2025-05-19 15:14:54,267 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
+2025-05-19 15:14:54,267 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
+2025-05-19 15:14:54,267 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
+2025-05-19 15:14:54,267 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
+2025-05-19 15:14:54,267 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
+2025-05-19 15:14:54,267 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
+2025-05-19 15:14:54,267 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
+2025-05-19 15:14:54,267 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
+2025-05-19 15:14:54,267 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
+2025-05-19 15:14:54,267 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
+2025-05-19 15:14:54,267 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
+2025-05-19 15:14:54,267 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
+2025-05-19 15:14:54,267 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
+2025-05-19 15:14:54,268 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
+2025-05-19 15:14:54,268 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
+2025-05-19 15:14:54,268 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
+2025-05-19 15:14:54,268 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
+2025-05-19 15:14:54,268 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
+2025-05-19 15:14:54,268 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
+2025-05-19 15:14:54,269 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
+2025-05-19 15:14:54,272 - main - INFO - Loaded predictions successfully
+2025-05-19 15:14:54,272 - main - INFO - Predictions: {'Dense': {'April 2025': 1.745678901234, 'May 2025': 1.2456789012345, 'June 2025': 2.2567890123456}, 'GRU': {'April 2025': 1.2234567890123, 'May 2025': 1.8345678901234, 'June 2025': 1.9456789012345}, 'LSTM': {'April 2025': 1.7456789012345, 'May 2025': 1.9567890123456, 'June 2025': 1.2678901234567}}
+2025-05-19 15:14:54,272 - main - INFO - ModelManager initialized successfully
+2025-05-19 15:15:57,349 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
+2025-05-19 15:15:57,435 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
+2025-05-19 15:15:57,491 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
+2025-05-19 15:15:57,491 - main - INFO - Loaded normalization parameters
+2025-05-19 15:15:57,494 - main - INFO - Loaded test metrics
+2025-05-19 15:15:57,500 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
+2025-05-19 15:15:57,500 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
+2025-05-19 15:15:57,500 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
+2025-05-19 15:15:57,500 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
+2025-05-19 15:15:57,500 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
+2025-05-19 15:15:57,500 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
+2025-05-19 15:15:57,500 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
+2025-05-19 15:15:57,500 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
+2025-05-19 15:15:57,500 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
+2025-05-19 15:15:57,501 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
+2025-05-19 15:15:57,501 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
+2025-05-19 15:15:57,501 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
+2025-05-19 15:15:57,501 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
+2025-05-19 15:15:57,501 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
+2025-05-19 15:15:57,501 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
+2025-05-19 15:15:57,501 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
+2025-05-19 15:15:57,501 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
+2025-05-19 15:15:57,501 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
+2025-05-19 15:15:57,501 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
+2025-05-19 15:15:57,501 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
+2025-05-19 15:15:57,502 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
+2025-05-19 15:15:57,506 - main - INFO - Loaded predictions successfully
+2025-05-19 15:15:57,506 - main - INFO - Predictions: {'Dense': {'April 2025': 1.745678901234, 'May 2025': 1.2456789012345, 'June 2025': 2.2567890123456}, 'GRU': {'April 2025': 1.2234567890123, 'May 2025': 1.8345678901234, 'June 2025': 1.9456789012345}, 'LSTM': {'April 2025': 1.7456789012345, 'May 2025': 1.9567890123456, 'June 2025': 1.2678901234567}}
+2025-05-19 15:15:57,506 - main - INFO - ModelManager initialized successfully
+2025-05-19 15:17:09,333 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
+2025-05-19 15:17:09,407 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
+2025-05-19 15:17:09,462 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
+2025-05-19 15:17:09,462 - main - INFO - Loaded normalization parameters
+2025-05-19 15:17:09,465 - main - INFO - Loaded test metrics
+2025-05-19 15:17:09,471 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
+2025-05-19 15:17:09,471 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
+2025-05-19 15:17:09,471 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
+2025-05-19 15:17:09,471 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
+2025-05-19 15:17:09,471 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
+2025-05-19 15:17:09,471 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
+2025-05-19 15:17:09,471 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
+2025-05-19 15:17:09,472 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
+2025-05-19 15:17:09,472 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
+2025-05-19 15:17:09,472 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
+2025-05-19 15:17:09,472 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
+2025-05-19 15:17:09,472 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
+2025-05-19 15:17:09,472 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
+2025-05-19 15:17:09,472 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
+2025-05-19 15:17:09,472 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
+2025-05-19 15:17:09,472 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
+2025-05-19 15:17:09,472 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
+2025-05-19 15:17:09,472 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
+2025-05-19 15:17:09,472 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
+2025-05-19 15:17:09,472 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
+2025-05-19 15:17:09,474 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
+2025-05-19 15:17:09,477 - main - INFO - Loaded predictions successfully
+2025-05-19 15:17:09,477 - main - INFO - Predictions: {'Dense': {'April 2025': 1.745678901234, 'May 2025': 1.2456789012345, 'June 2025': 2.2567890123456}, 'GRU': {'April 2025': 1.2234567890123, 'May 2025': 1.8345678901234, 'June 2025': 1.9456789012345}, 'LSTM': {'April 2025': 1.7456789012345, 'May 2025': 1.9567890123456, 'June 2025': 1.2678901234567}}
+2025-05-19 15:17:09,477 - main - INFO - ModelManager initialized successfully
+2025-05-19 15:18:21,866 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
+2025-05-19 15:18:21,944 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
+2025-05-19 15:18:21,993 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
+2025-05-19 15:18:21,994 - main - INFO - Loaded normalization parameters
+2025-05-19 15:18:21,996 - main - INFO - Loaded test metrics
+2025-05-19 15:18:22,002 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
+2025-05-19 15:18:22,002 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
+2025-05-19 15:18:22,002 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
+2025-05-19 15:18:22,004 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
+2025-05-19 15:18:22,004 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
+2025-05-19 15:18:22,004 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
+2025-05-19 15:18:22,004 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
+2025-05-19 15:18:22,004 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
+2025-05-19 15:18:22,004 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
+2025-05-19 15:18:22,004 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
+2025-05-19 15:18:22,004 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
+2025-05-19 15:18:22,004 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
+2025-05-19 15:18:22,004 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
+2025-05-19 15:18:22,004 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
+2025-05-19 15:18:22,004 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
+2025-05-19 15:18:22,004 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
+2025-05-19 15:18:22,004 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
+2025-05-19 15:18:22,004 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
+2025-05-19 15:18:22,005 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
+2025-05-19 15:18:22,005 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
+2025-05-19 15:18:22,006 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
+2025-05-19 15:18:22,009 - main - INFO - Loaded predictions successfully
+2025-05-19 15:18:22,009 - main - INFO - Predictions: {'Dense': {'April 2025': 1.745678901234, 'May 2025': 1.2456789012345, 'June 2025': 2.2567890123456}, 'GRU': {'April 2025': 1.2234567890123, 'May 2025': 1.8345678901234, 'June 2025': 1.9456789012345}, 'LSTM': {'April 2025': 1.7456789012345, 'May 2025': 1.9567890123456, 'June 2025': 1.2678901234567}}
+2025-05-19 15:18:22,009 - main - INFO - ModelManager initialized successfully
