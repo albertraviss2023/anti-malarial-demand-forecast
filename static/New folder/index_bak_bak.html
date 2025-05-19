@@ -1,0 +1,560 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OECD Electricity Demand Forecast</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.0.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.2.0"></script>
+    <style>
+        :root {
+            --oecd-blue: #004b88;
+            --oecd-light-blue: #e6f0f9;
+            --oecd-red: #e6007e;
+            --oecd-gray: #666666;
+            --oecd-green: #00a189;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .oecd-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--oecd-blue);
+            flex: 1;
+        }
+        
+        .oecd-header {
+            color: var(--oecd-blue);
+            border-bottom: 2px solid var(--oecd-light-blue);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .oecd-card {
+            background-color: var(--oecd-light-blue);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        
+        .oecd-model-card {
+            background-color: white;
+            border-left: 3px solid var(--oecd-blue);
+            padding: 15px;
+            margin: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            height: 100%;
+        }
+        
+        .oecd-highlight {
+            font-weight: bold;
+            color: var(--oecd-blue);
+        }
+        
+        .oecd-plot-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .oecd-plot-item {
+            flex: 0 0 48%;
+            margin-bottom: 20px;
+        }
+        
+        .oecd-footer {
+            margin-top: 30px;
+            font-size: 0.8em;
+            color: var(--oecd-gray);
+            text-align: center;
+            border-top: 1px solid var(--oecd-light-blue);
+            padding-top: 10px;
+        }
+        
+        .oecd-tab-content {
+            padding: 15px 0;
+        }
+        
+        .oecd-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .oecd-data-table {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        
+        .table th {
+            background-color: var(--oecd-blue);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        
+        .table tr:nth-child(even) {
+            background-color: var(--oecd-light-blue);
+        }
+        
+        .oecd-best-model {
+            border: 2px solid var(--oecd-green) !important;
+            background-color: #f5fffd !important;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--oecd-blue);
+            font-weight: bold;
+            border-bottom: 2px solid var(--oecd-blue);
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--oecd-gray);
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255,255,255,0.9);
+            border-radius: 8px;
+            z-index: 1000;
+        }
+        
+        @media (max-width: 768px) {
+            .oecd-container {
+                margin: 10px;
+                padding: 10px;
+            }
+            
+            .oecd-plot-item {
+                flex: 0 0 100%;
+            }
+            
+            .oecd-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid oecd-container">
+        <div class="oecd-header">
+            <h1><i class="bi bi-lightning-charge"></i> Electricity Demand Forecasting</h1>
+            <p class="lead">OECD-style dashboard for three-month ahead demand predictions</p>
+        </div>
+        
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading dashboard data...</p>
+        </div>
+        
+        <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="input-tab" data-bs-toggle="tab" data-bs-target="#input-tab-pane" type="button" role="tab">Input Data</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="predictions-tab" data-bs-toggle="tab" data-bs-target="#predictions-tab-pane" type="button" role="tab">Model Results</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="comparison-tab" data-bs-toggle="tab" data-bs-target="#comparison-tab-pane" type="button" role="tab">Comparative Analysis</button>
+            </li>
+        </ul>
+        
+        <div class="tab-content" id="dashboardTabContent">
+            <div class="tab-pane fade show active oecd-tab-content" id="input-tab-pane" role="tabpanel">
+                <div class="oecd-card">
+                    <h3><i class="bi bi-database"></i> Complete Input Dataset</h3>
+                    <p>Last 12 months of data used for forecasting (Apr 2024 - Mar 2025)</p>
+                    <div class="oecd-data-table">
+                        <table class="table table-striped table-hover" id="inputDataTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Max Temp (°C)</th>
+                                    <th>Min Temp (°C)</th>
+                                    <th>Humidity (%)</th>
+                                    <th>Precip (mm)</th>
+                                    <th>Sunshine (hrs)</th>
+                                    <th>Demand</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inputDataBody">
+                                <!-- Data will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="oecd-card">
+                    <h3><i class="bi bi-graph-up"></i> Key Statistics</h3>
+                    <div class="oecd-grid">
+                        <div class="oecd-model-card">
+                            <h4><i class="bi bi-thermometer-high"></i> Temperature Metrics</h4>
+                            <p>Max Temp Avg: <span class="oecd-highlight" id="maxTempAvg">-</span>°C</p>
+                            <p>Min Temp Avg: <span class="oecd-highlight" id="minTempAvg">-</span>°C</p>
+                        </div>
+                        <div class="oecd-model-card">
+                            <h4><i class="bi bi-clouds"></i> Environmental Factors</h4>
+                            <p>Humidity Avg: <span class="oecd-highlight" id="humidityAvg">-</span>%</p>
+                            <p>Precipitation Total: <span class="oecd-highlight" id="precipTotal">-</span>mm</p>
+                        </div>
+                        <div class="oecd-model-card">
+                            <h4><i class="bi bi-lightbulb"></i> Energy Metrics</h4>
+                            <p>Sunshine Hours: <span class="oecd-highlight" id="sunshineTotal">-</span></p>
+                            <p>Current Demand: <span class="oecd-highlight" id="currentDemand">-</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-pane fade oecd-tab-content" id="predictions-tab-pane" role="tabpanel">
+                <div class="oecd-card" id="bestModelCard">
+                    <h3><i class="bi bi-trophy"></i> Best Performing Model: <span id="bestModelName">-</span></h3>
+                    <p>Three-month ahead forecasts for electricity demand</p>
+                    <div class="oecd-model-card oecd-best-model">
+                        <h4><i class="bi bi-graph-up-arrow"></i> Historical Context & Forecast</h4>
+                        <div class="chart-container" style="position: relative; height:300px; width:100%">
+                            <canvas id="forecastChart"></canvas>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <h5><i class="bi bi-calendar-event"></i> Forecast Values:</h5>
+                            <p><span class="oecd-highlight">April 2025:</span> <span id="aprForecast">-</span></p>
+                            <p><span class="oecd-highlight">May 2025:</span> <span id="mayForecast">-</span></p>
+                            <p><span class="oecd-highlight">June 2025:</span> <span id="junForecast">-</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-pane fade oecd-tab-content" id="comparison-tab-pane" role="tabpanel">
+                <div class="oecd-card">
+                    <h3><i class="bi bi-bar-chart"></i> Model Performance Metrics</h3>
+                    <div class="oecd-plot-container">
+                        <div class="oecd-plot-item">
+                            <div class="chart-container" style="position: relative; height:300px; width:100%">
+                                <canvas id="maeChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="oecd-plot-item">
+                            <div class="chart-container" style="position: relative; height:300px; width:100%">
+                                <canvas id="predictionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="oecd-card">
+                    <h3><i class="bi bi-table"></i> Numerical Comparison</h3>
+                    <div class="oecd-data-table">
+                        <table class="table table-striped table-hover" id="comparisonTable">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Dense</th>
+                                    <th>GRU</th>
+                                    <th>LSTM</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Comparison data will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="oecd-footer">
+            <p>Dashboard generated on <span id="currentDate"></span></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize Luxon DateTime
+        const { DateTime } = luxon;
+
+        // Global variables to store data
+        let dashboardData = {
+            inputData: null,
+            predictions: null
+        };
+
+        // Format numbers to 13 decimal places
+        function formatNumber(value) {
+            if (value === undefined || value === null || isNaN(value)) return 'N/A';
+            return Number(value).toFixed(13);
+        }
+
+        // Load and render data
+        async function loadDashboardData() {
+            const spinner = document.getElementById('loadingSpinner');
+            spinner.style.display = 'block';
+
+            try {
+                // Fetch data
+                const [inputResponse, predResponse] = await Promise.all([
+                    fetch('/api/input-data'),
+                    fetch('/api/predictions')
+                ]);
+
+                if (!inputResponse.ok || !predResponse.ok) {
+                    throw new Error(`Failed to fetch data: ${inputResponse.status}, ${predResponse.status}`);
+                }
+
+                dashboardData.inputData = await inputResponse.json();
+                dashboardData.predictions = await predResponse.json();
+                console.log('Input Data:', dashboardData.inputData);
+                console.log('Predictions Data:', dashboardData.predictions);
+
+                // Render tabs
+                renderInputData();
+                renderPredictions();
+                renderComparison();
+
+                // Set current date
+                document.getElementById('currentDate').textContent = new Date().toLocaleString();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Failed to load dashboard data. Please check the console for details.');
+            } finally {
+                spinner.style.display = 'none';
+            }
+        }
+
+        // Render Input Data tab
+        function renderInputData() {
+            const { data, stats } = dashboardData.inputData;
+            const tbody = document.getElementById('inputDataBody');
+            tbody.innerHTML = '';
+
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${DateTime.fromISO(row.date).toFormat('MMM yyyy')}</td>
+                    <td>${formatNumber(row.avg_temp_max)}</td>
+                    <td>${formatNumber(row.avg_temp_min)}</td>
+                    <td>${formatNumber(row.avg_humidity)}</td>
+                    <td>${formatNumber(row.total_precipitation)}</td>
+                    <td>${formatNumber(row.total_sunshine_hours)}</td>
+                    <td>${formatNumber(row.ddd_demand)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('maxTempAvg').textContent = formatNumber(stats.max_temp_avg);
+            document.getElementById('minTempAvg').textContent = formatNumber(stats.min_temp_avg);
+            document.getElementById('humidityAvg').textContent = formatNumber(stats.humidity_avg);
+            document.getElementById('precipTotal').textContent = formatNumber(stats.precip_total);
+            document.getElementById('sunshineTotal').textContent = formatNumber(stats.sunshine_total);
+            document.getElementById('currentDemand').textContent = formatNumber(stats.current_demand);
+        }
+
+        // Render Predictions tab
+        function renderPredictions() {
+            const { predictions, best_model, last_6_months } = dashboardData.predictions;
+
+            // Update best model name
+            document.getElementById('bestModelName').textContent = best_model || 'N/A';
+
+            // Update forecast values
+            const bestPreds = predictions[best_model] || {};
+            const months = ['April 2025', 'May 2025', 'June 2025'];
+            document.getElementById('aprForecast').textContent = formatNumber(bestPreds['April 2025']);
+            document.getElementById('mayForecast').textContent = formatNumber(bestPreds['May 2025']);
+            document.getElementById('junForecast').textContent = formatNumber(bestPreds['June 2025']);
+
+            // Create forecast chart
+            const ctx = document.getElementById('forecastChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Historical Demand',
+                            data: last_6_months.map(row => ({
+                                x: DateTime.fromISO(row.date).toJSDate(),
+                                y: row.ddd_demand
+                            })),
+                            borderColor: 'var(--oecd-blue)',
+                            backgroundColor: 'var(--oecd-blue)',
+                            fill: false
+                        },
+                        {
+                            label: 'Forecasted Demand',
+                            data: months.map(month => ({
+                                x: DateTime.fromFormat(month, 'MMMM yyyy').toJSDate(),
+                                y: bestPreds[month]
+                            })).filter(point => point.y !== undefined && !isNaN(point.y)),
+                            borderColor: 'var(--oecd-green)',
+                            backgroundColor: 'var(--oecd-green)',
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'month',
+                                displayFormats: { month: 'MMM yyyy' }
+                            },
+                            title: { display: true, text: 'Date' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Demand' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+        }
+
+        // Render Comparison tab
+        function renderComparison() {
+            const { predictions, test_maes } = dashboardData.predictions;
+            const months = ['April 2025', 'May 2025', 'June 2025'];
+            const models = ['Dense', 'GRU', 'LSTM'];
+
+            // MAE Chart
+            const maeCtx = document.getElementById('maeChart').getContext('2d');
+            new Chart(maeCtx, {
+                type: 'bar',
+                data: {
+                    labels: models,
+                    datasets: [{
+                        label: 'MAE',
+                        data: models.map(model => test_maes[model]),
+                        backgroundColor: ['var(--oecd-blue)', 'var(--oecd-green)', 'var(--oecd-red)']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Mean Absolute Error' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: 'Model MAE Comparison' }
+                    }
+                }
+            });
+
+            // Prediction Chart
+            const predCtx = document.getElementById('predictionChart').getContext('2d');
+            new Chart(predCtx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: models.map((model, index) => ({
+                        label: model,
+                        data: months.map(month => predictions[model] ? predictions[model][month] : null),
+                        borderColor: index === 0 ? 'var(--oecd-blue)' : index === 1 ? 'var(--oecd-green)' : 'var(--oecd-red)',
+                        fill: false
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            title: { display: true, text: 'Predicted Demand' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: { display: true, text: 'Model Prediction Comparison' }
+                    }
+                }
+            });
+
+            // Comparison Table
+            const tbody = document.getElementById('comparisonTable').querySelector('tbody');
+            tbody.innerHTML = `
+                <tr>
+                    <td>MAE</td>
+                    ${models.map(model => `<td>${formatNumber(test_maes[model])}</td>`).join('')}
+                </tr>
+                ${months.map(month => `
+                    <tr>
+                        <td>${month}</td>
+                        ${models.map(model => `<td>${formatNumber(predictions[model] ? predictions[model][month] : undefined)}</td>`).join('')}
+                    </tr>
+                `).join('')}
+            `;
+        }
+
+        // Initialize dashboard on load
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
+    </script>
+</body>
+</html>
