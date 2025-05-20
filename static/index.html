@@ -1,33 +1,25 @@
 <script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+    function filledCell(cell) {
+        return cell !== '' && cell != null;
+    }
+    function loadFileData(filename) {
         if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
             try {
                 var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
                 var firstSheetName = workbook.SheetNames[0];
                 var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
                 var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
                 var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
                 var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
                 );
-                // Fallback
                 if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
+                    headerRowIndex = 0;
                 }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
                 csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
                 return csv;
             } catch (e) {
@@ -36,232 +28,358 @@
             }
         }
         return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+    }
+</script>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electricity Demand Forecasting Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/luxon@3.0.1"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.2.0"></script>
+    <title>Anti-Malarial Demand Forecasting Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js"></script>
     <style>
         :root {
-            --oecd-blue: #003087;
-            --oecd-light-blue: #e6f0f9;
-            --oecd-red: #e6007e;
-            --oecd-gray: #666666;
-            --oecd-green: #00a189;
-            --oecd-white: #ffffff;
-            --oecd-orange: #f4a261;
+            --primary-blue: #0052cc;
+            --secondary-blue: #e6f0ff;
+            --accent-green: #008a00;
+            --warning-orange: #ff6f00;
+            --error-red: #d32f2f;
+            --neutral-gray: #4a4a4a;
+            --light-gray: #f5f7fa;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+
+        /* Dark Mode Variables */
+        [data-theme="dark"] {
+            --primary-blue: #1a73e8;
+            --secondary-blue: #2a3b57;
+            --accent-green: #00c853;
+            --warning-orange: #ff9100;
+            --error-red: #ff5252;
+            --neutral-gray: #b0bec5;
+            --light-gray: #263238;
+            --white: #37474f;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: var(--oecd-white);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--light-gray);
             margin: 0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: background-color 0.3s, color 0.3s;
+            color: var(--neutral-gray);
         }
 
-        /* Header */
-        .oecd-header {
-            background-color: var(--oecd-blue);
-            color: var(--oecd-white);
-            padding: 10px 20px;
+        .dashboard-header {
+            background: linear-gradient(90deg, var(--primary-blue), #003087);
+            color: var(--white);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        .oecd-header .logo {
-            font-size: 1.5em;
-            font-weight: bold;
+        .dashboard-header .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .oecd-header .nav-links a {
-            color: var(--oecd-white);
-            margin-left: 20px;
+        .dashboard-header .nav-links a {
+            color: var(--white);
+            margin-left: 1.5rem;
             text-decoration: none;
-            font-size: 1em;
+            font-size: 1rem;
+            transition: opacity 0.2s;
         }
 
-        .oecd-header .nav-links a:hover {
-            text-decoration: underline;
+        .dashboard-header .nav-links a:hover {
+            opacity: 0.8;
         }
 
-        /* Main Content */
-        .oecd-main {
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .dashboard-main {
             flex: 1;
-            padding: 20px;
-            max-width: 1200px;
+            padding: 2rem;
+            max-width: 1400px;
             margin: 0 auto;
             width: 100%;
         }
 
-        .oecd-title {
-            color: var(--oecd-blue);
-            margin-bottom: 20px;
+        .dashboard-title {
+            color: var(--primary-blue);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
         }
 
-        .oecd-tabs {
-            border-bottom: 2px solid var(--oecd-light-blue);
-            margin-bottom: 20px;
+        .dashboard-subtitle {
+            color: var(--neutral-gray);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
         }
 
-        .nav-tabs .nav-link {
-            color: var(--oecd-gray);
-            border: none;
-            border-bottom: 2px solid transparent;
-            margin-right: 15px;
+        .dashboard-tabs .nav-link {
+            color: var(--neutral-gray);
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            transition: all 0.3s;
         }
 
-        .nav-tabs .nav-link.active {
-            color: var(--oecd-blue);
-            font-weight: bold;
-            border-bottom: 2px solid var(--oecd-blue);
+        .dashboard-tabs .nav-link.active {
+            color: var(--primary-blue);
+            background-color: var(--white);
+            border-bottom: 3px solid var(--primary-blue);
         }
 
-        .oecd-card {
-            background-color: var(--oecd-white);
-            padding: 15px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--oecd-blue);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        .dashboard-tabs .nav-link:hover {
+            background-color: var(--secondary-blue);
         }
 
-        .oecd-card h3 {
-            color: var(--oecd-blue);
-            margin-bottom: 10px;
+        .dashboard-card {
+            background-color: var(--white);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, background-color 0.3s;
         }
 
-        .oecd-grid {
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .dashboard-card h3 {
+            color: var(--primary-blue);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
         }
 
-        .oecd-chart-container {
+        .chart-container {
             position: relative;
-            height: 300px;
+            height: 350px;
             width: 100%;
         }
 
-        .oecd-data-table {
-            max-height: 400px;
+        .data-table {
+            max-height: 500px;
             overflow-y: auto;
+            border-radius: var(--border-radius);
+        }
+
+        .table {
+            margin-bottom: 0;
+            transition: background-color 0,3s;
         }
 
         .table th {
-            background-color: var(--oecd-blue);
-            color: var(--oecd-white);
+            background-color: var(--primary-blue);
+            color: var(--white);
+            font-weight: 600;
             position: sticky;
             top: 0;
-            z-index: 1;
+            z-index: 10;
         }
 
         .table tr:nth-child(even) {
-            background-color: var(--oecd-light-blue);
+            background-color: var(--secondary-blue);
         }
 
-        .oecd-highlight {
-            font-weight: bold;
-            color: var(--oecd-red);
+        .table-hover tbody tr:hover {
+            background-color: #e0e7ff;
         }
 
-        /* Footer */
-        .oecd-footer {
-            background-color: var(--oecd-light-blue);
-            color: var(--oecd-gray);
+        [data-theme="dark"] .table-hover tbody tr:hover {
+            background-color: #3f51b5;
+        }
+
+        .highlight {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        /* Animated Table Cells */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes numberTick {
+            0% { transform: translateY(10px); opacity: 0; }
+            50% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes highlightPulse {
+            0% { background-color: transparent; }
+            50% { background-color: var(--accent-green); color: var(--white); }
+            100% { background-color: transparent; }
+        }
+
+        .animated-cell {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .number-tick {
+            display: inline-block;
+            animation: numberTick 0.6s ease-in-out;
+        }
+
+        .highlight-pulse {
+            animation: highlightPulse 1.5s ease-in-out;
+        }
+
+        .dashboard-footer {
+            background-color: var(--primary-blue);
+            color: var(--white);
             text-align: center;
-            padding: 10px 0;
-            margin-top: 20px;
+            padding: 1rem;
+            font-size: 0.9rem;
         }
 
-        /* Loading Spinner */
         .loading-spinner {
             display: none;
-            text-align: center;
-            padding: 20px;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 8px;
-            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            z-index: 2000;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .oecd-header {
-                flex-direction: column;
-                padding: 10px;
-            }
+        [data-theme="dark"] .loading-spinner {
+            background-color: rgba(55, 71, 79, 0.95);
+            color: var(--neutral-gray);
+        }
 
-            .oecd-header .nav-links {
-                margin-top: 10px;
-            }
+        .refresh-btn {
+            background-color: var(--accent-green);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: background-color 0.2s;
+        }
 
-            .oecd-header .nav-links a {
-                margin: 0 10px;
-            }
+        .refresh-btn:hover {
+            background-color: #006400;
+        }
 
-            .oecd-main {
-                padding: 10px;
+        @media (max-width: 992px) {
+            .dashboard-main {
+                padding: 1.5rem;
             }
-
-            .oecd-grid {
+            .dashboard-grid {
                 grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .dashboard-header .nav-links {
+                display: flex;
+                gap: 1rem;
+            }
+            .dashboard-title {
+                font-size: 1.5rem;
+            }
+            .dashboard-tabs .nav-link {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
     <!-- Header -->
-    <header class="oecd-header">
-        <div class="logo">🌐 Electricity Demand Forecast</div>
+    <header class="dashboard-header">
+        <div class="logo">
+            <i class="fas fa-prescription-bottle-alt"></i> Anti-Malarial Demand Forecast
+        </div>
         <div class="nav-links">
-            <a href="#">Data</a>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+            <a href="#" id="refreshData"><i class="fas fa-sync-alt"></i> Refresh</a>
+            <a href="#">Data Sources</a>
             <a href="#">About</a>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="oecd-main">
-        <h1 class="oecd-title">Electricity Demand Forecasting Dashboard</h1>
-        <p class="lead">OECD-style dashboard for three-month ahead demand predictions</p>
+    <main class="dashboard-main">
+        <h1 class="dashboard-title">Anti-Malarial Demand Forecasting Dashboard</h1>
+        <p class="dashboard-subtitle">Real-time insights for three-month ahead anti-malarial demand predictions</p>
 
         <div class="loading-spinner" id="loadingSpinner">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-2">Loading dashboard data...</p>
+            <p class="mt-2">Loading dashboard...</p>
         </div>
 
-        <ul class="nav nav-tabs oecd-tabs" id="dashboardTabs" role="tablist">
+        <ul class="nav nav-tabs dashboard-tabs" id="dashboardTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="input-tab" data-bs-toggle="tab" data-bs-target="#input-tab-pane" type="button" role="tab">Input Data</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="predictions-tab" data-bs-toggle="tab" data-bs-target="#predictions-tab-pane" type="button" role="tab">Model Results</button>
+                <button class="nav-link" id="predictions-tab" data-bs-toggle="tab" data-bs-target="#predictions-tab-pane" type="button" role="tab">Forecasts</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="comparison-tab" data-bs-toggle="tab" data-bs-target="#comparison-tab-pane" type="button" role="tab">Comparative Analysis</button>
+                <button class="nav-link" id="comparison-tab" data-bs-toggle="tab" data-bs-target="#comparison-tab-pane" type="button" role="tab">Model Comparison</button>
             </li>
         </ul>
 
         <div class="tab-content" id="dashboardTabContent">
+            <!-- Input Data Tab -->
             <div class="tab-pane fade show active" id="input-tab-pane" role="tabpanel">
-                <div class="oecd-card">
-                    <h3><i class="bi bi-database"></i> Complete Input Dataset</h3>
-                    <p>Last 12 months of data used for forecasting (Apr 2024 - Mar 2025)</p>
-                    <div class="oecd-data-table">
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-database"></i> Input Dataset</h3>
+                    <p>Last 12 months of data (Apr 2024 - Mar 2025)</p>
+                    <div class="data-table">
                         <table class="table table-striped table-hover" id="inputDataTable">
                             <thead>
                                 <tr>
@@ -274,82 +392,73 @@
                                     <th>Demand</th>
                                 </tr>
                             </thead>
-                            <tbody id="inputDataBody">
-                                <!-- Data will be inserted here -->
-                            </tbody>
+                            <tbody id="inputDataBody"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <div class="oecd-card">
-                    <h3><i class="bi bi-graph-up"></i> Key Statistics</h3>
-                    <div class="oecd-grid">
-                        <div class="oecd-card">
-                            <h4><i class="bi bi-thermometer-high"></i> Temperature Metrics</h4>
-                            <p>Max Temp Avg: <span class="oecd-highlight" id="maxTempAvg">-</span>°C</p>
-                            <p>Min Temp Avg: <span class="oecd-highlight" id="minTempAvg">-</span>°C</p>
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-chart-line"></i> Key Metrics</h3>
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <h4><i class="fas fa-thermometer-half"></i> Temperature</h4>
+                            <p>Max Avg: <span class="highlight" id="maxTempAvg">-</span>°C</p>
+                            <p>Min Avg: <span class="highlight" id="minTempAvg">-</span>°C</p>
                         </div>
-                        <div class="oecd-card">
-                            <h4><i class="bi bi-clouds"></i> Environmental Factors</h4>
-                            <p>Humidity Avg: <span class="oecd-highlight" id="humidityAvg">-</span>%</p>
-                            <p>Precipitation Total: <span class="oecd-highlight" id="precipTotal">-</span>mm</p>
+                        <div class="dashboard-card">
+                            <h4><i class="fas fa-cloud-rain"></i> Environment</h4>
+                            <p>Humidity: <span class="highlight" id="humidityAvg">-</span>%</p>
+                            <p>Precipitation: <span class="highlight" id="precipTotal">-</span>mm</p>
                         </div>
-                        <div class="oecd-card">
-                            <h4><i class="bi bi-lightbulb"></i> Energy Metrics</h4>
-                            <p>Sunshine Hours: <span class="oecd-highlight" id="sunshineTotal">-</span></p>
-                            <p>Current Demand: <span class="oecd-highlight" id="currentDemand">-</span></p>
+                        <div class="dashboard-card">
+                            <h4><i class="fas fa-prescription-bottle-alt"></i> Demand</h4>
+                            <p>Sunshine: <span class="highlight" id="sunshineTotal">-</span>hrs</p>
+                            <p>Current: <span class="highlight" id="currentDemand">-</span></p>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Predictions Tab -->
             <div class="tab-pane fade" id="predictions-tab-pane" role="tabpanel">
-                <div class="oecd-card">
-                    <h3><i class="bi bi-trophy"></i> Best Performing Model: <span id="bestModelName">-</span></h3>
-                    <p>Three-month ahead forecasts for electricity demand</p>
-                    <div class="oecd-card">
-                        <h4><i class="bi bi-graph-up-arrow"></i> Historical Context & Forecast</h4>
-                        <div class="oecd-chart-container">
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-star"></i> Best Model: <span id="bestModelName">-</span></h3>
+                    <p>Three-month ahead anti-malarial demand forecasts</p>
+                    <div class="dashboard-card">
+                        <h4><i class="fas fa-chart-area"></i> Forecast Overview</h4>
+                        <div class="chart-container">
                             <canvas id="forecastChart"></canvas>
                         </div>
-                        <div style="margin-top: 15px;">
-                            <h5><i class="bi bi-calendar-event"></i> Forecast Values:</h5>
-                            <p><span class="oecd-highlight">April 2025:</span> <span id="aprForecast">-</span></p>
-                            <p><span class="oecd-highlight">May 2025:</span> <span id="mayForecast">-</span></p>
-                            <p><span class="oecd-highlight">June 2025:</span> <span id="junForecast">-</span></p>
+                        <div class="mt-3">
+                            <h5><i class="fas fa-calendar"></i> Forecast Values</h5>
+                            <p><span class="highlight">Apr 2025:</span> <span id="aprForecast">-</span></p>
+                            <p><span class="highlight">May 2025:</span> <span id="mayForecast">-</span></p>
+                            <p><span class="highlight">Jun 2025:</span> <span id="junForecast">-</span></p>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Comparison Tab -->
             <div class="tab-pane fade" id="comparison-tab-pane" role="tabpanel">
-                <div class="oecd-card">
-                    <h3><i class="bi bi-bar-chart"></i> Model Performance Metrics</h3>
-                    <div class="oecd-grid">
-                        <div class="oecd-chart-container">
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-balance-scale"></i> Model Performance</h3>
+                    <div class="dashboard-grid">
+                        <div class="chart-container">
                             <canvas id="maeChart"></canvas>
                         </div>
-                        <div class="oecd-chart-container">
+                        <div class="chart-container">
                             <canvas id="predictionChart"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <div class="oecd-card">
-                    <h3><i class="bi bi-table"></i> Numerical Comparison</h3>
-                    <div class="oecd-data-table">
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-table"></i> Model Metrics</h3>
+                    <div class="data-table">
                         <table class="table table-striped table-hover" id="comparisonTable">
-                            <thead>
-                                <tr>
-                                    <th>Metric</th>
-                                    <th>Dense</th>
-                                    <th>GRU</th>
-                                    <th>LSTM</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Comparison data will be inserted here -->
-                            </tbody>
+                            <thead id="comparisonTableHead"></thead>
+                            <tbody id="comparisonTableBody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -358,55 +467,59 @@
     </main>
 
     <!-- Footer -->
-    <footer class="oecd-footer">
-        <p>Generated on <span id="currentDate"></span> | Source: OECD-style Dashboard | © 2025</p>
+    <footer class="dashboard-footer">
+        <p>Generated on <span id="currentDate"></span> | Anti-Malarial Demand Dashboard | © 2025</p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Initialize Luxon DateTime
         const { DateTime } = luxon;
+        let dashboardData = { inputData: null, predictions: null };
+        const modelColors = ['#355070', '#6D597A', '#B56576', '#E56B6F'];
 
-        // Global variables to store data
-        let dashboardData = {
-            inputData: null,
-            predictions: null
-        };
-
-        // Format numbers to 2 decimal places
         function formatNumber(value) {
-            if (value === undefined || value === null || isNaN(value)) return 'N/A';
-            return Number(value).toFixed(2);
+            return (value === undefined || value === null || isNaN(value)) ? 'N/A' : Number(value).toFixed(2);
         }
 
-        // Load and render data
+        // Dark Mode Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const themeIcon = themeToggle.querySelector('i');
+
+        function toggleTheme() {
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            themeIcon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        body.setAttribute('data-theme', savedTheme);
+        themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+
         async function loadDashboardData() {
             const spinner = document.getElementById('loadingSpinner');
             spinner.style.display = 'block';
-
             try {
                 const [inputResponse, predResponse] = await Promise.all([
                     fetch('/api/input-data'),
                     fetch('/api/predictions')
                 ]);
-
                 if (!inputResponse.ok || !predResponse.ok) {
-                    throw new Error(`Failed to fetch data: ${inputResponse.status}, ${predResponse.status}`);
+                    throw new Error(`HTTP error: ${inputResponse.status}, ${predResponse.status}`);
                 }
-
                 dashboardData.inputData = await inputResponse.json();
                 dashboardData.predictions = await predResponse.json();
-                console.log('Input Data:', dashboardData.inputData);
-                console.log('Predictions Data:', dashboardData.predictions);
-
                 renderInputData();
                 renderPredictions();
                 renderComparison();
-
-                document.getElementById('currentDate').textContent = new Date().toLocaleString();
+                document.getElementById('currentDate').textContent = DateTime.now().toLocaleString(DateTime.DATETIME_FULL);
             } catch (error) {
-                console.error('Error loading data:', error);
-                alert('Failed to load dashboard data. Please check the console for details.');
+                console.error('Error:', error);
+                alert('Failed to load data. Please try again.');
             } finally {
                 spinner.style.display = 'none';
             }
@@ -415,11 +528,8 @@
         function renderInputData() {
             const { data, stats } = dashboardData.inputData;
             const tbody = document.getElementById('inputDataBody');
-            tbody.innerHTML = '';
-
-            data.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
+            tbody.innerHTML = data.map(row => `
+                <tr>
                     <td>${DateTime.fromISO(row.date).toFormat('MMM yyyy')}</td>
                     <td>${formatNumber(row.avg_temp_max)}</td>
                     <td>${formatNumber(row.avg_temp_min)}</td>
@@ -427,9 +537,8 @@
                     <td>${formatNumber(row.total_precipitation)}</td>
                     <td>${formatNumber(row.total_sunshine_hours)}</td>
                     <td>${formatNumber(row.ddd_demand)}</td>
-                `;
-                tbody.appendChild(tr);
-            });
+                </tr>
+            `).join('');
 
             document.getElementById('maxTempAvg').textContent = formatNumber(stats.max_temp_avg);
             document.getElementById('minTempAvg').textContent = formatNumber(stats.min_temp_avg);
@@ -441,9 +550,7 @@
 
         function renderPredictions() {
             const { predictions, best_model, last_6_months } = dashboardData.predictions;
-
             document.getElementById('bestModelName').textContent = best_model || 'N/A';
-
             const bestPreds = predictions[best_model] || {};
             const months = ['April 2025', 'May 2025', 'June 2025'];
             document.getElementById('aprForecast').textContent = formatNumber(bestPreds['April 2025']);
@@ -461,11 +568,11 @@
                                 x: DateTime.fromISO(row.date).toJSDate(),
                                 y: row.ddd_demand
                             })),
-                            borderColor: 'var(--oecd-blue)',
-                            backgroundColor: 'var(--oecd-blue)',
+                            borderColor: '#355070',
+                            backgroundColor: '#355070',
                             fill: false,
-                            borderWidth: 2,
-                            pointRadius: 2
+                            borderWidth: 3,
+                            pointRadius: 4
                         },
                         {
                             label: 'Forecasted Demand',
@@ -473,70 +580,148 @@
                                 x: DateTime.fromFormat(month, 'MMMM yyyy').toJSDate(),
                                 y: bestPreds[month]
                             })).filter(point => point.y !== undefined && !isNaN(point.y)),
-                            borderColor: 'var(--oecd-orange)',
-                            backgroundColor: 'var(--oecd-orange)',
+                            borderColor: '#E56B6F',
+                            backgroundColor: '#E56B6F',
                             fill: false,
-                            borderWidth: 2,
-                            borderDash: [5, 5], // Dotted line
-                            pointRadius: 2
+                            borderWidth: 3,
+                            borderDash: [5, 5],
+                            pointRadius: 4
                         }
                     ]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         x: {
                             type: 'time',
-                            time: {
-                                unit: 'month',
-                                displayFormats: { month: 'MMM yyyy' }
-                            },
-                            title: { display: true, text: 'Date' }
+                            time: { unit: 'month', displayFormats: { month: 'MMM yyyy' } },
+                            title: { display: true, text: 'Date', font: { size: 14 } }
                         },
                         y: {
-                            title: { display: true, text: 'Demand' }
+                            title: { display: true, text: 'Demand', font: { size: 14 } },
+                            beginAtZero: false
                         }
                     },
                     plugins: {
-                        legend: { position: 'top' }
+                        legend: { position: 'top', labels: { font: { size: 12 } } },
+                        tooltip: { enabled: true, mode: 'index', intersect: false }
                     },
-                    elements: {
-                        line: {
-                            tension: 0 // Ensure straight lines for continuity
-                        }
-                    }
+                    elements: { line: { tension: 0.1 } }
                 }
             });
         }
 
+        function animateNumber(cell, targetValue, duration = 1000) {
+            const startValue = 0;
+            const startTime = performance.now();
+            const formattedTarget = formatNumber(targetValue);
+
+            function update() {
+                const elapsed = performance.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easedProgress = 1 - Math.pow(1 - progress, 3); // Ease-out cubic
+                const currentValue = startValue + (targetValue - startValue) * easedProgress;
+                cell.textContent = formatNumber(currentValue);
+                cell.classList.add('number-tick');
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    cell.textContent = formattedTarget;
+                    cell.classList.remove('number-tick');
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
         function renderComparison() {
-            const { predictions, test_maes } = dashboardData.predictions;
+            const { predictions, test_maes, model_names } = dashboardData.predictions;
             const months = ['April 2025', 'May 2025', 'June 2025'];
-            const models = ['Dense', 'GRU', 'LSTM'];
+
+            const thead = document.getElementById('comparisonTableHead');
+            thead.innerHTML = `
+                <tr>
+                    <th>Metric</th>
+                    ${model_names.map(model => `<th>${model}</th>`).join('')}
+                </tr>
+            `;
+
+            const tbody = document.getElementById('comparisonTableBody');
+            tbody.innerHTML = '';
+            const rows = [
+                { metric: 'MAE', values: model_names.map(model => test_maes[model]) },
+                ...months.map(month => ({
+                    metric: month,
+                    values: model_names.map(model => predictions[model]?.[month] ?? null)
+                }))
+            ];
+
+            // Render rows with animated cells
+            rows.forEach((row, rowIndex) => {
+                const rowElement = document.createElement('tr');
+                rowElement.innerHTML = `
+                    <td>${row.metric}</td>
+                    ${row.values.map(() => `<td class="animated-cell"><span class="number-placeholder">-</span></td>`).join('')}
+                `;
+                tbody.appendChild(rowElement);
+                setTimeout(() => {
+                    rowElement.querySelectorAll('.animated-cell').forEach((cell, colIndex) => {
+                        cell.style.animationDelay = `${rowIndex * 0.1}s`;
+                        const value = row.values[colIndex];
+                        if (value !== null && !isNaN(value)) {
+                            const numberSpan = cell.querySelector('.number-placeholder');
+                            animateNumber(numberSpan, value, 1000);
+                        } else {
+                            cell.innerHTML = 'N/A';
+                        }
+                    });
+                }, 0);
+            });
+
+            // Highlight best model's MAE
+            const bestModel = model_names.reduce((best, model) => 
+                test_maes[model] < test_maes[best] ? model : best, model_names[0]);
+            setTimeout(() => {
+                const bestModelIndex = model_names.indexOf(bestModel);
+                const maeRow = tbody.querySelector('tr:first-child');
+                if (maeRow) {
+                    const bestCell = maeRow.querySelector(`td:nth-child(${bestModelIndex + 2})`);
+                    if (bestCell) bestCell.classList.add('highlight-pulse');
+                }
+            }, rows.length * 100 + 500);
 
             const maeCtx = document.getElementById('maeChart').getContext('2d');
             new Chart(maeCtx, {
                 type: 'bar',
                 data: {
-                    labels: models,
+                    labels: model_names,
                     datasets: [{
                         label: 'MAE',
-                        data: models.map(model => test_maes[model]),
-                        backgroundColor: ['var(--oecd-blue)', 'var(--oecd-green)', 'var(--oecd-red)']
+                        data: model_names.map(model => test_maes[model]),
+                        backgroundColor: model_names.map((_, i) => modelColors[i % modelColors.length]),
+                        borderRadius: 4
                     }]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true,
-                            title: { display: true, text: 'Mean Absolute Error' }
+                            title: { display: true, text: 'Mean Absolute Error', font: { size: 14 } }
+                        },
+                        x: { 
+                            title: { display: true, text: 'Model', font: { size: 14 } },
+                            ticks: { padding: 10 }
                         }
                     },
                     plugins: {
-                        legend: { display: false },
-                        title: { display: true, text: 'Model MAE Comparison' }
-                    }
+                        legend: { position: 'top', labels: { font: { size: 12 } } },
+                        title: { display: true, text: 'Model MAE Comparison', font: { size: 16 } }
+                    },
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.9
                 }
             });
 
@@ -545,41 +730,40 @@
                 type: 'line',
                 data: {
                     labels: months,
-                    datasets: models.map((model, index) => ({
+                    datasets: model_names.map((model, i) => ({
                         label: model,
-                        data: months.map(month => predictions[model] ? predictions[model][month] : null),
-                        borderColor: index === 0 ? 'var(--oecd-blue)' : index === 1 ? 'var(--oecd-green)' : 'var(--oecd-red)',
-                        fill: false
+                        data: months.map(month => predictions[model]?.[month] ?? null),
+                        borderColor: modelColors[i % modelColors.length],
+                        backgroundColor: modelColors[i % modelColors.length],
+                        fill: false,
+                        borderWidth: 3,
+                        pointRadius: 4
                     }))
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
-                            title: { display: true, text: 'Predicted Demand' }
-                        }
+                            title: { display: true, text: 'Predicted Demand', font: { size: 14 } },
+                            beginAtZero: false
+                        },
+                        x: { title: { display: true, text: 'Month', font: { size: 14 } } }
                     },
                     plugins: {
-                        legend: { position: 'top' },
-                        title: { display: true, text: 'Model Prediction Comparison' }
-                    }
+                        legend: { position: 'top', labels: { font: { size: 12 } } },
+                        title: { display: true, text: 'Model Prediction Comparison', font: { size: 16 } },
+                        tooltip: { enabled: true, mode: 'index', intersect: false }
+                    },
+                    elements: { line: { tension: 0.1 } }
                 }
             });
-
-            const tbody = document.getElementById('comparisonTable').querySelector('tbody');
-            tbody.innerHTML = `
-                <tr>
-                    <td>MAE</td>
-                    ${models.map(model => `<td>${formatNumber(test_maes[model])}</td>`).join('')}
-                </tr>
-                ${months.map(month => `
-                    <tr>
-                        <td>${month}</td>
-                        ${models.map(model => `<td>${formatNumber(predictions[model] ? predictions[model][month] : undefined)}</td>`).join('')}
-                    </tr>
-                `).join('')}
-            `;
         }
+
+        document.getElementById('refreshData').addEventListener('click', (e) => {
+            e.preventDefault();
+            loadDashboardData();
+        });
 
         document.addEventListener('DOMContentLoaded', loadDashboardData);
     </script>

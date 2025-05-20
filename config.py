@@ -11,7 +11,8 @@ class Config:
     MODEL_FILES = {
         'Dense': 'Dense_model.keras',
         'GRU': 'GRU_model.keras',
-        'LSTM': 'LSTM_model.keras'
+        'LSTM': 'LSTM_model.keras',
+        'transformer': 'transformer.keras'
     }
     
     EXPECTED_COLS = [
