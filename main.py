@@ -87,15 +87,13 @@ class ModelManager:
             required_cols = ['model_name', 'mae']
             if not all(col in metrics_df.columns for col in required_cols):
                 raise ValueError(f"Missing required columns in test_metrics.csv: {required_cols}")
-            if not all(model in metrics_df['model_name'].values for model in Config.MODEL_FILES.keys()):
-                raise ValueError("Not all expected models found in test_metrics.csv")
             if (metrics_df['mae'] < 0).any():
                 raise ValueError("Negative MAE values found in test_metrics.csv")
             self.test_maes = dict(zip(metrics_df['model_name'], metrics_df['mae']))
-            logger.info("Loaded test metrics")
+            logger.info(f"Loaded test metrics for models: {list(self.test_maes.keys())}")
         except Exception as e:
             logger.error(f"Failed to load test metrics: {str(e)}")
-            self.test_maes = {name: 0.0 for name in Config.MODEL_FILES.keys()}
+            self.test_maes = {}
     
     def _load_data(self) -> None:
         """Load and validate input data, selecting the last 12 months"""
@@ -179,10 +177,12 @@ class ModelManager:
             
             self.predictions = {}
             expected_dates = ['April 2025', 'May 2025', 'June 2025']
-            for model in Config.MODEL_FILES.keys():
+            model_names = predictions_df['model_name'].unique()
+            for model in model_names:
                 model_preds = predictions_df[predictions_df['model_name'] == model]
                 if model_preds.empty:
-                    raise ValueError(f"No predictions found for model {model}")
+                    logger.warning(f"No predictions found for model {model}")
+                    continue
                 
                 # Create dictionary with formatted dates
                 model_dict = {}
@@ -196,7 +196,7 @@ class ModelManager:
                 # Validate that all expected dates are present
                 if not all(date in model_dict for date in expected_dates):
                     missing = [date for date in expected_dates if date not in model_dict]
-                    raise ValueError(f"Missing expected dates {missing} for model {model} in predictions")
+                    logger.warning(f"Missing expected dates {missing} for model {model} in predictions")
                 
                 self.predictions[model] = model_dict
             
@@ -298,7 +298,8 @@ class ModelManager:
             'predictions': self.predictions,
             'best_model': min(self.test_maes, key=self.test_maes.get) if self.test_maes else None,
             'test_maes': self.test_maes,
-            'last_6_months': self.data['ddd_demand'].iloc[-6:].reset_index().rename(columns={'index': 'date'}).to_dict(orient='records')
+            'last_6_months': self.data['ddd_demand'].iloc[-6:].reset_index().rename(columns={'index': 'date'}).to_dict(orient='records'),
+            'model_names': list(self.test_maes.keys())
         }
 
 # Initialize FastAPI app
@@ -355,3 +356,4 @@ if os.path.exists(Config.STATIC_DIR):
     app.mount("/", StaticFiles(directory=Config.STATIC_DIR, html=True), name="static")
 else:
     logger.warning(f"Static directory {Config.STATIC_DIR} not found")
+    
