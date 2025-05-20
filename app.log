@@ -1,178 +1,267 @@
-2025-05-20 19:09:43,790 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
-2025-05-20 19:09:43,849 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
-2025-05-20 19:09:43,897 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
-2025-05-20 19:09:43,898 - main - INFO - Loaded normalization parameters
-2025-05-20 19:09:43,899 - main - ERROR - Failed to load test metrics: Not all expected models found in test_metrics.csv
-2025-05-20 19:09:43,904 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
-2025-05-20 19:09:43,904 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
-2025-05-20 19:09:43,911 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
-2025-05-20 19:09:43,911 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
-2025-05-20 19:09:43,911 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
-2025-05-20 19:09:43,913 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
-2025-05-20 19:09:43,913 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
-2025-05-20 19:09:43,913 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
-2025-05-20 19:09:43,913 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
-2025-05-20 19:09:43,913 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
-2025-05-20 19:09:43,913 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
-2025-05-20 19:09:43,913 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
-2025-05-20 19:09:43,913 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
-2025-05-20 19:09:43,913 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
-2025-05-20 19:09:43,913 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
-2025-05-20 19:09:43,913 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
-2025-05-20 19:09:43,913 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
-2025-05-20 19:09:43,913 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
-2025-05-20 19:09:43,913 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
-2025-05-20 19:09:43,913 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
-2025-05-20 19:09:43,914 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
-2025-05-20 19:09:43,917 - main - INFO - Loaded predictions successfully
-2025-05-20 19:09:43,917 - main - INFO - Predictions: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}}
-2025-05-20 19:09:43,917 - main - INFO - ModelManager initialized successfully
-2025-05-20 19:12:39,026 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
-2025-05-20 19:12:39,093 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
-2025-05-20 19:12:39,143 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
-2025-05-20 19:12:39,144 - main - INFO - Loaded normalization parameters
-2025-05-20 19:12:39,147 - main - ERROR - Failed to load test metrics: Not all expected models found in test_metrics.csv
-2025-05-20 19:12:39,153 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
-2025-05-20 19:12:39,153 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
-2025-05-20 19:12:39,153 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
-2025-05-20 19:12:39,153 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
-2025-05-20 19:12:39,153 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
-2025-05-20 19:12:39,153 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
-2025-05-20 19:12:39,154 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
-2025-05-20 19:12:39,154 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
-2025-05-20 19:12:39,154 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
-2025-05-20 19:12:39,154 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
-2025-05-20 19:12:39,154 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
-2025-05-20 19:12:39,154 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
-2025-05-20 19:12:39,154 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
-2025-05-20 19:12:39,154 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
-2025-05-20 19:12:39,154 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
-2025-05-20 19:12:39,154 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
-2025-05-20 19:12:39,154 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
-2025-05-20 19:12:39,154 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
-2025-05-20 19:12:39,154 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
-2025-05-20 19:12:39,154 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
-2025-05-20 19:12:39,155 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
-2025-05-20 19:12:39,158 - main - INFO - Loaded predictions successfully
-2025-05-20 19:12:39,159 - main - INFO - Predictions: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}}
-2025-05-20 19:12:39,159 - main - INFO - ModelManager initialized successfully
-2025-05-20 19:42:44,637 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
-2025-05-20 19:42:44,705 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
-2025-05-20 19:42:44,756 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
-2025-05-20 19:42:44,757 - main - ERROR - Failed to load transformer model: Model file C:\Users\alber\anti-malarial-demand-forecast\models\transformer.keras not found
-2025-05-20 19:42:44,757 - main - INFO - Loaded normalization parameters
-2025-05-20 19:42:44,766 - main - INFO - Loaded test metrics for models: ['dense', 'LSTM', 'GRU', 'transformer']
-2025-05-20 19:42:44,771 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
-2025-05-20 19:42:44,772 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
-2025-05-20 19:42:44,772 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
-2025-05-20 19:42:44,772 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
-2025-05-20 19:42:44,772 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
-2025-05-20 19:42:44,772 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
-2025-05-20 19:42:44,772 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
-2025-05-20 19:42:44,772 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
-2025-05-20 19:42:44,772 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
-2025-05-20 19:42:44,772 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
-2025-05-20 19:42:44,772 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
-2025-05-20 19:42:44,772 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
-2025-05-20 19:42:44,772 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
-2025-05-20 19:42:44,772 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
-2025-05-20 19:42:44,772 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
-2025-05-20 19:42:44,772 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
-2025-05-20 19:42:44,772 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
-2025-05-20 19:42:44,772 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
-2025-05-20 19:42:44,772 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
-2025-05-20 19:42:44,773 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
-2025-05-20 19:42:44,774 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
-2025-05-20 19:42:44,780 - main - INFO - Loaded predictions successfully
-2025-05-20 19:42:44,780 - main - INFO - Predictions: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.6103, 'June 2025': 1.3905}}
-2025-05-20 19:42:44,780 - main - INFO - ModelManager initialized successfully
-2025-05-20 19:42:50,110 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
-2025-05-20 19:42:50,187 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
-2025-05-20 19:42:50,243 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
-2025-05-20 19:42:50,243 - main - ERROR - Failed to load transformer model: Model file C:\Users\alber\anti-malarial-demand-forecast\models\transformer.keras not found
-2025-05-20 19:42:50,244 - main - INFO - Loaded normalization parameters
-2025-05-20 19:42:50,246 - main - INFO - Loaded test metrics for models: ['dense', 'LSTM', 'GRU', 'transformer']
-2025-05-20 19:42:50,251 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
-2025-05-20 19:42:50,251 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
-2025-05-20 19:42:50,251 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
-2025-05-20 19:42:50,251 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
-2025-05-20 19:42:50,251 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
-2025-05-20 19:42:50,251 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
-2025-05-20 19:42:50,251 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
-2025-05-20 19:42:50,251 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
-2025-05-20 19:42:50,251 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
-2025-05-20 19:42:50,251 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
-2025-05-20 19:42:50,251 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
-2025-05-20 19:42:50,251 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
-2025-05-20 19:42:50,251 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
-2025-05-20 19:42:50,251 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
-2025-05-20 19:42:50,251 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
-2025-05-20 19:42:50,251 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
-2025-05-20 19:42:50,252 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
-2025-05-20 19:42:50,252 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
-2025-05-20 19:42:50,252 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
-2025-05-20 19:42:50,252 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
-2025-05-20 19:42:50,253 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
-2025-05-20 19:42:50,256 - main - INFO - Loaded predictions successfully
-2025-05-20 19:42:50,256 - main - INFO - Predictions: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.6103, 'June 2025': 1.3905}}
-2025-05-20 19:42:50,256 - main - INFO - ModelManager initialized successfully
-2025-05-20 19:43:10,790 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
-2025-05-20 19:43:10,851 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
-2025-05-20 19:43:10,894 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
-2025-05-20 19:43:10,894 - main - ERROR - Failed to load transformer model: Model file C:\Users\alber\anti-malarial-demand-forecast\models\transformer.keras not found
-2025-05-20 19:43:10,895 - main - INFO - Loaded normalization parameters
-2025-05-20 19:43:10,896 - main - INFO - Loaded test metrics for models: ['dense', 'LSTM', 'GRU', 'transformer']
-2025-05-20 19:43:10,901 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
-2025-05-20 19:43:10,902 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
-2025-05-20 19:43:10,902 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
-2025-05-20 19:43:10,902 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
-2025-05-20 19:43:10,902 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
-2025-05-20 19:43:10,902 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
-2025-05-20 19:43:10,902 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
-2025-05-20 19:43:10,902 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
-2025-05-20 19:43:10,902 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
-2025-05-20 19:43:10,902 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
-2025-05-20 19:43:10,902 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
-2025-05-20 19:43:10,902 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
-2025-05-20 19:43:10,902 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
-2025-05-20 19:43:10,902 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
-2025-05-20 19:43:10,902 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
-2025-05-20 19:43:10,902 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
-2025-05-20 19:43:10,902 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
-2025-05-20 19:43:10,902 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
-2025-05-20 19:43:10,902 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
-2025-05-20 19:43:10,902 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
-2025-05-20 19:43:10,903 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
-2025-05-20 19:43:10,907 - main - INFO - Loaded predictions successfully
-2025-05-20 19:43:10,907 - main - INFO - Predictions: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.6103, 'June 2025': 1.3905}}
-2025-05-20 19:43:10,907 - main - INFO - ModelManager initialized successfully
-2025-05-20 19:54:36,068 - main - INFO - Loaded Dense model from C:\Users\alber\anti-malarial-demand-forecast\models\Dense_model.keras
-2025-05-20 19:54:36,130 - main - INFO - Loaded GRU model from C:\Users\alber\anti-malarial-demand-forecast\models\GRU_model.keras
-2025-05-20 19:54:36,175 - main - INFO - Loaded LSTM model from C:\Users\alber\anti-malarial-demand-forecast\models\LSTM_model.keras
-2025-05-20 19:54:36,175 - main - ERROR - Failed to load transformer model: Model file C:\Users\alber\anti-malarial-demand-forecast\models\transformer.keras not found
-2025-05-20 19:54:36,176 - main - INFO - Loaded normalization parameters
-2025-05-20 19:54:36,178 - main - INFO - Loaded test metrics for models: ['Dense', 'LSTM', 'GRU', 'transformer']
-2025-05-20 19:54:36,183 - main - INFO - avg_temp_max - Recent Mean: 28.7825, Std: 1.5931
-2025-05-20 19:54:36,183 - main - INFO - avg_temp_max - Training Mean: 27.4351, Std: 1.6257
-2025-05-20 19:54:36,183 - main - INFO - avg_temp_max - Drift: Mean diff 4.91%, Std diff 2.01%
-2025-05-20 19:54:36,183 - main - INFO - avg_temp_min - Recent Mean: 18.1275, Std: 0.6595
-2025-05-20 19:54:36,183 - main - INFO - avg_temp_min - Training Mean: 17.8719, Std: 0.5855
-2025-05-20 19:54:36,183 - main - INFO - avg_temp_min - Drift: Mean diff 1.43%, Std diff 12.64%
-2025-05-20 19:54:36,183 - main - INFO - avg_humidity - Recent Mean: 68.3017, Std: 9.6981
-2025-05-20 19:54:36,183 - main - INFO - avg_humidity - Training Mean: 72.0622, Std: 8.6964
-2025-05-20 19:54:36,183 - main - INFO - avg_humidity - Drift: Mean diff 5.22%, Std diff 11.52%
-2025-05-20 19:54:36,183 - main - INFO - total_precipitation - Recent Mean: 11820.6338, Std: 6590.9268
-2025-05-20 19:54:36,183 - main - INFO - total_precipitation - Training Mean: 12788.4971, Std: 6300.8018
-2025-05-20 19:54:36,183 - main - INFO - total_precipitation - Drift: Mean diff 7.57%, Std diff 4.60%
-2025-05-20 19:54:36,183 - main - INFO - total_sunshine_hours - Recent Mean: 37094.1680, Std: 1544.4633
-2025-05-20 19:54:36,183 - main - INFO - total_sunshine_hours - Training Mean: 36897.8633, Std: 1921.8816
-2025-05-20 19:54:36,183 - main - INFO - total_sunshine_hours - Drift: Mean diff 0.53%, Std diff 19.64%
-2025-05-20 19:54:36,183 - main - INFO - ddd_demand - Recent Mean: 1.4082, Std: 0.3202
-2025-05-20 19:54:36,183 - main - INFO - ddd_demand - Training Mean: 1.3976, Std: 0.2596
-2025-05-20 19:54:36,183 - main - INFO - ddd_demand - Drift: Mean diff 0.76%, Std diff 23.35%
-2025-05-20 19:54:36,183 - main - WARNING - Potential data drift detected in ddd_demand! Consider retraining.
-2025-05-20 19:54:36,183 - main - INFO - Loaded and validated last 12 months of input data (Apr 2024 - Mar 2025)
-2025-05-20 19:54:36,184 - main - INFO - Raw date column values: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
-2025-05-20 19:54:36,187 - main - INFO - Loaded predictions successfully
-2025-05-20 19:54:36,187 - main - INFO - Predictions: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.6103, 'June 2025': 1.3905}}
-2025-05-20 19:54:36,188 - main - INFO - ModelManager initialized successfully
+2025-05-20 21:38:17,309 - main - INFO - Startup validation completed successfully
+2025-05-20 21:47:36,503 - DEBUG - main - Mounted static directory: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 21:47:36,505 - DEBUG - main - Starting application
+2025-05-20 21:47:36,505 - DEBUG - main - Data directory exists: C:\Users\alber\anti-malarial-demand-forecast\data
+2025-05-20 21:47:36,505 - DEBUG - main - Static directory exists: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 21:47:36,505 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 21:47:36,505 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 21:47:36,505 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\predictions.csv
+2025-05-20 21:47:36,517 - DEBUG - main - selected_data.csv: 99 data rows, columns: ['avg_temp_max', 'avg_temp_min', 'avg_humidity', 'total_precipitation', 'total_sunshine_hours', 'ddd_demand']
+2025-05-20 21:47:36,520 - DEBUG - main - First row: {'avg_temp_max': 31.48, 'avg_temp_min': 18.21, 'avg_humidity': 45.61, 'total_precipitation': 1566.1, 'total_sunshine_hours': 40921.04, 'ddd_demand': 0.8647902406163}
+2025-05-20 21:47:36,521 - DEBUG - main - Validated test_metrics.csv: 4 rows, columns: ['model_name', 'mae_sum', 'mae', 't+1_mae', 't+1_mae.1', 't+1_mae.2']
+2025-05-20 21:47:36,522 - DEBUG - main - Validated predictions.csv: 12 rows, columns: ['model_name', 'date', 'predicted_demand']
+2025-05-20 21:47:36,522 - INFO - main - Startup validation completed successfully
+2025-05-20 21:48:01,328 - DEBUG - main - Mounted static directory: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 21:48:01,330 - DEBUG - main - Starting application
+2025-05-20 21:48:01,330 - DEBUG - main - Data directory exists: C:\Users\alber\anti-malarial-demand-forecast\data
+2025-05-20 21:48:01,330 - DEBUG - main - Static directory exists: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 21:48:01,330 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 21:48:01,330 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 21:48:01,330 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\predictions.csv
+2025-05-20 21:48:01,335 - DEBUG - main - selected_data.csv: 99 data rows, columns: ['avg_temp_max', 'avg_temp_min', 'avg_humidity', 'total_precipitation', 'total_sunshine_hours', 'ddd_demand']
+2025-05-20 21:48:01,336 - DEBUG - main - First row: {'avg_temp_max': 31.48, 'avg_temp_min': 18.21, 'avg_humidity': 45.61, 'total_precipitation': 1566.1, 'total_sunshine_hours': 40921.04, 'ddd_demand': 0.8647902406163}
+2025-05-20 21:48:01,337 - DEBUG - main - Validated test_metrics.csv: 4 rows, columns: ['model_name', 'mae_sum', 'mae', 't+1_mae', 't+1_mae.1', 't+1_mae.2']
+2025-05-20 21:48:01,337 - DEBUG - main - Validated predictions.csv: 12 rows, columns: ['model_name', 'date', 'predicted_demand']
+2025-05-20 21:48:01,337 - INFO - main - Startup validation completed successfully
+2025-05-20 22:04:21,938 - DEBUG - main - Mounted static directory: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 22:04:21,940 - DEBUG - main - Starting application
+2025-05-20 22:04:21,940 - DEBUG - main - Data directory exists: C:\Users\alber\anti-malarial-demand-forecast\data
+2025-05-20 22:04:21,940 - DEBUG - main - Static directory exists: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 22:04:21,940 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 22:04:21,940 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 22:04:21,941 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\predictions.csv
+2025-05-20 22:04:21,946 - DEBUG - main - selected_data.csv: 99 data rows, columns: ['avg_temp_max', 'avg_temp_min', 'avg_humidity', 'total_precipitation', 'total_sunshine_hours', 'ddd_demand']
+2025-05-20 22:04:21,946 - DEBUG - main - First row: {'avg_temp_max': 31.48, 'avg_temp_min': 18.21, 'avg_humidity': 45.61, 'total_precipitation': 1566.1, 'total_sunshine_hours': 40921.04, 'ddd_demand': 0.8647902406163}
+2025-05-20 22:04:21,947 - DEBUG - main - Validated test_metrics.csv: 4 rows, columns: ['model_name', 'mae_sum', 'mae', 't+1_mae', 't+1_mae.1', 't+1_mae.2']
+2025-05-20 22:04:21,948 - DEBUG - main - Validated predictions.csv: 12 rows, columns: ['model_name', 'date', 'predicted_demand']
+2025-05-20 22:04:21,948 - INFO - main - Startup validation completed successfully
+2025-05-20 22:06:51,467 - DEBUG - main - Mounted static directory at /static: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 22:06:51,468 - DEBUG - main - Starting application
+2025-05-20 22:06:51,468 - DEBUG - main - Data directory exists: C:\Users\alber\anti-malarial-demand-forecast\data
+2025-05-20 22:06:51,468 - DEBUG - main - Static directory exists: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 22:06:51,468 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 22:06:51,468 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 22:06:51,468 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\predictions.csv
+2025-05-20 22:06:51,472 - DEBUG - main - selected_data.csv: 99 data rows, columns: ['avg_temp_max', 'avg_temp_min', 'avg_humidity', 'total_precipitation', 'total_sunshine_hours', 'ddd_demand']
+2025-05-20 22:06:51,472 - DEBUG - main - First row: {'avg_temp_max': 31.48, 'avg_temp_min': 18.21, 'avg_humidity': 45.61, 'total_precipitation': 1566.1, 'total_sunshine_hours': 40921.04, 'ddd_demand': 0.8647902406163}
+2025-05-20 22:06:51,473 - DEBUG - main - Validated test_metrics.csv: 4 rows, columns: ['model_name', 'mae_sum', 'mae', 't+1_mae', 't+1_mae.1', 't+1_mae.2']
+2025-05-20 22:06:51,474 - DEBUG - main - Validated predictions.csv: 12 rows, columns: ['model_name', 'date', 'predicted_demand']
+2025-05-20 22:06:51,474 - INFO - main - Startup validation completed successfully
+2025-05-20 22:06:59,625 - DEBUG - main - Request: GET / - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'cache-control': 'max-age=0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b', 'if-none-match': '"7844db7064d396adaafc78da8203f4bb"', 'if-modified-since': 'Tue, 20 May 2025 19:03:57 GMT'}
+2025-05-20 22:06:59,625 - ERROR - main - 404 Not Found: GET / - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'cache-control': 'max-age=0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b', 'if-none-match': '"7844db7064d396adaafc78da8203f4bb"', 'if-modified-since': 'Tue, 20 May 2025 19:03:57 GMT'}
+2025-05-20 22:06:59,626 - DEBUG - main - Response: / - Status: 404
+2025-05-20 22:07:14,442 - DEBUG - main - Mounted static directory at /static: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 22:07:14,443 - DEBUG - main - Starting application
+2025-05-20 22:07:14,443 - DEBUG - main - Data directory exists: C:\Users\alber\anti-malarial-demand-forecast\data
+2025-05-20 22:07:14,443 - DEBUG - main - Static directory exists: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 22:07:14,443 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 22:07:14,443 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 22:07:14,443 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\predictions.csv
+2025-05-20 22:07:14,448 - DEBUG - main - selected_data.csv: 99 data rows, columns: ['avg_temp_max', 'avg_temp_min', 'avg_humidity', 'total_precipitation', 'total_sunshine_hours', 'ddd_demand']
+2025-05-20 22:07:14,448 - DEBUG - main - First row: {'avg_temp_max': 31.48, 'avg_temp_min': 18.21, 'avg_humidity': 45.61, 'total_precipitation': 1566.1, 'total_sunshine_hours': 40921.04, 'ddd_demand': 0.8647902406163}
+2025-05-20 22:07:14,449 - DEBUG - main - Validated test_metrics.csv: 4 rows, columns: ['model_name', 'mae_sum', 'mae', 't+1_mae', 't+1_mae.1', 't+1_mae.2']
+2025-05-20 22:07:14,449 - DEBUG - main - Validated predictions.csv: 12 rows, columns: ['model_name', 'date', 'predicted_demand']
+2025-05-20 22:07:14,450 - INFO - main - Startup validation completed successfully
+2025-05-20 22:07:34,655 - DEBUG - main - Request: GET / - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'none', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:07:34,656 - ERROR - main - 404 Not Found: GET / - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'none', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:07:34,656 - DEBUG - main - Response: / - Status: 404
+2025-05-20 22:07:44,412 - DEBUG - main - Request: GET / - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'none', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:07:44,412 - ERROR - main - 404 Not Found: GET / - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'none', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:07:44,413 - DEBUG - main - Response: / - Status: 404
+2025-05-20 22:08:12,385 - DEBUG - main - Request: GET / - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'none', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:08:12,386 - ERROR - main - 404 Not Found: GET / - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'none', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:08:12,386 - DEBUG - main - Response: / - Status: 404
+2025-05-20 22:11:23,766 - DEBUG - main - Mounted static directory at /static: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 22:11:23,768 - DEBUG - main - Starting application
+2025-05-20 22:11:23,768 - DEBUG - main - Data directory exists: C:\Users\alber\anti-malarial-demand-forecast\data
+2025-05-20 22:11:23,768 - DEBUG - main - Static directory exists: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 22:11:23,768 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 22:11:23,768 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 22:11:23,768 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\predictions.csv
+2025-05-20 22:11:23,773 - DEBUG - main - selected_data.csv: 99 data rows, columns: ['avg_temp_max', 'avg_temp_min', 'avg_humidity', 'total_precipitation', 'total_sunshine_hours', 'ddd_demand']
+2025-05-20 22:11:23,773 - DEBUG - main - First row: {'avg_temp_max': 31.48, 'avg_temp_min': 18.21, 'avg_humidity': 45.61, 'total_precipitation': 1566.1, 'total_sunshine_hours': 40921.04, 'ddd_demand': 0.8647902406163}
+2025-05-20 22:11:23,775 - DEBUG - main - Validated test_metrics.csv: 4 rows, columns: ['model_name', 'mae_sum', 'mae', 't+1_mae', 't+1_mae.1', 't+1_mae.2']
+2025-05-20 22:11:23,776 - DEBUG - main - Validated predictions.csv: 12 rows, columns: ['model_name', 'date', 'predicted_demand']
+2025-05-20 22:11:23,776 - INFO - main - Startup validation completed successfully
+2025-05-20 22:11:29,612 - DEBUG - main - Mounted static directory at /static: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 22:11:29,614 - DEBUG - main - Starting application
+2025-05-20 22:11:29,614 - DEBUG - main - Data directory exists: C:\Users\alber\anti-malarial-demand-forecast\data
+2025-05-20 22:11:29,614 - DEBUG - main - Static directory exists: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 22:11:29,614 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 22:11:29,614 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 22:11:29,614 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\predictions.csv
+2025-05-20 22:11:29,619 - DEBUG - main - selected_data.csv: 99 data rows, columns: ['avg_temp_max', 'avg_temp_min', 'avg_humidity', 'total_precipitation', 'total_sunshine_hours', 'ddd_demand']
+2025-05-20 22:11:29,619 - DEBUG - main - First row: {'avg_temp_max': 31.48, 'avg_temp_min': 18.21, 'avg_humidity': 45.61, 'total_precipitation': 1566.1, 'total_sunshine_hours': 40921.04, 'ddd_demand': 0.8647902406163}
+2025-05-20 22:11:29,620 - DEBUG - main - Validated test_metrics.csv: 4 rows, columns: ['model_name', 'mae_sum', 'mae', 't+1_mae', 't+1_mae.1', 't+1_mae.2']
+2025-05-20 22:11:29,622 - DEBUG - main - Validated predictions.csv: 12 rows, columns: ['model_name', 'date', 'predicted_demand']
+2025-05-20 22:11:29,622 - INFO - main - Startup validation completed successfully
+2025-05-20 22:11:35,923 - DEBUG - main - Request: GET / - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'cache-control': 'max-age=0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'none', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:11:35,924 - DEBUG - main - Redirecting root to /static/index.html
+2025-05-20 22:11:35,924 - DEBUG - main - Response: / - Status: 307 - Client IP: 127.0.0.1 - Duration: 1.08ms
+2025-05-20 22:11:35,931 - DEBUG - main - Request: GET /static/index.html - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'cache-control': 'max-age=0', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'none', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:11:35,969 - DEBUG - main - Response: /static/index.html - Status: 200 - Client IP: 127.0.0.1 - Duration: 37.94ms
+2025-05-20 22:11:36,067 - DEBUG - main - Request: GET /api/input-data - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'dnt': '1', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:8000/static/index.html', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:11:36,068 - DEBUG - main - Received request for /api/input-data
+2025-05-20 22:11:36,068 - DEBUG - main - Loading CSV: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 22:11:36,070 - DEBUG - main - Loaded selected_data.csv: 99 data rows, columns: ['avg_temp_max', 'avg_temp_min', 'avg_humidity', 'total_precipitation', 'total_sunshine_hours', 'ddd_demand']
+2025-05-20 22:11:36,071 - DEBUG - main - First row: {'avg_temp_max': 31.48, 'avg_temp_min': 18.21, 'avg_humidity': 45.61, 'total_precipitation': 1566.1, 'total_sunshine_hours': 40921.04, 'ddd_demand': 0.8647902406163}
+2025-05-20 22:11:36,072 - DEBUG - main - Data types: {'avg_temp_max': dtype('float64'), 'avg_temp_min': dtype('float64'), 'avg_humidity': dtype('float64'), 'total_precipitation': dtype('float64'), 'total_sunshine_hours': dtype('float64'), 'ddd_demand': dtype('float64')}
+2025-05-20 22:11:36,077 - DEBUG - main - Data validation passed
+2025-05-20 22:11:36,094 - DEBUG - main - Selected last 12 rows: ['2024-04-01', '2024-05-01', '2024-06-01', '2024-07-01', '2024-08-01', '2024-09-01', '2024-10-01', '2024-11-01', '2024-12-01', '2025-01-01', '2025-02-01', '2025-03-01']
+2025-05-20 22:11:36,096 - DEBUG - main - Computed stats: {'max_temp_avg': 28.782501220703125, 'min_temp_avg': 18.127500534057617, 'humidity_avg': 68.30166625976562, 'precip_total': 141847.609375, 'sunshine_total': 445130.0, 'current_demand': 1.7332526445388794}
+2025-05-20 22:11:36,100 - INFO - main - Returning input data: 12 rows, stats keys: ['max_temp_avg', 'min_temp_avg', 'humidity_avg', 'precip_total', 'sunshine_total', 'current_demand']
+2025-05-20 22:11:36,100 - DEBUG - main - Response sample: [{'avg_temp_max': 27.719999313354492, 'avg_temp_min': 18.6200008392334, 'avg_humidity': 78.30000305175781, 'total_precipitation': 21083.19921875, 'total_sunshine_hours': 34248.2109375, 'ddd_demand': 1.788276195526123, 'date': '2024-04-01'}]
+2025-05-20 22:11:36,102 - DEBUG - main - Request: GET /api/test-metrics - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'dnt': '1', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:8000/static/index.html', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:11:36,102 - DEBUG - main - Received request for /api/test-metrics
+2025-05-20 22:11:36,102 - DEBUG - main - Loading CSV: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 22:11:36,104 - DEBUG - main - Loaded test_metrics.csv: 4 rows, columns: ['model_name', 'mae_sum', 'mae', 't+1_mae', 't+1_mae.1', 't+1_mae.2']
+2025-05-20 22:11:36,105 - DEBUG - main - First row: {'model_name': 'Dense', 'mae_sum': 0.299327358603, 'mae': 0.099775786201, 't+1_mae': 0.070946060121, 't+1_mae.1': 0.070946060121, 't+1_mae.2': 0.070946060121}
+2025-05-20 22:11:36,105 - INFO - main - Returning test metrics: 4 rows
+2025-05-20 22:11:36,106 - DEBUG - main - Response sample: [{'model_name': 'Dense', 'mae_sum': 0.299327358603, 'mae': 0.099775786201, 't+1_mae': 0.070946060121, 't+1_mae.1': 0.070946060121, 't+1_mae.2': 0.070946060121}]
+2025-05-20 22:11:36,106 - DEBUG - main - Response: /api/input-data - Status: 200 - Client IP: 127.0.0.1 - Duration: 38.91ms
+2025-05-20 22:11:36,107 - DEBUG - main - Response: /api/test-metrics - Status: 200 - Client IP: 127.0.0.1 - Duration: 5.02ms
+2025-05-20 22:11:36,111 - DEBUG - main - Request: GET /api/predictions - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'dnt': '1', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:8000/static/index.html', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:11:36,111 - DEBUG - main - Received request for /api/predictions
+2025-05-20 22:11:36,111 - DEBUG - main - Loading CSV: C:\Users\alber\anti-malarial-demand-forecast\data\predictions.csv
+2025-05-20 22:11:36,113 - DEBUG - main - Loaded predictions.csv: 12 rows, columns: ['model_name', 'date', 'predicted_demand']
+2025-05-20 22:11:36,114 - DEBUG - main - First row: {'model_name': 'Dense', 'date': '2025-04-01', 'predicted_demand': 1.6158}
+2025-05-20 22:11:36,114 - DEBUG - main - Raw dates: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
+2025-05-20 22:11:36,118 - DEBUG - main - Formatted dates: ['April 2025', 'May 2025', 'June 2025', 'April 2025', 'May 2025', 'June 2025', 'April 2025', 'May 2025', 'June 2025', 'April 2025', 'May 2025', 'June 2025']
+2025-05-20 22:11:36,121 - DEBUG - main - Model names: ['Dense', 'GRU', 'LSTM', 'transformer']
+2025-05-20 22:11:36,130 - DEBUG - main - Predictions structure: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.6103, 'June 2025': 1.3905}}
+2025-05-20 22:11:36,130 - DEBUG - main - Loading test metrics for best model: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 22:11:36,132 - DEBUG - main - Test MAEs: {'Dense': 0.099775786201, 'LSTM': 0.219373166561, 'GRU': 0.087615636488, 'transformer': 0.253565068046}, Best model: GRU
+2025-05-20 22:11:36,132 - DEBUG - main - Loading input data for last 6 months: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 22:11:36,136 - DEBUG - main - Last 6 months dates: ['2024-10-01', '2024-11-01', '2024-12-01', '2025-01-01', '2025-02-01', '2025-03-01']
+2025-05-20 22:11:36,136 - INFO - main - Returning predictions: 4 models, best_model: GRU
+2025-05-20 22:11:36,136 - DEBUG - main - Response sample: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.6103, 'June 2025': 1.3905}}
+2025-05-20 22:11:36,137 - DEBUG - main - Response: /api/predictions - Status: 200 - Client IP: 127.0.0.1 - Duration: 26.97ms
+2025-05-20 22:31:51,830 - DEBUG - main - Request: GET /static/index.html - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'cache-control': 'max-age=0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'none', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b', 'if-none-match': '"67a26b2c2378cc2c71a291cda5646f24"', 'if-modified-since': 'Tue, 20 May 2025 19:06:47 GMT'}
+2025-05-20 22:31:51,831 - DEBUG - main - Response: /static/index.html - Status: 200 - Client IP: 127.0.0.1 - Duration: 2.00ms
+2025-05-20 22:31:52,010 - DEBUG - main - Request: GET /api/input-data - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'dnt': '1', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:8000/static/index.html', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:31:52,011 - DEBUG - main - Received request for /api/input-data
+2025-05-20 22:31:52,011 - DEBUG - main - Loading CSV: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 22:31:52,015 - DEBUG - main - Loaded selected_data.csv: 99 data rows, columns: ['avg_temp_max', 'avg_temp_min', 'avg_humidity', 'total_precipitation', 'total_sunshine_hours', 'ddd_demand']
+2025-05-20 22:31:52,016 - DEBUG - main - First row: {'avg_temp_max': 31.48, 'avg_temp_min': 18.21, 'avg_humidity': 45.61, 'total_precipitation': 1566.1, 'total_sunshine_hours': 40921.04, 'ddd_demand': 0.8647902406163}
+2025-05-20 22:31:52,016 - DEBUG - main - Data types: {'avg_temp_max': dtype('float64'), 'avg_temp_min': dtype('float64'), 'avg_humidity': dtype('float64'), 'total_precipitation': dtype('float64'), 'total_sunshine_hours': dtype('float64'), 'ddd_demand': dtype('float64')}
+2025-05-20 22:31:52,020 - DEBUG - main - Data validation passed
+2025-05-20 22:31:52,024 - DEBUG - main - Selected last 12 rows: ['2024-04-01', '2024-05-01', '2024-06-01', '2024-07-01', '2024-08-01', '2024-09-01', '2024-10-01', '2024-11-01', '2024-12-01', '2025-01-01', '2025-02-01', '2025-03-01']
+2025-05-20 22:31:52,024 - DEBUG - main - Computed stats: {'max_temp_avg': 28.782501220703125, 'min_temp_avg': 18.127500534057617, 'humidity_avg': 68.30166625976562, 'precip_total': 141847.609375, 'sunshine_total': 445130.0, 'current_demand': 1.7332526445388794}
+2025-05-20 22:31:52,025 - INFO - main - Returning input data: 12 rows, stats keys: ['max_temp_avg', 'min_temp_avg', 'humidity_avg', 'precip_total', 'sunshine_total', 'current_demand']
+2025-05-20 22:31:52,025 - DEBUG - main - Response sample: [{'avg_temp_max': 27.719999313354492, 'avg_temp_min': 18.6200008392334, 'avg_humidity': 78.30000305175781, 'total_precipitation': 21083.19921875, 'total_sunshine_hours': 34248.2109375, 'ddd_demand': 1.788276195526123, 'date': '2024-04-01'}]
+2025-05-20 22:31:52,026 - DEBUG - main - Request: GET /api/predictions - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'dnt': '1', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:8000/static/index.html', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:31:52,027 - DEBUG - main - Received request for /api/predictions
+2025-05-20 22:31:52,027 - DEBUG - main - Loading CSV: C:\Users\alber\anti-malarial-demand-forecast\data\predictions.csv
+2025-05-20 22:31:52,028 - DEBUG - main - Loaded predictions.csv: 12 rows, columns: ['model_name', 'date', 'predicted_demand']
+2025-05-20 22:31:52,028 - DEBUG - main - First row: {'model_name': 'Dense', 'date': '2025-04-01', 'predicted_demand': 1.6158}
+2025-05-20 22:31:52,029 - DEBUG - main - Raw dates: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
+2025-05-20 22:31:52,030 - DEBUG - main - Formatted dates: ['April 2025', 'May 2025', 'June 2025', 'April 2025', 'May 2025', 'June 2025', 'April 2025', 'May 2025', 'June 2025', 'April 2025', 'May 2025', 'June 2025']
+2025-05-20 22:31:52,030 - DEBUG - main - Model names: ['Dense', 'GRU', 'LSTM', 'transformer']
+2025-05-20 22:31:52,035 - DEBUG - main - Predictions structure: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.6103, 'June 2025': 1.3905}}
+2025-05-20 22:31:52,035 - DEBUG - main - Loading test metrics for best model: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 22:31:52,038 - DEBUG - main - Test MAEs: {'Dense': 0.099775786201, 'LSTM': 0.219373166561, 'GRU': 0.087615636488, 'transformer': 0.253565068046}, Best model: GRU
+2025-05-20 22:31:52,038 - DEBUG - main - Loading input data for last 6 months: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 22:31:52,045 - DEBUG - main - Last 6 months dates: ['2024-10-01', '2024-11-01', '2024-12-01', '2025-01-01', '2025-02-01', '2025-03-01']
+2025-05-20 22:31:52,045 - INFO - main - Returning predictions: 4 models, best_model: GRU
+2025-05-20 22:31:52,045 - DEBUG - main - Response sample: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.6103, 'June 2025': 1.3905}}
+2025-05-20 22:31:52,046 - DEBUG - main - Response: /api/input-data - Status: 200 - Client IP: 127.0.0.1 - Duration: 36.00ms
+2025-05-20 22:31:52,048 - DEBUG - main - Response: /api/predictions - Status: 200 - Client IP: 127.0.0.1 - Duration: 22.78ms
+2025-05-20 22:31:52,052 - DEBUG - main - Request: GET /api/test-metrics - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'dnt': '1', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:8000/static/index.html', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:31:52,053 - DEBUG - main - Received request for /api/test-metrics
+2025-05-20 22:31:52,053 - DEBUG - main - Loading CSV: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 22:31:52,054 - DEBUG - main - Loaded test_metrics.csv: 4 rows, columns: ['model_name', 'mae_sum', 'mae', 't+1_mae', 't+1_mae.1', 't+1_mae.2']
+2025-05-20 22:31:52,055 - DEBUG - main - First row: {'model_name': 'Dense', 'mae_sum': 0.299327358603, 'mae': 0.099775786201, 't+1_mae': 0.070946060121, 't+1_mae.1': 0.070946060121, 't+1_mae.2': 0.070946060121}
+2025-05-20 22:31:52,056 - INFO - main - Returning test metrics: 4 rows
+2025-05-20 22:31:52,056 - DEBUG - main - Response sample: [{'model_name': 'Dense', 'mae_sum': 0.299327358603, 'mae': 0.099775786201, 't+1_mae': 0.070946060121, 't+1_mae.1': 0.070946060121, 't+1_mae.2': 0.070946060121}]
+2025-05-20 22:31:52,056 - DEBUG - main - Response: /api/test-metrics - Status: 200 - Client IP: 127.0.0.1 - Duration: 4.00ms
+2025-05-20 22:56:37,520 - DEBUG - main - Request: GET /static/index.html - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'cache-control': 'max-age=0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'none', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b', 'if-none-match': '"122e060d7748ac1a781df85df0153c29"', 'if-modified-since': 'Tue, 20 May 2025 19:31:45 GMT'}
+2025-05-20 22:56:37,523 - DEBUG - main - Response: /static/index.html - Status: 304 - Client IP: 127.0.0.1 - Duration: 3.01ms
+2025-05-20 22:56:37,593 - DEBUG - main - Request: GET /api/input-data - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'dnt': '1', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:8000/static/index.html', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:56:37,594 - DEBUG - main - Received request for /api/input-data
+2025-05-20 22:56:37,594 - DEBUG - main - Loading CSV: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 22:56:37,596 - DEBUG - main - Loaded selected_data.csv: 99 data rows, columns: ['avg_temp_max', 'avg_temp_min', 'avg_humidity', 'total_precipitation', 'total_sunshine_hours', 'ddd_demand']
+2025-05-20 22:56:37,597 - DEBUG - main - First row: {'avg_temp_max': 31.48, 'avg_temp_min': 18.21, 'avg_humidity': 45.61, 'total_precipitation': 1566.1, 'total_sunshine_hours': 40921.04, 'ddd_demand': 0.8647902406163}
+2025-05-20 22:56:37,597 - DEBUG - main - Data types: {'avg_temp_max': dtype('float64'), 'avg_temp_min': dtype('float64'), 'avg_humidity': dtype('float64'), 'total_precipitation': dtype('float64'), 'total_sunshine_hours': dtype('float64'), 'ddd_demand': dtype('float64')}
+2025-05-20 22:56:37,600 - DEBUG - main - Data validation passed
+2025-05-20 22:56:37,604 - DEBUG - main - Selected last 12 rows: ['2024-04-01', '2024-05-01', '2024-06-01', '2024-07-01', '2024-08-01', '2024-09-01', '2024-10-01', '2024-11-01', '2024-12-01', '2025-01-01', '2025-02-01', '2025-03-01']
+2025-05-20 22:56:37,605 - DEBUG - main - Computed stats: {'max_temp_avg': 28.782501220703125, 'min_temp_avg': 18.127500534057617, 'humidity_avg': 68.30166625976562, 'precip_total': 141847.609375, 'sunshine_total': 445130.0, 'current_demand': 1.7332526445388794}
+2025-05-20 22:56:37,607 - INFO - main - Returning input data: 12 rows, stats keys: ['max_temp_avg', 'min_temp_avg', 'humidity_avg', 'precip_total', 'sunshine_total', 'current_demand']
+2025-05-20 22:56:37,607 - DEBUG - main - Response sample: [{'avg_temp_max': 27.719999313354492, 'avg_temp_min': 18.6200008392334, 'avg_humidity': 78.30000305175781, 'total_precipitation': 21083.19921875, 'total_sunshine_hours': 34248.2109375, 'ddd_demand': 1.788276195526123, 'date': '2024-04-01'}]
+2025-05-20 22:56:37,609 - DEBUG - main - Request: GET /api/predictions - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'dnt': '1', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:8000/static/index.html', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:56:37,610 - DEBUG - main - Received request for /api/predictions
+2025-05-20 22:56:37,610 - DEBUG - main - Loading CSV: C:\Users\alber\anti-malarial-demand-forecast\data\predictions.csv
+2025-05-20 22:56:37,613 - DEBUG - main - Loaded predictions.csv: 12 rows, columns: ['model_name', 'date', 'predicted_demand']
+2025-05-20 22:56:37,614 - DEBUG - main - First row: {'model_name': 'Dense', 'date': '2025-04-01', 'predicted_demand': 1.6158}
+2025-05-20 22:56:37,614 - DEBUG - main - Raw dates: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
+2025-05-20 22:56:37,616 - DEBUG - main - Formatted dates: ['April 2025', 'May 2025', 'June 2025', 'April 2025', 'May 2025', 'June 2025', 'April 2025', 'May 2025', 'June 2025', 'April 2025', 'May 2025', 'June 2025']
+2025-05-20 22:56:37,617 - DEBUG - main - Model names: ['Dense', 'GRU', 'LSTM', 'transformer']
+2025-05-20 22:56:37,624 - DEBUG - main - Predictions structure: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.6103, 'June 2025': 1.3905}}
+2025-05-20 22:56:37,624 - DEBUG - main - Loading test metrics for best model: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 22:56:37,625 - DEBUG - main - Test MAEs: {'Dense': 0.099775786201, 'LSTM': 0.219373166561, 'GRU': 0.087615636488, 'transformer': 0.253565068046}, Best model: GRU
+2025-05-20 22:56:37,625 - DEBUG - main - Loading input data for last 6 months: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 22:56:37,628 - DEBUG - main - Last 6 months dates: ['2024-10-01', '2024-11-01', '2024-12-01', '2025-01-01', '2025-02-01', '2025-03-01']
+2025-05-20 22:56:37,629 - INFO - main - Returning predictions: 4 models, best_model: GRU
+2025-05-20 22:56:37,629 - DEBUG - main - Response sample: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.6103, 'June 2025': 1.3905}}
+2025-05-20 22:56:37,629 - DEBUG - main - Response: /api/input-data - Status: 200 - Client IP: 127.0.0.1 - Duration: 36.12ms
+2025-05-20 22:56:37,630 - DEBUG - main - Response: /api/predictions - Status: 200 - Client IP: 127.0.0.1 - Duration: 21.12ms
+2025-05-20 22:56:37,632 - DEBUG - main - Request: GET /api/test-metrics - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'dnt': '1', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:8000/static/index.html', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 22:56:37,632 - DEBUG - main - Received request for /api/test-metrics
+2025-05-20 22:56:37,632 - DEBUG - main - Loading CSV: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 22:56:37,634 - DEBUG - main - Loaded test_metrics.csv: 4 rows, columns: ['model_name', 'mae_sum', 'mae', 't+1_mae', 't+1_mae.1', 't+1_mae.2']
+2025-05-20 22:56:37,634 - DEBUG - main - First row: {'model_name': 'Dense', 'mae_sum': 0.299327358603, 'mae': 0.099775786201, 't+1_mae': 0.070946060121, 't+1_mae.1': 0.070946060121, 't+1_mae.2': 0.070946060121}
+2025-05-20 22:56:37,635 - INFO - main - Returning test metrics: 4 rows
+2025-05-20 22:56:37,635 - DEBUG - main - Response sample: [{'model_name': 'Dense', 'mae_sum': 0.299327358603, 'mae': 0.099775786201, 't+1_mae': 0.070946060121, 't+1_mae.1': 0.070946060121, 't+1_mae.2': 0.070946060121}]
+2025-05-20 22:56:37,635 - DEBUG - main - Response: /api/test-metrics - Status: 200 - Client IP: 127.0.0.1 - Duration: 3.08ms
+2025-05-20 23:28:16,429 - DEBUG - main - Mounted static directory at /static: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 23:28:16,430 - DEBUG - main - Starting application
+2025-05-20 23:28:16,430 - DEBUG - main - Data directory exists: C:\Users\alber\anti-malarial-demand-forecast\data
+2025-05-20 23:28:16,431 - DEBUG - main - Static directory exists: C:\Users\alber\anti-malarial-demand-forecast\static
+2025-05-20 23:28:16,431 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 23:28:16,431 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 23:28:16,431 - DEBUG - main - Found required file: C:\Users\alber\anti-malarial-demand-forecast\data\predictions.csv
+2025-05-20 23:28:16,441 - DEBUG - main - selected_data.csv: 99 data rows, columns: ['avg_temp_max', 'avg_temp_min', 'avg_humidity', 'total_precipitation', 'total_sunshine_hours', 'ddd_demand']
+2025-05-20 23:28:16,443 - DEBUG - main - First row: {'avg_temp_max': 31.48, 'avg_temp_min': 18.21, 'avg_humidity': 45.61, 'total_precipitation': 1566.1, 'total_sunshine_hours': 40921.04, 'ddd_demand': 0.8647902406163}
+2025-05-20 23:28:16,444 - DEBUG - main - Validated test_metrics.csv: 4 rows, columns: ['model_name', 'mae_sum', 'mae', 't+1_mae', 't+1_mae.1', 't+1_mae.2']
+2025-05-20 23:28:16,446 - DEBUG - main - Validated predictions.csv: 12 rows, columns: ['model_name', 'date', 'predicted_demand']
+2025-05-20 23:28:16,446 - INFO - main - Startup validation completed successfully
+2025-05-20 23:28:45,741 - DEBUG - main - Request: GET / - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'none', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 23:28:45,741 - DEBUG - main - Redirecting root to /static/index.html
+2025-05-20 23:28:45,741 - DEBUG - main - Response: / - Status: 307 - Client IP: 127.0.0.1 - Duration: 0.00ms
+2025-05-20 23:28:45,747 - DEBUG - main - Request: GET /static/index.html - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'dnt': '1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'sec-fetch-site': 'none', 'sec-fetch-mode': 'navigate', 'sec-fetch-user': '?1', 'sec-fetch-dest': 'document', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b', 'if-none-match': '"122e060d7748ac1a781df85df0153c29"', 'if-modified-since': 'Tue, 20 May 2025 19:31:45 GMT'}
+2025-05-20 23:28:45,784 - DEBUG - main - Response: /static/index.html - Status: 304 - Client IP: 127.0.0.1 - Duration: 36.79ms
+2025-05-20 23:28:45,885 - DEBUG - main - Request: GET /api/input-data - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'dnt': '1', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:8000/static/index.html', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 23:28:45,886 - DEBUG - main - Received request for /api/input-data
+2025-05-20 23:28:45,886 - DEBUG - main - Loading CSV: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 23:28:45,887 - DEBUG - main - Loaded selected_data.csv: 99 data rows, columns: ['avg_temp_max', 'avg_temp_min', 'avg_humidity', 'total_precipitation', 'total_sunshine_hours', 'ddd_demand']
+2025-05-20 23:28:45,889 - DEBUG - main - First row: {'avg_temp_max': 31.48, 'avg_temp_min': 18.21, 'avg_humidity': 45.61, 'total_precipitation': 1566.1, 'total_sunshine_hours': 40921.04, 'ddd_demand': 0.8647902406163}
+2025-05-20 23:28:45,889 - DEBUG - main - Data types: {'avg_temp_max': dtype('float64'), 'avg_temp_min': dtype('float64'), 'avg_humidity': dtype('float64'), 'total_precipitation': dtype('float64'), 'total_sunshine_hours': dtype('float64'), 'ddd_demand': dtype('float64')}
+2025-05-20 23:28:45,892 - DEBUG - main - Data validation passed
+2025-05-20 23:28:45,902 - DEBUG - main - Selected last 12 rows: ['2024-04-01', '2024-05-01', '2024-06-01', '2024-07-01', '2024-08-01', '2024-09-01', '2024-10-01', '2024-11-01', '2024-12-01', '2025-01-01', '2025-02-01', '2025-03-01']
+2025-05-20 23:28:45,903 - DEBUG - main - Computed stats: {'max_temp_avg': 28.782501220703125, 'min_temp_avg': 18.127500534057617, 'humidity_avg': 68.30166625976562, 'precip_total': 141847.609375, 'sunshine_total': 445130.0, 'current_demand': 1.7332526445388794}
+2025-05-20 23:28:45,906 - INFO - main - Returning input data: 12 rows, stats keys: ['max_temp_avg', 'min_temp_avg', 'humidity_avg', 'precip_total', 'sunshine_total', 'current_demand']
+2025-05-20 23:28:45,906 - DEBUG - main - Response sample: [{'avg_temp_max': 27.719999313354492, 'avg_temp_min': 18.6200008392334, 'avg_humidity': 78.30000305175781, 'total_precipitation': 21083.19921875, 'total_sunshine_hours': 34248.2109375, 'ddd_demand': 1.788276195526123, 'date': '2024-04-01'}]
+2025-05-20 23:28:45,907 - DEBUG - main - Request: GET /api/test-metrics - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'dnt': '1', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:8000/static/index.html', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 23:28:45,907 - DEBUG - main - Received request for /api/test-metrics
+2025-05-20 23:28:45,908 - DEBUG - main - Loading CSV: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 23:28:45,909 - DEBUG - main - Loaded test_metrics.csv: 4 rows, columns: ['model_name', 'mae_sum', 'mae', 't+1_mae', 't+1_mae.1', 't+1_mae.2']
+2025-05-20 23:28:45,910 - DEBUG - main - First row: {'model_name': 'Dense', 'mae_sum': 0.299327358603, 'mae': 0.099775786201, 't+1_mae': 0.070946060121, 't+1_mae.1': 0.070946060121, 't+1_mae.2': 0.070946060121}
+2025-05-20 23:28:45,911 - INFO - main - Returning test metrics: 4 rows
+2025-05-20 23:28:45,911 - DEBUG - main - Response sample: [{'model_name': 'Dense', 'mae_sum': 0.299327358603, 'mae': 0.099775786201, 't+1_mae': 0.070946060121, 't+1_mae.1': 0.070946060121, 't+1_mae.2': 0.070946060121}]
+2025-05-20 23:28:45,911 - DEBUG - main - Response: /api/input-data - Status: 200 - Client IP: 127.0.0.1 - Duration: 26.39ms
+2025-05-20 23:28:45,912 - DEBUG - main - Response: /api/test-metrics - Status: 200 - Client IP: 127.0.0.1 - Duration: 5.00ms
+2025-05-20 23:28:45,914 - DEBUG - main - Request: GET /api/predictions - Client IP: 127.0.0.1 - Headers: {'host': 'localhost:8000', 'connection': 'keep-alive', 'sec-ch-ua-platform': '"Windows"', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0', 'sec-ch-ua': '"Chromium";v="136", "Microsoft Edge";v="136", "Not.A/Brand";v="99"', 'dnt': '1', 'sec-ch-ua-mobile': '?0', 'accept': '*/*', 'sec-fetch-site': 'same-origin', 'sec-fetch-mode': 'cors', 'sec-fetch-dest': 'empty', 'referer': 'http://localhost:8000/static/index.html', 'accept-encoding': 'gzip, deflate, br, zstd', 'accept-language': 'en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,sv;q=0.6,en-GB;q=0.5', 'cookie': 'ajs_anonymous_id=6d285159-4412-4482-aeb1-2cbc6e3a5c3b'}
+2025-05-20 23:28:45,914 - DEBUG - main - Received request for /api/predictions
+2025-05-20 23:28:45,914 - DEBUG - main - Loading CSV: C:\Users\alber\anti-malarial-demand-forecast\data\predictions.csv
+2025-05-20 23:28:45,916 - DEBUG - main - Loaded predictions.csv: 12 rows, columns: ['model_name', 'date', 'predicted_demand']
+2025-05-20 23:28:45,916 - DEBUG - main - First row: {'model_name': 'Dense', 'date': '2025-04-01', 'predicted_demand': 1.6158}
+2025-05-20 23:28:45,916 - DEBUG - main - Raw dates: ['2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01', '2025-04-01', '2025-05-01', '2025-06-01']
+2025-05-20 23:28:45,919 - DEBUG - main - Formatted dates: ['April 2025', 'May 2025', 'June 2025', 'April 2025', 'May 2025', 'June 2025', 'April 2025', 'May 2025', 'June 2025', 'April 2025', 'May 2025', 'June 2025']
+2025-05-20 23:28:45,920 - DEBUG - main - Model names: ['Dense', 'GRU', 'LSTM', 'transformer']
+2025-05-20 23:28:45,928 - DEBUG - main - Predictions structure: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.6103, 'June 2025': 1.3905}}
+2025-05-20 23:28:45,928 - DEBUG - main - Loading test metrics for best model: C:\Users\alber\anti-malarial-demand-forecast\data\test_metrics.csv
+2025-05-20 23:28:45,931 - DEBUG - main - Test MAEs: {'Dense': 0.099775786201, 'LSTM': 0.219373166561, 'GRU': 0.087615636488, 'transformer': 0.253565068046}, Best model: GRU
+2025-05-20 23:28:45,931 - DEBUG - main - Loading input data for last 6 months: C:\Users\alber\anti-malarial-demand-forecast\data\selected_data.csv
+2025-05-20 23:28:45,936 - DEBUG - main - Last 6 months dates: ['2024-10-01', '2024-11-01', '2024-12-01', '2025-01-01', '2025-02-01', '2025-03-01']
+2025-05-20 23:28:45,936 - INFO - main - Returning predictions: 4 models, best_model: GRU
+2025-05-20 23:28:45,936 - DEBUG - main - Response sample: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.5825, 'June 2025': 1.5041}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6706, 'June 2025': 1.2447}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4979, 'June 2025': 1.4128}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.6103, 'June 2025': 1.3905}}
+2025-05-20 23:28:45,937 - DEBUG - main - Response: /api/predictions - Status: 200 - Client IP: 127.0.0.1 - Duration: 23.06ms
