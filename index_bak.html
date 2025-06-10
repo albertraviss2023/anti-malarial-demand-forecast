@@ -1,49 +1,12 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uganda Malaria Dashboard</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Replace Chart.js with Plotly -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -90,10 +53,6 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        #map {
-            width: 100%;
-            height: 600px;
-        }
         .info {
             padding: 6px 8px;
             font: 14px/16px Arial, sans-serif;
@@ -117,7 +76,6 @@
             margin-right: 8px;
             opacity: 0.7;
         }
-        /* Glow effect for all markers */
         .district-marker {
             animation: glow 2s infinite alternate;
         }
@@ -131,59 +89,69 @@
             animation: low-glow 2s infinite alternate;
         }
         @keyframes high-glow {
-            from {
-                box-shadow: 0 0 5px #fff, 0 0 10px rgba(255, 0, 0, 0.7), 0 0 15px rgba(255, 0, 0, 0.7);
-            }
-            to {
-                box-shadow: 0 0 10px #fff, 0 0 20px rgba(255, 0, 0, 0.9), 0 0 30px rgba(255, 0, 0, 0.9);
-            }
+            from { box-shadow: 0 0 5px #fff, 0 0 10px rgba(255, 0, 0, 0.7), 0 0 15px rgba(255, 0, 0, 0.7); }
+            to { box-shadow: 0 0 10px #fff, 0 0 20px rgba(255, 0, 0, 0.9), 0 0 30px rgba(255, 0, 0, 0.9); }
         }
         @keyframes medium-glow {
-            from {
-                box-shadow: 0 0 5px #fff, 0 0 10px rgba(255, 165, 0, 0.7), 0 0 15px rgba(255, 165, 0, 0.7);
-            }
-            to {
-                box-shadow: 0 0 10px #fff, 0 0 20px rgba(255, 165, 0, 0.9), 0 0 30px rgba(255, 165, 0, 0.9);
-            }
+            from { box-shadow: 0 0 5px #fff, 0 0 10px rgba(255, 165, 0, 0.7), 0 0 15px rgba(255, 165, 0, 0.7); }
+            to { box-shadow: 0 0 10px #fff, 0 0 20px rgba(255, 165, 0, 0.9), 0 0 30px rgba(255, 165, 0, 0.9); }
         }
         @keyframes low-glow {
-            from {
-                box-shadow: 0 0 5px #fff, 0 0 10px rgba(0, 255, 0, 0.7), 0 0 15px rgba(0, 255, 0, 0.7);
-            }
-            to {
-                box-shadow: 0 0 10px #fff, 0 0 20px rgba(0, 255, 0, 0.9), 0 0 30px rgba(0, 255, 0, 0.9);
-            }
+            from { box-shadow: 0 0 5px #fff, 0 0 10px rgba(0, 255, 0, 0.7), 0 0 15px rgba(0, 255, 0, 0.7); }
+            to { box-shadow: 0 0 10px #fff, 0 0 20px rgba(0, 255, 0, 0.9), 0 0 30px rgba(0, 255, 0, 0.9); }
         }
         @keyframes flicker {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0.3;
-            }
+            from { opacity: 1; }
+            to { opacity: 0.3; }
         }
         .marker-circle {
-            width: 16px;
-            height: 16px;
+            width: 11px;
+            height: 11px;
             border-radius: 50%;
             border: 2px solid white;
             position: relative;
         }
         .filter-controls {
             margin-bottom: 10px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
         }
         .filter-controls select {
             padding: 5px;
             font-size: 14px;
         }
+        .map-and-chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        #map {
+            flex: 2;
+            min-width: 300px;
+            height: 500px;
+        }
+        .chart-container {
+            flex: 1;
+            min-width: 300px;
+            height: 500px;
+        }
+        /* New style for Plotly chart */
+        .plotly-chart {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
         @media (max-width: 768px) {
-            #map {
+            .map-and-chart-container {
+                flex-direction: column;
+            }
+            #map, .chart-container {
+                width: 100%;
                 height: 400px;
             }
-            .tab button {
-                padding: 10px 12px;
-                font-size: 14px;
-            }
+            .tab button { padding: 10px 12px; font-size: 14px; }
+            .filter-controls { flex-direction: column; align-items: flex-start; gap: 10px; }
         }
     </style>
 </head>
@@ -200,33 +168,45 @@
 
     <div id="Overview" class="tabcontent">
         <h2>Overview</h2>
-        <p>Welcome to the Uganda Malaria Dashboard. This section provides a summary of malaria cases across the country as of May 2025.</p>
-        <!-- Placeholder for overview content -->
+        <p>Welcome to the Uganda Malaria Dashboard. This section provides a summary of malaria cases across the country for April to June 2025.</p>
     </div>
 
     <div id="Trends" class="tabcontent">
         <h2>Trends</h2>
         <p>View trends in malaria cases over time.</p>
-        <!-- Placeholder for trends content -->
     </div>
 
     <div id="Map" class="tabcontent">
         <h2>Malaria Cases Map</h2>
         <div class="filter-controls">
-            <label for="statusFilter">Filter by Status: </label>
-            <select id="statusFilter" onchange="filterMarkers()">
-                <option value="all">All</option>
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-            </select>
+            <div>
+                <label for="monthFilter">Select Month: </label>
+                <select id="monthFilter" onchange="updateMap()">
+                    <option value="April">April 2025</option>
+                    <option value="May">May 2025</option>
+                    <option value="June">June 2025</option>
+                </select>
+            </div>
+            <div>
+                <label for="statusFilter">Filter by Status: </label>
+                <select id="statusFilter" onchange="filterMarkers()">
+                    <option value="all">All</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </div>
         </div>
-        <div id="map"></div>
+        <div class="map-and-chart-container">
+            <div id="map"></div>
+            <div class="chart-container">
+                <div id="statusTrendChart" class="plotly-chart"></div>
+            </div>
+        </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        // District data with coordinates
         const districts = [
             {"district": "Abim", "latitude": 2.7032, "longitude": 33.6732},
             {"district": "Adjumani", "latitude": 3.3869, "longitude": 31.7909},
@@ -349,29 +329,42 @@
             {"district": "Zombo", "latitude": 2.5333, "longitude": 30.9167}
         ];
 
-        // Generate synthetic malaria cases data
         function generateMalariaData() {
-            const threshold = 500;
+            const threshold = 750;
             return districts.map(district => {
-                const cases = Math.floor(Math.random() * 900) + 100;
-                let status;
-                if (cases > threshold) {
-                    status = 'high';
-                } else if (cases > threshold * 0.95) {
-                    status = 'medium';
-                } else {
-                    status = 'low';
-                }
-                return { ...district, cases, status };
+                const casesApril = Math.floor(Math.random() * 1000) + 100;
+                const casesMay = Math.floor(Math.random() * 1000) + 100;
+                const casesJune = Math.floor(Math.random() * 1000) + 100;
+
+                const getStatus = (cases) => {
+                    if (cases > threshold) return 'high';
+                    else if (cases > threshold * 0.7) return 'medium';
+                    else return 'low';
+                };
+
+                return {
+                    ...district,
+                    cases: {
+                        April: casesApril,
+                        May: casesMay,
+                        June: casesJune
+                    },
+                    status: {
+                        April: getStatus(casesApril),
+                        May: getStatus(casesMay),
+                        June: getStatus(casesJune)
+                    }
+                };
             });
         }
 
         const malariaData = generateMalariaData();
         let map, districtsLayer;
+        let currentMonth = 'April';
+        let statusTrendChart = null;
 
-        // Initialize map when Map tab is opened
         function initMap() {
-            if (map) return; // Prevent reinitialization
+            if (map) return;
 
             map = L.map('map').setView([1.3733, 32.2903], 7);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -379,63 +372,18 @@
             }).addTo(map);
 
             districtsLayer = L.layerGroup().addTo(map);
-
-            function getColor(status) {
-                return status === 'high' ? 'red' :
-                       status === 'medium' ? 'orange' : 'green';
-            }
-
-            function getGlowClass(status) {
-                return status === 'high' ? 'high-glow' :
-                       status === 'medium' ? 'medium-glow' : 'low-glow';
-            }
-
-            malariaData.forEach(data => {
-                const icon = L.divIcon({
-                    className: `district-marker ${getGlowClass(data.status)}`,
-                    html: `<div class="marker-circle" style="background-color: ${getColor(data.status)}"></div>`,
-                    iconSize: [20, 20],
-                    iconAnchor: [10, 10]
-                });
-
-                const marker = L.marker([data.latitude, data.longitude], {
-                    icon: icon,
-                    riseOnHover: true,
-                    data: data // Store data for filtering
-                });
-
-                marker.bindPopup(`
-                    <div style="min-width: 200px;">
-                        <b>${data.district}</b><br>
-                        Malaria Cases: <strong>${data.cases}</strong><br>
-                        Status: <span style="color: ${getColor(data.status)}">${data.status}</span>
-                        <div style="margin-top: 5px; height: 5px; width: 100%; 
-                             background: linear-gradient(to right, #4CAF50 0%, #FFC107 50%, #F44336 100%); 
-                             background-position: ${100 - (data.cases / 10)}% 0;
-                             border-radius: 3px;"></div>
-                    </div>
-                `);
-
-                marker.bindTooltip(
-                    `${data.district}: ${data.cases} cases`,
-                    { direction: 'top', offset: [0, -10] }
-                );
-
-                marker.addTo(districtsLayer);
-            });
+            updateMap();
 
             const legend = L.control({position: 'bottomright'});
             legend.onAdd = function() {
                 const div = L.DomUtil.create('div', 'info legend');
                 const statuses = ['high', 'medium', 'low'];
                 const colors = ['red', 'orange', 'green'];
-                const labels = ['Above threshold (Flickering)', 'Within 5% of threshold (Flickering)', 'Below threshold'];
+                const labels = ['Above threshold (Flickering)', 'Within 30% of threshold (Flickering)', 'Below threshold'];
 
                 div.innerHTML = '<h4>Malaria Cases Status</h4>';
                 for (let i = 0; i < statuses.length; i++) {
-                    div.innerHTML += 
-                        '<i style="background:' + colors[i] + '"></i> ' + 
-                        labels[i] + '<br>';
+                    div.innerHTML += '<i style="background:' + colors[i] + '"></i> ' + labels[i] + '<br>';
                 }
                 return div;
             };
@@ -450,22 +398,217 @@
             info.update = function(props) {
                 this._div.innerHTML = '<h4>Uganda Malaria Cases</h4>' + 
                     (props ? 
-                        `<b>${props.district}</b><br>Cases: ${props.cases}` : 
-                        'Click on a district for details<br>Data as of May 2025');
+                        `<b>${props.district}</b><br>Cases in ${currentMonth} 2025: ${props.cases[currentMonth]}` : 
+                        `Click on a district for details<br>Data for ${currentMonth} 2025`);
             };
             info.addTo(map);
         }
 
-        // Filter markers based on status
+        function updateMap() {
+            currentMonth = document.getElementById('monthFilter').value;
+            districtsLayer.clearLayers();
+
+            function getColor(status) {
+                return status === 'high' ? 'red' :
+                       status === 'medium' ? 'orange' : 'green';
+            }
+
+            function getGlowClass(status) {
+                return status === 'high' ? 'high-glow' :
+                       status === 'medium' ? 'medium-glow' : 'low-glow';
+            }
+
+            malariaData.forEach(data => {
+                const currentCases = data.cases[currentMonth];
+                const currentStatus = data.status[currentMonth];
+
+                const icon = L.divIcon({
+                    className: `district-marker ${getGlowClass(currentStatus)}`,
+                    html: `<div class="marker-circle" style="background-color: ${getColor(currentStatus)}"></div>`,
+                    iconSize: [13, 13],
+                    iconAnchor: [7, 7]
+                });
+
+                const marker = L.marker([data.latitude, data.longitude], {
+                    icon: icon,
+                    riseOnHover: true,
+                    data: data
+                });
+
+                marker.bindPopup(`
+                    <div style="min-width: 200px;">
+                        <b>${data.district}</b><br>
+                        Malaria Cases in ${currentMonth} 2025: <strong>${currentCases}</strong><br>
+                        Status: <span style="color: ${getColor(currentStatus)}">${currentStatus}</span>
+                        <div style="margin-top: 5px; height: 5px; width: 100%; 
+                             background: linear-gradient(to right, #4CAF50 0%, #FFC107 50%, #F44336 100%); 
+                             background-position: ${100 - (currentCases / 10)}% 0;
+                             border-radius: 3px;"></div>
+                    </div>
+                `);
+
+                marker.bindTooltip(
+                    `${data.district}: ${currentCases} cases (${currentMonth} 2025)`,
+                    { direction: 'top', offset: [0, -10] }
+                );
+
+                marker.addTo(districtsLayer);
+            });
+
+            const infoControl = map._controlContainer.querySelector('.info');
+            if (infoControl) {
+                infoControl.innerHTML = `<h4>Uganda Malaria Cases</h4>Click on a district for details<br>Data for ${currentMonth} 2025`;
+            }
+
+            filterMarkers();
+            renderStatusTrendChart();
+        }
+
         function filterMarkers() {
             const filterValue = document.getElementById('statusFilter').value;
             districtsLayer.eachLayer(layer => {
-                const markerStatus = layer.options.data.status;
-                layer.setOpacity(filterValue === 'all' || markerStatus === filterValue ? 1 : 0);
+                const markerData = layer.options.data;
+                const currentStatus = markerData.status[currentMonth];
+                const shouldShow = filterValue === 'all' || currentStatus === filterValue;
+                layer.setOpacity(shouldShow ? 1 : 0);
+                layer.getElement().style.display = shouldShow ? 'block' : 'none';
             });
         }
 
-        // Tab functionality
+        function renderStatusTrendChart() {
+            const months = ['April', 'May', 'June'];
+            const counts = {
+                high: months.map(month => malariaData.filter(d => d.status[month] === 'high').length),
+                medium: months.map(month => malariaData.filter(d => d.status[month] === 'medium').length),
+                low: months.map(month => malariaData.filter(d => d.status[month] === 'low').length)
+            };
+
+            const highTrace = {
+                x: months.map(m => `${m} 2025`),
+                y: counts.high,
+                name: 'High',
+                mode: 'lines+markers',
+                line: {
+                    color: '#EF553B',
+                    width: 3,
+                    shape: 'spline'
+                },
+                marker: {
+                    size: 8,
+                    color: '#EF553B'
+                }
+            };
+
+            const mediumTrace = {
+                x: months.map(m => `${m} 2025`),
+                y: counts.medium,
+                name: 'Medium',
+                mode: 'lines+markers',
+                line: {
+                    color: '#FFA15A',
+                    width: 3,
+                    shape: 'spline'
+                },
+                marker: {
+                    size: 8,
+                    color: '#FFA15A'
+                }
+            };
+
+            const lowTrace = {
+                x: months.map(m => `${m} 2025`),
+                y: counts.low,
+                name: 'Low',
+                mode: 'lines+markers',
+                line: {
+                    color: '#00CC96',
+                    width: 3,
+                    shape: 'spline'
+                },
+                marker: {
+                    size: 8,
+                    color: '#00CC96'
+                }
+            };
+
+            const layout = {
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                font: {
+                    family: 'Arial, sans-serif',
+                    size: 12,
+                    color: '#333'
+                },
+                margin: {
+                    l: 50,
+                    r: 30,
+                    b: 50,
+                    t: 50,
+                    pad: 10
+                },
+                xaxis: {
+                    showgrid: false,
+                    linecolor: '#999',
+                    linewidth: 1,
+                    mirror: true,
+                    tickfont: {
+                        size: 11
+                    }
+                },
+                yaxis: {
+                    showgrid: true,
+                    gridcolor: '#eee',
+                    linecolor: '#999',
+                    linewidth: 1,
+                    mirror: true,
+                    tickfont: {
+                        size: 11
+                    },
+                    title: {
+                        text: 'Number of Districts',
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                legend: {
+                    orientation: 'h',
+                    y: -0.2,
+                    x: 0.5,
+                    xanchor: 'center'
+                },
+                hovermode: 'closest',
+                hoverlabel: {
+                    bgcolor: '#fff',
+                    bordercolor: '#ddd',
+                    font: {
+                        size: 12
+                    }
+                },
+                title: {
+                    text: 'Trend of District Status Across Months',
+                    font: {
+                        size: 16,
+                        color: '#333'
+                    },
+                    x: 0.5,
+                    xanchor: 'center'
+                }
+            };
+
+            const config = {
+                responsive: true,
+                displayModeBar: false
+            };
+
+            Plotly.newPlot(
+                'statusTrendChart',
+                [highTrace, mediumTrace, lowTrace],
+                layout,
+                config
+            );
+        }
+
         function openTab(evt, tabName) {
             const tabcontent = document.getElementsByClassName("tabcontent");
             for (let i = 0; i < tabcontent.length; i++) {
@@ -482,11 +625,12 @@
 
             if (tabName === 'Map') {
                 initMap();
-                setTimeout(() => map.invalidateSize(), 0); // Fix map rendering
+                setTimeout(() => {
+                    if (map) map.invalidateSize();
+                }, 0);
             }
         }
 
-        // Open default tab
         document.getElementById("defaultOpen").click();
     </script>
 </body>
