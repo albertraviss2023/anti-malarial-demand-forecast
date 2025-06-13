@@ -38,10 +38,13 @@ services:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER:-airflow}:${POSTGRES_PASSWORD:-airflow}@postgres/${POSTGRES_DB:-prod_db}
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW__WEBSERVER__SECRET_KEY:-your_secure_random_key}
+      AIRFLOW__LOGGING__REMOTE_LOGGING: 'false'
       _AIRFLOW_DB_MIGRATE: 'true'
       _AIRFLOW_WWW_USER_CREATE: 'true'
       _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-admin}
       _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-admin}
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'True'
     command: ["bash", "-c", "airflow db init && (airflow users list | grep -q admin || airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com)"]
     restart: on-failure
     networks:
@@ -63,8 +66,14 @@ services:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER:-airflow}:${POSTGRES_PASSWORD:-airflow}@postgres/${POSTGRES_DB:-prod_db}
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW__WEBSERVER__SECRET_KEY:-your_secure_random_key}
+      AIRFLOW__LOGGING__REMOTE_LOGGING: 'false'
+      AIRFLOW__CORE__BASE_LOG_FOLDER: /opt/airflow/logs
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'True'
     volumes:
       - ../dags:/opt/airflow/dags
+      - ../logs:/opt/airflow/logs:rw
+      - ../spark_jobs:/opt/spark_jobs
     ports:
       - "8080:8080"
     command: ["airflow", "webserver"]
@@ -86,8 +95,14 @@ services:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER:-airflow}:${POSTGRES_PASSWORD:-airflow}@postgres/${POSTGRES_DB:-prod_db}
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW__WEBSERVER__SECRET_KEY:-your_secure_random_key}
+      AIRFLOW__LOGGING__REMOTE_LOGGING: 'false'
+      AIRFLOW__CORE__BASE_LOG_FOLDER: /opt/airflow/logs
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'True'
     volumes:
       - ../dags:/opt/airflow/dags
+      - ../logs:/opt/airflow/logs:rw
+      - ../spark_jobs:/opt/spark_jobs
     command: ["airflow", "scheduler"]
     restart: always
     networks:
@@ -98,18 +113,57 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  spark:
+  spark-master:
     build: ./spark
     volumes:
       - ../spark_jobs:/opt/spark_jobs
-    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master"]
+      - ../logs:/opt/spark_logs:rw
+      - ./spark/conf/spark-master.conf:/opt/spark/conf/spark-defaults.conf
+    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master", "--host", "spark-master", "--port", "7077", "--webui-port", "8080"]
     ports:
-      - "7077:7077"
-      - "8081:8080"
+      - "7077:7077"   # Spark master port
+      - "8081:8080"   # Spark master web UI (mapped to avoid conflict with Airflow)
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_HOST=spark-master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_MASTER_WEBUI_PORT=8080
     restart: always
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - pipeline_net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  spark-worker:
+    build: ./spark
+    volumes:
+      - ../spark_jobs:/opt/spark_jobs
+      - ../logs:/opt/spark_logs:rw
+      - ./spark/conf/spark-worker.conf:/opt/spark/conf/spark-defaults.conf
+    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077", "--port", "7078", "--webui-port", "8081"]
+    ports:
+      - "7078:7078"   # Spark worker port
+      - "8082:8081"   # Spark worker web UI
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_MEMORY=2g
+      - SPARK_WORKER_PORT=7078
+      - SPARK_WORKER_WEBUI_PORT=8081
+    depends_on:
+      - spark-master
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2048M
     networks:
       - pipeline_net
     logging:
@@ -125,3 +179,4 @@ volumes:
 networks:
   pipeline_net:
     name: pipeline_net
+    
