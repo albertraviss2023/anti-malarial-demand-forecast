@@ -1,0 +1,1 @@
+docker-compose -f docker-compose-mssql.yml up -d --build

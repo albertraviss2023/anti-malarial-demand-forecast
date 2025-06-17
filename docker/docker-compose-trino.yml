@@ -1,0 +1,60 @@
+services:
+  trino-coordinator:
+    image: custom-trino:local
+    build:
+      context: ./trino
+    ports:
+      - "8084:8084"
+    volumes:
+      - ../data/trino:/var/trino/data
+      - ./trino/config/coordinator:/etc/trino:ro
+    environment:
+      TRINO_DISCOVERY_URI: http://trino-coordinator:8084
+    depends_on:
+      - iceberg-rest
+      - minio
+    networks:
+      - pipeline_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/v1/info"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2048M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  trino-worker:
+    image: custom-trino:local
+    build:
+      context: ./trino
+    volumes:
+      - ./trino/config/worker:/etc/trino:ro
+    environment:
+      TRINO_DISCOVERY_URI: http://trino-coordinator:8084
+    depends_on:
+      - trino-coordinator
+    networks:
+      - pipeline_net
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2048M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  pipeline_net:
+    external: true
+    

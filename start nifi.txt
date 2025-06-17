@@ -1,0 +1,4 @@
+docker-compose `
+  -f docker-compose-nifi.yml `
+  -f docker-compose-minio.yml `
+  up -d 

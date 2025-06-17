@@ -1,0 +1,48 @@
+# Tier 1: postgres, zookeeper, minio, mssql
+docker-compose -f docker-compose.yml up -d --build postgres
+docker-compose -f docker-compose-kafka.yml up -d zookeeper
+docker-compose -f docker-compose-minio.yml up -d minio
+docker-compose -f docker-compose-mssql.yml up -d mssql
+
+# Wait for Tier 1 to be healthy
+docker inspect --format "{{.State.Health.Status}}" docker-postgres-1 | findstr "healthy"
+docker inspect --format "{{.State.Health.Status}}" docker-zookeeper-1 | findstr "healthy"
+docker inspect --format "{{.State.Health.Status}}" minio | findstr "healthy"
+docker inspect --format "{{.State.Health.Status}}" docker-mssql-1 | findstr "healthy"
+
+# Tier 2: kafka, mc, airflow-init
+docker-compose -f docker-compose-kafka.yml up -d kafka
+docker-compose -f docker-compose-minio.yml up -d mc
+docker-compose -f docker-compose.yml up -d --build airflow-init
+
+# Wait for Tier 2 (mc exits, so no healthcheck)
+docker inspect --format "{{.State.Health.Status}}" kafka-1 | findstr "healthy"
+docker inspect --format "{{.State.Status}}" mc | findstr "exited"
+docker inspect --format "{{.State.Health.Status}}" airflow-init-1 | findstr "healthy"
+
+# Tier 3: airflow-webserver, airflow-scheduler, iceberg-rest
+docker-compose -f docker-compose.yml up -d --build airflow-webserver airflow-scheduler
+docker-compose -f docker-compose-iceberg.yml up -d iceberg-rest
+
+# Wait for Tier 3
+docker inspect --format "{{.State.Health.Status}}" airflow-webserver | findstr "healthy"
+docker inspect --format "{{.State.Health.Status}}" iceberg-rest | findstr "healthy"
+
+# Tier 4: spark-master, spark-worker, jupyter, nifi, trino
+docker-compose `
+  -f docker-compose.yml `
+  -f docker-compose-minio.yml `
+  -f docker-compose-kafka.yml `
+  -f docker-compose-mssql.yml `
+  -f docker-compose-nifi.yml `
+  -f docker-compose-iceberg.yml `
+  -f docker-compose-trino.yml `
+  -f docker-compose-jupyter.yml `
+  up -d --build
+
+
+# Wait for Tier 4
+docker inspect --format "{{.State.Health.Status}}" spark-master | findstr "healthy"
+docker inspect --format "{{.State.Health.Status}}" jupyter | findstr "healthy"
+docker inspect --format "{{.State.Health.Status}}" nifi | findstr "healthy"
+docker inspect --format "{{.State.Health.Status}}" trino | findstr "healthy"
