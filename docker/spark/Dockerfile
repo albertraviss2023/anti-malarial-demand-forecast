@@ -21,11 +21,23 @@ RUN python3 -m pip install --upgrade pip
 # Install Python packages
 RUN pip3 install \
     pyspark \
-    pyiceberg==0.7.1 \
     confluent-kafka==2.5.3 \
-    minio==7.2.8
+    minio==7.2.8 \
+    pyspark[sql] \
+    jupyterlab==4.2.5 \
+    pyiceberg[pyarrow,duckdb,pandas] \
+    jupysql==0.10.12 \
+    chispa \
+    pyarrow>=14.0.0 \
+    pandas>=1.5.3 \
+    duckdb>=0.10.0 \
+    grpcio>=1.48.1 \
+    ipython-sql \
+    sql \
+    sqlalchemy \
+    posthog==2.5.0 \
+    findspark
 
-# Add required jars
 RUN mkdir -p /opt/spark/jars && \
     wget -q https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-3.5_2.12/1.6.1/iceberg-spark-runtime-3.5_2.12-1.6.1.jar -O /opt/spark/jars/iceberg-spark-runtime.jar && \
     wget -q https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/3.6.2/kafka-clients-3.6.2.jar -O /opt/spark/jars/kafka-clients.jar
@@ -35,3 +47,21 @@ WORKDIR /opt/spark
 # Set JAVA_HOME
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 ENV PATH=$JAVA_HOME/bin:$PATH
+
+# Configure ZSH
+RUN wget https://github.com/ohmyzsh/ohmyzsh/raw/master/tools/install.sh -O - | zsh || true
+ENV TERM xterm
+ENV ZSH_THEME robbyrussell
+RUN chsh -s /usr/bin/zsh
+
+# Configure Python
+# ENV PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9.7-src.zip:$PYTHONPATH
+
+COPY jupyter_server_config.py /root/.jupyter/
+COPY themes.jupyterlab-settings /root/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/
+
+# Copy the startup script for jupyter and spark
+COPY start-spark-jupyter-server.sh /opt/start-spark-jupyter-server.sh
+RUN chmod +x /opt/start-spark-jupyter-server.sh
+# Clean up
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*

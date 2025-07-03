@@ -1,91 +1,71 @@
-# Makefile for managing multi-compose Docker stacks with dependencies
+# Makefile for managing Docker Compose services
 
-# Compose files for individual services
-COMPOSE_CORE=docker-compose.yml
-COMPOSE_MINIO=docker-compose-minio.yml
-COMPOSE_KAFKA=docker-compose-kafka.yml
-COMPOSE_ICEBERG=docker-compose-iceberg.yml
-COMPOSE_JUPYTER=docker-compose-jupyter.yml
-COMPOSE_NIFI=docker-compose-nifi.yml
-COMPOSE_MSSQL=docker-compose-mssql.yml
-COMPOSE_TRINO=docker-compose-trino.yml
+# Start services in detached mode
+up:
+	docker compose up -d
 
-# Base docker-compose command helper with files
-dc = docker-compose
 
-# Compose files joined for convenience, separated by space
-# Compose files to bring up core dependencies for a Jupyter stack
-JUPYTER_STACK = -f $(COMPOSE_CORE) -f $(COMPOSE_MINIO) -f $(COMPOSE_JUPYTER) -f $(COMPOSE_ICEBERG)
-NIFI_STACK    = -f $(COMPOSE_MINIO) -f $(COMPOSE_KAFKA) -f $(COMPOSE_MSSQL) -f $(COMPOSE_NIFI)
-TRINO_STACK   = -f $(COMPOSE_MINIO) -f $(COMPOSE_ICEBERG) -f $(COMPOSE_TRINO)
-
-.PHONY: help all start-core start-minio start-kafka start-iceberg start-jupyter start-nifi start-trino \
-        stop-core stop-minio stop-kafka stop-iceberg stop-jupyter stop-nifi stop-trino \
-        down clean
-
-help:
-	@echo "Usage:"
-	@echo "  make start-core       # Start core services (spark-master)"
-	@echo "  make start-minio      # Start MinIO"
-	@echo "  make start-kafka      # Start Kafka and Zookeeper"
-	@echo "  make start-iceberg    # Start Iceberg REST (depends on MinIO)"
-	@echo "  make start-jupyter    # Start Jupyter stack with dependencies"
-	@echo "  make start-nifi       # Start NiFi stack"
-	@echo "  make start-trino      # Start Trino stack"
-	@echo "  make stop-<service>   # Stop specific services"
-	@echo "  make down             # Stop and remove all containers"
-	@echo "  make clean            # Remove all containers, volumes, and networks"
-
-# Start core (spark-master) only
-start-core:
-	$(dc) -f $(COMPOSE_CORE) up -d --build
-
-start-minio:
-	$(dc) -f $(COMPOSE_MINIO) up -d --build minio
-
-start-kafka:
-	$(dc) -f $(COMPOSE_KAFKA) up -d --build zookeeper kafka
-
-start-iceberg:
-	$(dc) -f $(COMPOSE_MINIO) -f $(COMPOSE_ICEBERG) up -d --build iceberg-rest
-
-start-jupyter:
-	$(dc) $(JUPYTER_STACK) up -d --build spark-master minio jupyter iceberg-rest
-
-start-nifi:
-	$(dc) $(NIFI_STACK) up -d --build minio kafka mssql nifi
-
-start-trino:
-	$(dc) $(TRINO_STACK) up -d --build minio iceberg-rest trino
-
-# Stop specific service(s)
-stop-core:
-	$(dc) -f $(COMPOSE_CORE) stop 
-
-stop-minio:
-	$(dc) -f $(COMPOSE_MINIO) stop minio
-
-stop-kafka:
-	$(dc) -f $(COMPOSE_KAFKA) stop zookeeper kafka
-
-stop-iceberg:
-	$(dc) -f $(COMPOSE_ICEBERG) stop iceberg-rest
-
-stop-jupyter:
-	$(dc) $(JUPYTER_STACK) stop spark-master minio kafka jupyter
-
-stop-nifi:
-	$(dc) $(NIFI_STACK) stop minio kafka mssql nifi
-
-stop-trino:
-	$(dc) $(TRINO_STACK) stop minio iceberg-rest trino
-
-# Down / clean all services and volumes/networks
+# Stop and remove services, networks, and volumes defined in docker-compose.yml
 down:
-	$(dc) -f $(COMPOSE_CORE) -f $(COMPOSE_MINIO) -f $(COMPOSE_KAFKA) -f $(COMPOSE_ICEBERG) \
-		-f $(COMPOSE_JUPYTER) -f $(COMPOSE_NIFI) -f $(COMPOSE_MSSQL) -f $(COMPOSE_TRINO) down
+	docker compose down --volumes --remove-orphans
 
-clean: down
-	docker system prune -f
+# Stop all services without removing them
+stop:
+	docker compose stop
+
+# Start all stopped services
+start:
+	docker compose start
+	
+# Restart all services
+restart:
+	docker compose restart
+	
+# Build or rebuild images
+build:
+	docker compose build --no-cache
+
+bake:
+	docker buildx bake --no-cache
+
+# Build or rebuild images
+bcache:
+	docker compose build
+
+# Prune unused containers, images, networks, and volumes
+prune:
+	docker system prune -a --volumes -f
+
+# Delete all stopped containers
+clean-containers:
+	docker container prune -f
+
+# Delete all unused images
+clean-images:
+	docker image prune -a -f
+
+# Delete all unused volumes
+clean-volumes:
 	docker volume prune -f
+
+# Delete all unused networks
+clean-networks:
 	docker network prune -f
+
+# Comprehensive cleanup: stop and remove all services, containers, images, volumes, and networks
+clean-all: down clean-containers clean-images clean-volumes clean-networks
+
+# View logs for all services
+logs:
+	docker compose logs -f
+
+# View logs for a specific service (e.g., make logs-service SERVICE=spark-master)
+logs-service:
+	docker compose logs -f $(SERVICE)
+
+# Check the status of all servicesmake 
+ps:
+	docker compose ps
+
+# Declare all targets as phony to avoid conflicts with files
+.PHONY: up down stop start restart build prune clean-containers clean-images clean-volumes c

@@ -1,4 +1,0 @@
-docker-compose `
-  -f docker-compose-iceberg.yml `
-  -f docker-compose-minio.yml `
-  up -d --build

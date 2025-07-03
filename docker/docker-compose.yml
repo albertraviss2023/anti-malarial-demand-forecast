@@ -74,6 +74,8 @@ services:
       - ../dags:/opt/airflow/dags
       - ../logs:/opt/airflow/logs:rw
       - ../spark_jobs:/opt/spark_jobs
+      - ./data:/opt/data
+      - ./notebooks:/opt/notebooks
     ports:
       - "8080:8080"
     command: ["airflow", "webserver"]
@@ -103,6 +105,8 @@ services:
       - ../dags:/opt/airflow/dags
       - ../logs:/opt/airflow/logs:rw
       - ../spark_jobs:/opt/spark_jobs
+      - ./data:/opt/data
+      - ./notebooks:/opt/notebooks
     command: ["airflow", "scheduler"]
     restart: always
     networks:
@@ -119,10 +123,16 @@ services:
       - ../spark_jobs:/opt/spark_jobs
       - ../logs:/opt/spark_logs:rw
       - ./spark/conf/spark-master.conf:/opt/spark/conf/spark-defaults.conf
-    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master", "--host", "spark-master", "--port", "7077", "--webui-port", "8080"]
+      - ./data:/opt/data
+      - ./notebooks:/home/notebooks
+    command: ["/opt/start-spark-jupyter-server.sh", "master"]
     ports:
-      - "7077:7077"   # Spark master port
-      - "8081:8080"   # Spark master web UI (mapped to avoid conflict with Airflow)
+      - 8888:8888
+      - 7077:7077
+      - 8081:8080
+      - 10000:10000
+      - 10001:10001
+      - 4040-4042:4040-4042
     environment:
       - SPARK_MODE=master
       - SPARK_MASTER_HOST=spark-master
@@ -146,10 +156,12 @@ services:
       - ../spark_jobs:/opt/spark_jobs
       - ../logs:/opt/spark_logs:rw
       - ./spark/conf/spark-worker.conf:/opt/spark/conf/spark-defaults.conf
-    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077", "--port", "7078", "--webui-port", "8081"]
+      - ./data:/opt/data
+      - ./notebooks:/home/notebooks
+    command: ["/opt/start-spark-jupyter-server.sh", "worker"]
     ports:
-      - "7078:7078"   # Spark worker port
-      - "8082:8081"   # Spark worker web UI
+      - 7078:7078
+      - 8082:8081
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER=spark://spark-master:7077
