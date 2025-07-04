@@ -45,4 +45,5 @@ RUN pip3 install --no-cache-dir --upgrade pip && \
         pyodbc==5.1.0 \
         confluent-kafka==2.5.0 \
         minio==7.2.8 \
-        pymssql==2.2.11
+        pymssql==2.2.11 \
+        apache-airflow-providers-papermill

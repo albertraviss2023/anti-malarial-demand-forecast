@@ -1,0 +1,39 @@
+from airflow import DAG
+from airflow.providers.papermill.operators.papermill import PapermillOperator
+from datetime import datetime
+
+default_args = {
+    'owner': 'airflow',
+    'start_date': datetime(2025, 1, 1),  # always in the past
+}
+
+with DAG(
+    dag_id='etl_notebook_pipeline',
+    default_args=default_args,
+    schedule_interval=None,
+    catchup=False
+) as dag:
+
+    extract_task = PapermillOperator(
+        task_id='extract_data',
+        input_nb='/opt/notebooks/extract.ipynb',
+        output_nb='/opt/airflow/logs/extract_output_{{ execution_date }}.ipynb',
+        parameters={}
+    )
+
+    transform_task = PapermillOperator(
+        task_id='transform_data',
+        input_nb='/opt/notebooks/Transform.ipynb',
+        output_nb='/opt/airflow/logs/transform_output_{{ execution_date }}.ipynb',
+        parameters={}
+    )
+
+    load_task = PapermillOperator(
+        task_id='load_data',
+        input_nb='/opt/notebooks/Load.ipynb',
+        output_nb='/opt/airflow/logs/load_output_{{ execution_date }}.ipynb',
+        parameters={}
+    )
+
+    # Define order: E → T → L
+    extract_task >> transform_task >> load_task
