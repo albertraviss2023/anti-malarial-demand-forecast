@@ -8,7 +8,7 @@ if [[ "$ROLE" == "master" ]]; then
   /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master \
     --host spark-master --port 7077 --webui-port 8080 > /tmp/spark-master.log 2>&1 &
 
-  echo "Starting Jupyter Lab..."
+  echo "Starting Jupyter Notebook Server..."
   exec jupyter lab \
     --config=/root/.jupyter/jupyter_server_config.py \
     --no-browser --allow-root \
