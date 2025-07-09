@@ -32,6 +32,18 @@ bake:
 bcache:
 	docker compose build
 
+# Build only Airflow-related services (init, scheduler, webserver)
+airflow:
+	docker compose up -d --no-deps --build airflow-init airflow-scheduler airflow-webserver
+
+# Build only Spark-related services (master + worker)
+spark:
+	docker compose up -d --no-deps --build spark-master spark-worker
+
+# Build only Postgres service
+postgres:
+	docker compose up -d --no-deps --build postgres
+
 # Prune unused containers, images, networks, and volumes
 prune:
 	docker system prune -a --volumes -f
@@ -68,4 +80,9 @@ ps:
 	docker compose ps
 
 # Declare all targets as phony to avoid conflicts with files
-.PHONY: up down stop start restart build prune clean-containers clean-images clean-volumes c
+.PHONY: \
+  up down stop start restart build bcache bake prune \
+  airflow spark postgres \
+  clean-containers clean-images clean-volumes clean-networks clean-all \
+  logs logs-service ps
+

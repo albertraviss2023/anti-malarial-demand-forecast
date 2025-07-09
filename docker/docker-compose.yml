@@ -38,14 +38,17 @@ services:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER:-airflow}:${POSTGRES_PASSWORD:-airflow}@postgres/${POSTGRES_DB:-prod_db}
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
-      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW__WEBSERVER__SECRET_KEY:-your_secure_random_key}
+      AIRFLOW__API__SECRET_KEY: ${AIRFLOW__WEBSERVER__SECRET_KEY:-your_secure_random_key}
       AIRFLOW__LOGGING__REMOTE_LOGGING: 'false'
       _AIRFLOW_DB_MIGRATE: 'true'
       _AIRFLOW_WWW_USER_CREATE: 'true'
       _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-admin}
       _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-admin}
       AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'True'
+      AIRFLOW_ADMIN_PASSWORD: ${AIRFLOW_ADMIN_PASSWORD:-admin}
+      AIRFLOW__WEBSERVER__AUTH_BACKEND: airflow.auth.managers.fab.auth_manager.FabAuthManager
     command: ["bash", "-c", "airflow db init && (airflow users list | grep -q admin || airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com)"]
+
     restart: on-failure
     networks:
       - pipeline_net
@@ -75,7 +78,7 @@ services:
       - ../logs:/opt/airflow/logs:rw
       - ../spark_jobs:/opt/spark_jobs
       - ./data:/opt/data
-      - ./notebooks:/opt/notebooks
+      - ./notebooks:/opt/notebooks:rw
     ports:
       - "8080:8080"
     command: ["airflow", "webserver"]
@@ -106,7 +109,7 @@ services:
       - ../logs:/opt/airflow/logs:rw
       - ../spark_jobs:/opt/spark_jobs
       - ./data:/opt/data
-      - ./notebooks:/opt/notebooks
+      - ./notebooks:/opt/notebooks:rw
     command: ["airflow", "scheduler"]
     restart: always
     networks:

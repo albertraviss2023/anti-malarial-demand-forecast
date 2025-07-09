@@ -33,7 +33,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Install required Python packages
 RUN pip3 install --no-cache-dir --upgrade pip && \
     pip3 install --no-cache-dir \
-        apache-airflow-providers-apache-spark==4.1.0 \
+        apache-airflow-providers-apache-spark==4.0.0 \
         apache-airflow-providers-postgres==5.7.0 \
         psycopg2-binary==2.9.9 \
         pyspark==3.5.0 \
@@ -46,4 +46,10 @@ RUN pip3 install --no-cache-dir --upgrade pip && \
         confluent-kafka==2.5.0 \
         minio==7.2.8 \
         pymssql==2.2.11 \
-        apache-airflow-providers-papermill
+        papermill \
+        apache-airflow-providers-papermill==3.2.0 \
+        ipykernel==6.29.5 \
+        jupyter 
+
+# Register the python3 kernel for Jupyter
+RUN python3 -m ipykernel install --name python3 --user
