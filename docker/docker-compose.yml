@@ -79,6 +79,7 @@ services:
       - ../spark_jobs:/opt/spark_jobs
       - ./data:/opt/data
       - ./notebooks:/opt/notebooks:rw
+      - ../models:/opt/models:rw
     ports:
       - "8080:8080"
     command: ["airflow", "webserver"]
@@ -110,6 +111,7 @@ services:
       - ../spark_jobs:/opt/spark_jobs
       - ./data:/opt/data
       - ./notebooks:/opt/notebooks:rw
+      - ../models:/opt/models:rw
     command: ["airflow", "scheduler"]
     restart: always
     networks:
@@ -128,6 +130,7 @@ services:
       - ./spark/conf/spark-master.conf:/opt/spark/conf/spark-defaults.conf
       - ./data:/opt/data
       - ./notebooks:/home/notebooks
+      - ../models:/opt/models:rw
     command: ["/opt/start-spark-jupyter-server.sh", "master"]
     ports:
       - 8888:8888
@@ -161,6 +164,7 @@ services:
       - ./spark/conf/spark-worker.conf:/opt/spark/conf/spark-defaults.conf
       - ./data:/opt/data
       - ./notebooks:/home/notebooks
+      - ../models:/opt/models:rw
     command: ["/opt/start-spark-jupyter-server.sh", "worker"]
     ports:
       - 7078:7078
