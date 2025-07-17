@@ -1,0 +1,202 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-airflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-airflow}
+      POSTGRES_DB: ${POSTGRES_DB:-prod_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow -d prod_db"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    networks:
+      - pipeline_net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  airflow-init:
+    build: ./airflow
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER:-airflow}:${POSTGRES_PASSWORD:-airflow}@postgres/${POSTGRES_DB:-prod_db}
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      AIRFLOW__API__SECRET_KEY: ${AIRFLOW__WEBSERVER__SECRET_KEY:-your_secure_random_key}
+      AIRFLOW__LOGGING__REMOTE_LOGGING: 'false'
+      _AIRFLOW_DB_MIGRATE: 'true'
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+      _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-admin}
+      _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-admin}
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'True'
+      AIRFLOW_ADMIN_PASSWORD: ${AIRFLOW_ADMIN_PASSWORD:-admin}
+      AIRFLOW__WEBSERVER__AUTH_BACKEND: airflow.auth.managers.fab.auth_manager.FabAuthManager
+    command: ["bash", "-c", "airflow db init && (airflow users list | grep -q admin || airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com)"]
+
+    restart: on-failure
+    networks:
+      - pipeline_net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  airflow-webserver:
+    build: ./airflow
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER:-airflow}:${POSTGRES_PASSWORD:-airflow}@postgres/${POSTGRES_DB:-prod_db}
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW__WEBSERVER__SECRET_KEY:-your_secure_random_key}
+      AIRFLOW__LOGGING__REMOTE_LOGGING: 'false'
+      AIRFLOW__CORE__BASE_LOG_FOLDER: /opt/airflow/logs
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'True'
+    volumes:
+      - ../dags:/opt/airflow/dags
+      - ../logs:/opt/airflow/logs:rw
+      - ../spark_jobs:/opt/spark_jobs
+      - ../data:/opt/data
+      - ./notebooks:/opt/notebooks:rw
+      - ../models:/opt/models:rw
+    ports:
+      - "8080:8080"
+    command: ["airflow", "webserver"]
+    restart: always
+    networks:
+      - pipeline_net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  airflow-scheduler:
+    build: ./airflow
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER:-airflow}:${POSTGRES_PASSWORD:-airflow}@postgres/${POSTGRES_DB:-prod_db}
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW__WEBSERVER__SECRET_KEY:-your_secure_random_key}
+      AIRFLOW__LOGGING__REMOTE_LOGGING: 'false'
+      AIRFLOW__CORE__BASE_LOG_FOLDER: /opt/airflow/logs
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'True'
+    volumes:
+      - ../dags:/opt/airflow/dags
+      - ../logs:/opt/airflow/logs:rw
+      - ../spark_jobs:/opt/spark_jobs
+      - ../data:/opt/data
+      - ./notebooks:/opt/notebooks:rw
+      - ../models:/opt/models:rw
+
+    command: ["airflow", "scheduler"]
+    restart: always
+    networks:
+      - pipeline_net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  spark-master:
+    build: ./spark
+    volumes:
+      - ../spark_jobs:/opt/spark_jobs
+      - ../logs:/opt/spark_logs:rw
+      - ./spark/conf/spark-master.conf:/opt/spark/conf/spark-defaults.conf
+      - ../data:/opt/data
+      - ./notebooks:/home/notebooks
+      - ../models:/opt/models:rw
+    command: ["/opt/start-spark-jupyter-server.sh", "master"]
+    ports:
+      - 8888:8888
+      - 7077:7077
+      - 8081:8080
+      - 10000:10000
+      - 10001:10001
+      - 4040-4042:4040-4042
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_HOST=spark-master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_MASTER_WEBUI_PORT=8080
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pipeline_net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  spark-worker:
+    build: ./spark
+    volumes:
+      - ../spark_jobs:/opt/spark_jobs
+      - ../logs:/opt/spark_logs:rw
+      - ./spark/conf/spark-worker.conf:/opt/spark/conf/spark-defaults.conf
+      - ../data:/opt/data
+      - ./notebooks:/home/notebooks
+      - ../models:/opt/models:rw
+    command: ["/opt/start-spark-jupyter-server.sh", "worker"]
+    ports:
+      - 7078:7078
+      - 8082:8081
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_MEMORY=2g
+      - SPARK_WORKER_PORT=7078
+      - SPARK_WORKER_WEBUI_PORT=8081
+    depends_on:
+      - spark-master
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2048M
+    networks:
+      - pipeline_net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  postgres_data:
+  airflow_dags:
+
+networks:
+  pipeline_net:
+    name: pipeline_net
+    
