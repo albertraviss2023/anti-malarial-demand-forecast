@@ -25,10 +25,15 @@ jobs:
 
       - name: Run prediction notebook
         run: |
+          export TF_CPP_MIN_LOG_LEVEL=2
           papermill docker/notebooks/generate_predictions.ipynb docker/notebooks/output_predictions.ipynb -p cwd .
+
+      - name: Debug directory contents
+        run: |
+          ls -R
 
       - name: Upload predictions
         uses: actions/upload-artifact@v4
         with:
           name: predictions-output
-          path: docker/notebooks/output/output_predictions.ipynb
+          path: data/predicted_demand_*.csv
