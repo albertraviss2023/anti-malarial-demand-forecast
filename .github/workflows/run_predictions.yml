@@ -20,14 +20,21 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install papermill tensorflow pandas numpy
+          pip install papermill tensorflow pandas numpy jupyter
+          python -m ipykernel install --user --name python3 --display-name "Python 3"
+
+      - name: Create notebooks directory if not exists
+        run: |
+          mkdir -p notebooks
 
       - name: Run prediction notebook
         run: |
-          papermill docker/notebooks/generate_predictions.ipynb docker/notebooks/output_predictions.ipynb -p cwd ./data
+          papermill notebooks/generate_predictions.ipynb data/output_predictions.ipynb -p cwd ./data
 
       - name: Upload predictions
         uses: actions/upload-artifact@v4
         with:
           name: predictions-output
-          path: docker/notebooks/output/output_predictions.ipynb
+          path: |
+            data/output_predictions.ipynb
+            data/predictions_new.csv
