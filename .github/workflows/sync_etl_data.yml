@@ -1,0 +1,41 @@
+name: Sync Data Folder from ETL to Main
+
+on:
+  push:
+    branches:
+      - etl
+    paths:
+      - 'data/**'  # Trigger only when data folder changes
+
+jobs:
+  sync-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout ETL branch
+        uses: actions/checkout@v4
+        with:
+          ref: etl
+          path: etl
+
+      - name: Checkout Main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync data folder
+        run: |
+          rm -rf main/data
+          cp -r etl/data main/data
+
+      - name: Commit & push to main
+        run: |
+          cd main
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add data/
+          git diff --cached --quiet || git commit -m "Sync data folder from etl branch"
+          git push origin main
