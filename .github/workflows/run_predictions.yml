@@ -23,10 +23,6 @@ jobs:
           pip install papermill tensorflow pandas numpy jupyter
           python -m ipykernel install --user --name python3 --display-name "Python 3"
 
-      - name: Create notebooks directory if not exists
-        run: |
-          mkdir -p notebooks
-
       - name: Run prediction notebook
         run: |
           papermill notebooks/generate_predictions.ipynb data/output_predictions.ipynb -p cwd ./data
@@ -38,3 +34,4 @@ jobs:
           path: |
             data/output_predictions.ipynb
             data/predictions_new.csv
+            
