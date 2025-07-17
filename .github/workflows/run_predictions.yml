@@ -25,13 +25,10 @@ jobs:
 
       - name: Run prediction notebook
         run: |
-          papermill notebooks/generate_predictions.ipynb data/output_predictions.ipynb -p cwd ./data
+          papermill docker/notebooks/generate_predictions.ipynb docker/notebooks/output_predictions.ipynb -p cwd ./data
 
       - name: Upload predictions
         uses: actions/upload-artifact@v4
         with:
           name: predictions-output
-          path: |
-            data/output_predictions.ipynb
-            data/predictions_new.csv
-            
+          path: docker/notebooks/output/output_predictions.ipynb
