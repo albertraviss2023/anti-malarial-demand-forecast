@@ -50,6 +50,7 @@ RUN pip3 install --no-cache-dir --upgrade pip && \
         apache-airflow-providers-papermill==3.2.0 \
         ipykernel==6.29.5 \
         jupyter 
+       
 
 # Register the python3 kernel for Jupyter
 RUN python3 -m ipykernel install --name python3 --user

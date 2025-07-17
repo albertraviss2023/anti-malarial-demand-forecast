@@ -2,23 +2,9 @@ FROM apache/spark:3.5.0
 
 USER root
 
-# Install dependencies for Python 3.9 and existing packages
+# Install dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        wget \
-        build-essential \
-        libssl-dev \
-        zlib1g-dev \
-        libbz2-dev \
-        libreadline-dev \
-        libsqlite3-dev \
-        curl \
-        libncursesw5-dev \
-        xz-utils \
-        libxml2-dev \
-        libxmlsec1-dev \
-        libffi-dev \
-        liblzma-dev \
         python3-pip \
         openjdk-11-jre \
         procps \
@@ -29,28 +15,11 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Python 3.9 from source
-RUN wget https://www.python.org/ftp/python/3.9.19/Python-3.9.19.tar.xz && \
-    tar -xf Python-3.9.19.tar.xz && \
-    cd Python-3.9.19 && \
-    ./configure --enable-optimizations && \
-    make -j$(nproc) && \
-    make install && \
-    rm -rf /Python-3.9.19 /Python-3.9.19.tar.xz
+# Upgrade pip
+RUN python3 -m pip install --upgrade pip
 
-# Create and configure virtual environment
-RUN python3.9 -m venv /opt/spark-venv && \
-    /opt/spark-venv/bin/pip install --upgrade pip && \
-    /opt/spark-venv/bin/pip install tensorflow==2.16.1
-
-# Set virtual environment's Python as default
-ENV PATH="/opt/spark-venv/bin:$PATH"
-
-# Upgrade pip (using virtual environment's pip)
-RUN pip install --upgrade pip
-
-# Install Python packages (using virtual environment's pip)
-RUN pip install \
+# Install Python packages
+RUN pip3 install \
     pyspark \
     confluent-kafka==2.5.3 \
     minio==7.2.8 \
@@ -70,7 +39,6 @@ RUN pip install \
     findspark \
     tensorflow==2.16.1
 
-# Download Spark dependencies
 RUN mkdir -p /opt/spark/jars && \
     wget -q https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-3.5_2.12/1.6.1/iceberg-spark-runtime-3.5_2.12-1.6.1.jar -O /opt/spark/jars/iceberg-spark-runtime.jar && \
     wget -q https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/3.6.2/kafka-clients-3.6.2.jar -O /opt/spark/jars/kafka-clients.jar
@@ -96,6 +64,5 @@ COPY themes.jupyterlab-settings /root/.jupyter/lab/user-settings/@jupyterlab/app
 # Copy the startup script for jupyter and spark
 COPY start-spark-jupyter-server.sh /opt/start-spark-jupyter-server.sh
 RUN chmod +x /opt/start-spark-jupyter-server.sh
-
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

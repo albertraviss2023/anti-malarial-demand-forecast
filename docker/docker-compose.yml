@@ -77,7 +77,7 @@ services:
       - ../dags:/opt/airflow/dags
       - ../logs:/opt/airflow/logs:rw
       - ../spark_jobs:/opt/spark_jobs
-      - ./data:/opt/data
+      - ../data:/opt/data
       - ./notebooks:/opt/notebooks:rw
       - ../models:/opt/models:rw
     ports:
@@ -109,9 +109,10 @@ services:
       - ../dags:/opt/airflow/dags
       - ../logs:/opt/airflow/logs:rw
       - ../spark_jobs:/opt/spark_jobs
-      - ./data:/opt/data
+      - ../data:/opt/data
       - ./notebooks:/opt/notebooks:rw
       - ../models:/opt/models:rw
+
     command: ["airflow", "scheduler"]
     restart: always
     networks:
@@ -128,7 +129,7 @@ services:
       - ../spark_jobs:/opt/spark_jobs
       - ../logs:/opt/spark_logs:rw
       - ./spark/conf/spark-master.conf:/opt/spark/conf/spark-defaults.conf
-      - ./data:/opt/data
+      - ../data:/opt/data
       - ./notebooks:/home/notebooks
       - ../models:/opt/models:rw
     command: ["/opt/start-spark-jupyter-server.sh", "master"]
@@ -162,7 +163,7 @@ services:
       - ../spark_jobs:/opt/spark_jobs
       - ../logs:/opt/spark_logs:rw
       - ./spark/conf/spark-worker.conf:/opt/spark/conf/spark-defaults.conf
-      - ./data:/opt/data
+      - ../data:/opt/data
       - ./notebooks:/home/notebooks
       - ../models:/opt/models:rw
     command: ["/opt/start-spark-jupyter-server.sh", "worker"]
