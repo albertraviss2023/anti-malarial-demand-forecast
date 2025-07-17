@@ -1,0 +1,33 @@
+name: Run Monthly Predictions
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # Every 15 minutes
+  workflow_dispatch:      # Allow manual run from GitHub
+
+jobs:
+  run-prediction:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install papermill tensorflow pandas numpy
+
+      - name: Run prediction notebook
+        run: |
+          papermill docker/notebooks/generate_predictions.ipynb docker/notebooks/output_predictions.ipynb -p cwd ./data
+
+      - name: Upload predictions
+        uses: actions/upload-artifact@v4
+        with:
+          name: predictions-output
+          path: docker/notebooks/output/output_predictions.ipynb
