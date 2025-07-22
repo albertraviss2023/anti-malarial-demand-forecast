@@ -6,47 +6,19 @@
     <title>Anti-Malarial Demand Forecasting Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Condensed:wght@400;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js"></script>
     <style>
         :root {
-            /* Primary Colors */
             --primary-blue: #1a5cb8;
             --health-green: #00a86b;
             --warning-orange: #ff7d00;
             --epidemic-red: #e63946;
             --medical-teal: #00a8cc;
-            
-            /* Secondary Colors */
             --secondary-blue: #e3f2fd;
-            --light-green: #e8f5e9;
-            --light-orange: #fff3e0;
-            --light-red: #ffebee;
-            --light-teal: #e0f7fa;
-            
-            /* New Malaria-Themed Colors */
-            --mosquito-dark: #2d3747;
-            --net-blue: #5d8bf4;
-            --prevention-purple: #6a4c93;
-            
-            /* Neutrals */
-            --neutral-gray: #4a4a4a;
-            --medium-gray: #757575;
             --light-gray: #f8f9fa;
             --white: #ffffff;
-
-            /* Mosquito pattern background */
-            --mosquito-pattern: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2300a86b' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
-
-            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            --font-secondary: 'Roboto Condensed', sans-serif;
-            --font-mono: 'Roboto Mono', monospace;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.12);
-            --border-radius: 10px;
-            --border-radius-sm: 6px;
         }
 
         [data-theme="dark"] {
@@ -56,588 +28,87 @@
             --epidemic-red: #ff6b6b;
             --medical-teal: #3bc9db;
             --secondary-blue: #1a3a5a;
-            --light-green: #1e3b1e;
-            --light-orange: #3e2a1e;
-            --light-red: #3a1e1e;
-            --light-teal: #1a3a3a;
-            --mosquito-dark: #a5b4c4;
-            --net-blue: #7e9ff4;
-            --prevention-purple: #9c7cc9;
-            --neutral-gray: #e0e0e0;
-            --medium-gray: #b0bec5;
             --light-gray: #1a1e21;
             --white: #2d3436;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            --shadow-hover: 0 6px 16px rgba(0, 0, 0, 0.4);
         }
 
         body {
-            font-family: var(--font-primary);
+            font-family: 'Inter', sans-serif;
             background-color: var(--light-gray);
             margin: 0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            transition: background-color 0.5s ease, color 0.5s ease;
-            color: var(--neutral-gray);
-            line-height: 1.6;
+            transition: background-color 0.3s ease;
         }
 
         .dashboard-header {
-            background: linear-gradient(135deg, var(--primary-blue), var(--mosquito-dark));
-            color: var(--white);
+            background: linear-gradient(135deg, var(--primary-blue), #2d3747);
+            color: white;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .dashboard-header .logo {
-            font-family: var(--font-secondary);
-            font-size: 1.5rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            letter-spacing: 0.5px;
-        }
-
-        .dashboard-header .logo i {
-            font-size: 1.8rem;
-            color: var(--health-green);
-            text-shadow: 0 0 8px rgba(0, 168, 107, 0.3);
-        }
-
-        .dashboard-header .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .dashboard-header .nav-links a {
-            color: var(--white);
-            text-decoration: none;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-        }
-
-        .dashboard-header .nav-links a:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .dashboard-header .nav-links a i {
-            font-size: 1.1rem;
-        }
-
-        .theme-toggle {
-            background: none;
-            border: none;
-            color: var(--white);
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .theme-toggle:hover {
-            transform: rotate(15deg) scale(1.1);
-            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .dashboard-main {
             flex: 1;
             padding: 2rem;
-            max-width: 1600px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .dashboard-title-container {
-            margin-bottom: 2rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            padding-bottom: 1rem;
-        }
-
-        [data-theme="dark"] .dashboard-title-container {
-            border-bottom-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .dashboard-title {
-            color: var(--primary-blue);
-            font-family: var(--font-secondary);
-            font-size: 2.25rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-            letter-spacing: -0.5px;
-        }
-
-        .dashboard-subtitle {
-            color: var(--neutral-gray);
-            font-size: 1.15rem;
-            max-width: 800px;
-        }
-
-        .dashboard-tabs {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-
-        [data-theme="dark"] .dashboard-tabs {
-            border-bottom-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .dashboard-tabs .nav-link {
-            color: var(--neutral-gray);
-            font-family: var(--font-secondary);
-            font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
-            transition: all 0.3s ease;
-            border: none;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            position: relative;
-        }
-
-        .dashboard-tabs .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 50%;
-            width: 0;
-            height: 3px;
-            background: var(--primary-blue);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .dashboard-tabs .nav-link:hover::after {
-            width: 80%;
-        }
-
-        .dashboard-tabs .nav-link.active::after {
-            width: 100%;
-            background: var(--health-green);
-        }
-
-        .dashboard-tabs .nav-link.active {
-            color: var(--health-green);
-            background-color: transparent;
-        }
-
-        .dashboard-tabs .nav-link:hover {
-            background-color: var(--secondary-blue);
         }
 
         .dashboard-card {
             background-color: var(--white);
-            padding: 1.75rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.5s ease, border-color 0.5s ease;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .dashboard-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: var(--mosquito-pattern);
-            opacity: 0.03;
-            pointer-events: none;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .dashboard-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
         }
 
-        .dashboard-card.wide-card {
-            grid-column: span 2;
-        }
-
-        .dashboard-card.highlight-card {
-            border-left: 4px solid var(--health-green);
-            background: linear-gradient(to right, rgba(0, 168, 107, 0.05), transparent);
-        }
-
-        .dashboard-card h3 {
-            color: var(--primary-blue);
-            font-family: var(--font-secondary);
-            font-size: 1.35rem;
-            margin-bottom: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .dashboard-card h3 i {
-            font-size: 1.25rem;
-            color: var(--medical-teal);
-        }
-
-        .dashboard-card h4 {
-            font-family: var(--font-secondary);
-            font-size: 1.15rem;
-            margin-bottom: 1rem;
-            color: var(--medium-gray);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .dashboard-card h4 i {
-            font-size: 1rem;
-            color: var(--primary-blue);
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.75rem;
-            margin-bottom: 2rem;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+        .chart-container {
+            height: 350px;
+            width: 100%;
+            position: relative;
         }
 
         .metric-card {
             background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: var(--border-radius-sm);
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
+            padding: 1rem;
+            border-radius: 8px;
             text-align: center;
             border-top: 4px solid var(--medical-teal);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-            z-index: 0;
-        }
-
-        .metric-card:hover {
-            transform: translateY(-5px) scale(1.02);
-        }
-
-        .metric-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .metric-header i {
-            font-size: 1.25rem;
-            color: var(--primary-blue);
-        }
-
-        .metric-header h4 {
-            font-family: var(--font-secondary);
-            font-size: 1rem;
-            font-weight: 600;
-            margin: 0;
-            color: var(--neutral-gray);
         }
 
         .metric-value {
-            font-family: var(--font-secondary);
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin: 0.5rem 0;
-            position: relative;
-            z-index: 1;
+            font-size: 2rem;
+            font-weight: bold;
             background: linear-gradient(to right, var(--primary-blue), var(--medical-teal));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .metric-trend {
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 12px;
-            display: inline-block;
-            position: relative;
-            z-index: 1;
-        }
-
-        .metric-trend.up {
-            background-color: var(--light-green);
-            color: var(--health-green);
-        }
-
-        .metric-trend.down {
-            background-color: var(--light-red);
-            color: var(--epidemic-red);
-        }
-
-        .chart-container {
-            position: relative;
-            height: 350px;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-
-        canvas {
-            transition: opacity 0.5s ease;
-        }
-
-        [data-theme="dark"] canvas {
-            filter: brightness(0.9) contrast(1.1);
-        }
-
-        .chart-header {
+        .loading-spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .chart-controls {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .chart-btn {
-            background: none;
-            border: 1px solid var(--medium-gray);
-            color: var(--medium-gray);
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .chart-btn.active {
-            background-color: var(--primary-blue);
-            color: var(--white);
-            border-color: var(--primary-blue);
-        }
-
-        .chart-btn:hover {
-            background-color: var(--secondary-blue);
+            z-index: 1000;
         }
 
         .data-table {
             max-height: 500px;
             overflow-y: auto;
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        [data-theme="dark"] .data-table {
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .table {
-            margin-bottom: 0;
-            transition: background-color 0.3s;
-        }
-
-        .table th {
-            background-color: var(--primary-blue);
-            color: var(--white);
-            font-family: var(--font-secondary);
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 0.5px;
-            padding: 0.75rem 1rem;
-        }
-
-        .table td {
-            padding: 0.75rem 1rem;
-            vertical-align: middle;
-            font-family: var(--font-primary);
-        }
-
-        .table tr:nth-child(even) {
-            background-color: var(--secondary-blue);
-        }
-
-        .table-hover tbody tr:hover {
-            background-color: #e0e7ff;
-        }
-
-        [data-theme="dark"] .table-hover tbody tr:hover {
-            background-color: #3f51b5;
-        }
-
-        .highlight {
-            color: var(--health-green);
-            font-weight: 600;
-            font-family: var(--font-mono);
-        }
-
-        .warning-highlight {
-            color: var(--warning-orange);
-            font-weight: 600;
-            font-family: var(--font-mono);
-        }
-
-        .critical-highlight {
-            color: var(--epidemic-red);
-            font-weight: 600;
-            font-family: var(--font-mono);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes numberTick {
-            0% { transform: translateY(10px); opacity: 0; }
-            50% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes highlightPulse {
-            0% { background-color: transparent; }
-            50% { background-color: var(--health-green); color: var(--white); }
-            100% { background-color: transparent; }
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 82, 204, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 82, 204, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 82, 204, 0); }
-        }
-
-        .animated-cell {
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-
-        .number-tick {
-            display: inline-block;
-            animation: numberTick 0.6s ease-in-out;
-        }
-
-        .highlight-pulse {
-            animation: highlightPulse 1.5s ease-in-out;
-        }
-
-        .alert-pulse {
-            animation: pulse 2s infinite;
-        }
-
-        .dashboard-footer {
-            background-color: var(--primary-blue);
-            color: var(--white);
-            text-align: center;
-            padding: 1rem;
-            font-size: 0.85rem;
-            font-family: var(--font-mono);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .loading-spinner {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            z-index: 2000;
-            text-align: center;
-        }
-
-        [data-theme="dark"] .loading-spinner {
-            background-color: rgba(45, 52, 54, 0.95);
-            color: var(--neutral-gray);
-        }
-
-        .loading-spinner p {
-            margin-top: 1rem;
-            font-family: var(--font-secondary);
-        }
-
-        .error-message {
-            display: none;
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: var(--light-red);
-            color: var(--epidemic-red);
-            padding: 1rem;
-            border-radius: var(--border-radius-sm);
-            box-shadow: var(--shadow);
-            z-index: 2000;
-            max-width: 400px;
-        }
-
-        [data-theme="dark"] .error-message {
-            background-color: rgba(255, 107, 107, 0.2);
-            color: var(--epidemic-red);
-        }
-
-        @media (max-width: 1200px) {
-            .dashboard-main {
-                padding: 1.75rem;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            .dashboard-card.wide-card {
-                grid-column: span 1;
-            }
-            .metrics-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
 
         @media (max-width: 768px) {
@@ -645,36 +116,6 @@
                 flex-direction: column;
                 gap: 1rem;
                 padding: 1rem;
-            }
-            .dashboard-header .nav-links {
-                width: 100%;
-                justify-content: space-between;
-                gap: 0.5rem;
-            }
-            .dashboard-title {
-                font-size: 1.75rem;
-            }
-            .dashboard-tabs .nav-link {
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
-            }
-            .chart-container {
-                height: 300px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .dashboard-main {
-                padding: 1.25rem;
-            }
-            .metrics-grid {
-                grid-template-columns: 1fr;
-            }
-            .dashboard-title {
-                font-size: 1.5rem;
-            }
-            .dashboard-subtitle {
-                font-size: 1rem;
             }
         }
     </style>
@@ -684,212 +125,164 @@
         <div class="logo">
             <i class="fas fa-virus"></i> Anti-Malarial Demand Forecast
         </div>
-        <div class="nav-links">
-            <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+        <div>
+            <button class="btn btn-sm btn-outline-light me-2" id="refreshData">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <button class="btn btn-sm btn-outline-light" id="themeToggle">
                 <i class="fas fa-moon"></i>
             </button>
-            <a href="#" id="refreshData"><i class="fas fa-sync-alt"></i> Refresh</a>
-            <a href="#"><i class="fas fa-database"></i> Data Sources</a>
-            <a href="#"><i class="fas fa-info-circle"></i> About</a>
         </div>
     </header>
 
-    <main class="dashboard-main">
-        <div class="dashboard-title-container">
-            <h1 class="dashboard-title">Anti-Malarial Demand Forecasting Dashboard</h1>
-            <p class="dashboard-subtitle">Real-time insights for three-month ahead anti-malarial demand predictions</p>
+    <main class="dashboard-main container-fluid">
+        <div class="loading-spinner" id="loadingSpinner" style="display: none;">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
         </div>
 
-        <div class="loading-spinner" id="loadingSpinner">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p>Loading dashboard data...</p>
-        </div>
+        <h1 class="mb-4">Anti-Malarial Demand Forecasting</h1>
 
-        <div class="error-message" id="errorMessage"></div>
-
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-header">
-                    <i class="fas fa-prescription-bottle-alt"></i>
-                    <h4>Current Demand</h4>
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <h5>Current Demand</h5>
+                    <div class="metric-value" id="currentDemand">-</div>
+                    <small id="demandTrend">-</small>
                 </div>
-                <div class="metric-value" id="currentDemand">-</div>
-                <div class="metric-trend up" id="demandTrend">-</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-header">
-                    <i class="fas fa-thermometer-half"></i>
-                    <h4>Avg Temperature</h4>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <h5>Avg Temperature</h5>
+                    <div class="metric-value" id="avgTemp">-</div>
+                    <small id="tempTrend">-</small>
                 </div>
-                <div class="metric-value" id="avgTemp">-</div>
-                <div class="metric-trend up" id="tempTrend">-</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-header">
-                    <i class="fas fa-cloud-rain"></i>
-                    <h4>Precipitation</h4>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <h5>Precipitation</h5>
+                    <div class="metric-value" id="precipTotal">-</div>
+                    <small id="precipTrend">-</small>
                 </div>
-                <div class="metric-value" id="precipTotal">-</div>
-                <div class="metric-trend down" id="precipTrend">-</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-header">
-                    <i class="fas fa-tint"></i>
-                    <h4>Humidity</h4>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <h5>Humidity</h5>
+                    <div class="metric-value" id="humidityAvg">-</div>
+                    <small id="humidityTrend">-</small>
                 </div>
-                <div class="metric-value" id="humidityAvg">-</div>
-                <div class="metric-trend up" id="humidityTrend">-</div>
             </div>
         </div>
 
-        <ul class="nav nav-tabs dashboard-tabs" id="dashboardTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview-tab-pane" type="button" role="tab">
-                    <i class="fas fa-chart-line"></i> Overview
-                </button>
+        <ul class="nav nav-tabs mb-3" id="dashboardTabs">
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#overview">Overview</button>
             </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="input-tab" data-bs-toggle="tab" data-bs-target="#input-tab-pane" type="button" role="tab">
-                    <i class="fas fa-database"></i> Input Data
-                </button>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#inputData">Input Data</button>
             </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="predictions-tab" data-bs-toggle="tab" data-bs-target="#predictions-tab-pane" type="button" role="tab">
-                    <i class="fas fa-chart-bar"></i> Forecasts
-                </button>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#predictions">Forecasts</button>
             </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="comparison-tab" data-bs-toggle="tab" data-bs-target="#comparison-tab-pane" type="button" role="tab">
-                    <i class="fas fa-balance-scale"></i> Model Comparison
-                </button>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#comparison">Model Comparison</button>
             </li>
         </ul>
 
-        <div class="tab-content" id="dashboardTabContent">
-            <div class="tab-pane fade show active" id="overview-tab-pane" role="tabpanel">
-                <div class="dashboard-grid">
-                    <div class="dashboard-card wide-card">
-                        <div class="chart-header">
-                            <h3><i class="fas fa-chart-area"></i> Demand Forecast Overview</h3>
-                            <div class="chart-controls">
-                                <button class="chart-btn active">3M</button>
-                                <button class="chart-btn">6M</button>
-                                <button class="chart-btn">12M</button>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="overview">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="dashboard-card">
+                            <h3>Demand Forecast Overview</h3>
+                            <div class="chart-container">
+                                <canvas id="overviewChart"></canvas>
                             </div>
                         </div>
-                        <div class="chart-container">
-                            <canvas id="overviewChart"></canvas>
-                        </div>
                     </div>
-                    <div class="dashboard-card">
-                        <h3><i class="fas fa-exclamation-triangle"></i> Risk Indicators</h3>
-                        <div class="chart-container">
-                            <canvas id="riskChart"></canvas>
-                        </div>
-                        <div class="mt-3">
-                            <p><span class="highlight">Precipitation Risk:</span> <span id="precipRisk">-</span></p>
-                            <p><span class="warning-highlight">Temperature Risk:</span> <span id="tempRisk">-</span></p>
-                        </div>
-                    </div>
-                    <div class="dashboard-card">
-                        <h3><i class="fas fa-lightbulb"></i> Key Insights</h3>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Demand expected to peak in <span class="highlight">Apr 2025</span></li>
-                            <li class="list-group-item">High precipitation correlates with <span class="highlight">increased demand</span></li>
-                            <li class="list-group-item">Best performing model: <span class="highlight" id="bestModelOverview">-</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="input-tab-pane" role="tabpanel">
-                <div class="dashboard-grid">
-                    <div class="dashboard-card wide-card">
-                        <h3><i class="fas fa-database"></i> Input Dataset</h3>
-                        <p>Last 12 months of data (Apr 2024 - Mar 2025)</p>
-                        <div class="data-table">
-                            <table class="table table-striped table-hover" id="inputDataTable">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Max Temp (°C)</th>
-                                        <th>Min Temp (°C)</th>
-                                        <th>Humidity (%)</th>
-                                        <th>Precip (mm)</th>
-                                        <th>Sunshine (hrs)</th>
-                                        <th>Demand</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="inputDataBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="dashboard-card">
-                        <h3><i class="fas fa-chart-line"></i> Environmental Trends</h3>
-                        <div class="chart-container">
-                            <canvas id="environmentChart"></canvas>
-                        </div>
-                        <div class="mt-3">
-                            <p><span class="highlight">Correlation with Demand:</span> <span id="demandCorrelation">-</span></p>
+                    <div class="col-lg-4">
+                        <div class="dashboard-card">
+                            <h3>Risk Indicators</h3>
+                            <div class="chart-container">
+                                <canvas id="riskChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="predictions-tab-pane" role="tabpanel">
-                <div class="dashboard-grid">
-                    <div class="dashboard-card wide-card">
-                        <h3><i class="fas fa-star"></i> Best Model: <span id="bestModelName">-</span></h3>
-                        <p>Three-month ahead anti-malarial demand forecasts</p>
-                        <div class="chart-container">
-                            <canvas id="forecastChart"></canvas>
+            <div class="tab-pane fade" id="inputData">
+                <div class="dashboard-card">
+                    <h3>Input Data</h3>
+                    <div class="table-responsive data-table">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Max Temp</th>
+                                    <th>Min Temp</th>
+                                    <th>Humidity</th>
+                                    <th>Precipitation</th>
+                                    <th>Sunshine</th>
+                                    <th>Demand</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inputDataBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="predictions">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="dashboard-card">
+                            <h3>Forecast: <span id="bestModelName">-</span></h3>
+                            <div class="chart-container">
+                                <canvas id="forecastChart"></canvas>
+                            </div>
                         </div>
                     </div>
-                    <div class="dashboard-card highlight-card">
-                        <h3><i class="fas fa-calendar-alt"></i> Forecast Values</h3>
-                        <div class="mt-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h4>Apr 2025</h4>
-                                <span class="highlight" id="aprForecast">-</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h4>May 2025</h4>
-                                <span class="highlight" id="mayForecast">-</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h4>Jun 2025</h4>
-                                <span class="highlight" id="junForecast">-</span>
-                            </div>
-                        </div>
-                        <div class="mt-4 pt-3 border-top">
-                            <p><span class="highlight">Total Forecasted Demand:</span> <span id="totalForecast">-</span></p>
+                    <div class="col-lg-4">
+                        <div class="dashboard-card">
+                            <h3>Forecast Values</h3>
+                            <div id="forecastValuesContainer"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="comparison-tab-pane" role="tabpanel">
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <h3><i class="fas fa-balance-scale"></i> Model Performance</h3>
-                        <div class="chart-container">
-                            <canvas id="maeChart"></canvas>
+            <div class="tab-pane fade" id="comparison">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="dashboard-card">
+                            <h3>Model Performance</h3>
+                            <div class="chart-container">
+                                <canvas id="maeChart"></canvas>
+                            </div>
                         </div>
                     </div>
-                    <div class="dashboard-card">
-                        <h3><i class="fas fa-chart-bar"></i> Prediction Comparison</h3>
-                        <div class="chart-container">
-                            <canvas id="predictionChart"></canvas>
+                    <div class="col-md-6">
+                        <div class="dashboard-card">
+                            <h3>Prediction Comparison</h3>
+                            <div class="chart-container">
+                                <canvas id="predictionChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="dashboard-card wide-card">
-                    <h3><i class="fas fa-table"></i> Model Metrics</h3>
-                    <div class="data-table">
-                        <table class="table table-striped table-hover" id="comparisonTable">
-                            <thead id="comparisonTableHead"></thead>
+                <div class="dashboard-card">
+                    <h3>Model Metrics</h3>
+                    <div class="table-responsive data-table">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>MAE</th>
+                                    <th id="predictionDate1">-</th>
+                                    <th id="predictionDate2">-</th>
+                                    <th id="predictionDate3">-</th>
+                                </tr>
+                            </thead>
                             <tbody id="comparisonTableBody"></tbody>
                         </table>
                     </div>
@@ -898,122 +291,378 @@
         </div>
     </main>
 
-    <footer class="dashboard-footer">
-        <p>Generated on <span id="currentDate"></span> | Anti-Malarial Demand Dashboard | © 2025</p>
-    </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const { DateTime } = luxon;
-        let dashboardData = { inputData: null, predictions: null, testMetrics: null };
-        const skylineShades = ['#2A6F97', '#468FAF', '#91C8E4', '#C9E4FF'];
-        let currentCharts = {};
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const errorMessage = document.getElementById('errorMessage');
+        let charts = {};
+        let dashboardData = {};
 
-        function formatNumber(value, decimals = 2) {
-            return (value === undefined || value === null || isNaN(value)) ? 'N/A' : Number(value).toFixed(decimals);
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
+            setupEventListeners();
+            loadDashboardData();
+        });
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
         }
 
-        function showError(message) {
-            console.error(`Error: ${message}`);
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            setTimeout(() => {
-                errorMessage.style.display = 'none';
-            }, 5000);
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeToggle').querySelector('i');
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
 
-        async function fetchWithLogging(url) {
-            console.log(`Fetching: ${url}`);
-            try {
-                const response = await fetch(url);
-                console.log(`Response status for ${url}: ${response.status}`);
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+        function setupEventListeners() {
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            document.getElementById('refreshData').addEventListener('click', loadDashboardData);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+            refreshCharts();
+        }
+
+        function refreshCharts() {
+            Object.values(charts).forEach(chart => {
+                if (chart && typeof chart.update === 'function') {
+                    chart.update();
                 }
-                const data = await response.json();
-                console.log(`Data received from ${url}:`, JSON.stringify(data, null, 2).slice(0, 500) + '...');
-                return data;
-            } catch (error) {
-                console.error(`Fetch error for ${url}:`, error);
-                showError(`Failed to load data from ${url}: ${error.message}`);
-                throw error;
-            }
+            });
         }
 
         async function loadDashboardData() {
-            loadingSpinner.style.display = 'block';
+            showLoading(true);
             try {
                 const [inputData, testMetrics, predictions] = await Promise.all([
-                    fetchWithLogging('/api/input-data'),
-                    fetchWithLogging('/api/test-metrics'),
-                    fetchWithLogging('/api/predictions')
+                    fetch('/api/input-data').then(res => res.text()),
+                    fetch('/api/test-metrics').then(res => res.json()),
+                    fetch('/api/predictions').then(res => res.json())
                 ]);
-                dashboardData = { inputData, testMetrics, predictions };
-                console.log('All data loaded successfully:', Object.keys(dashboardData));
+                
+                dashboardData = {
+                    inputData: processInputData(inputData),
+                    testMetrics,
+                    predictions
+                };
+                
                 updateDashboard();
             } catch (error) {
                 console.error('Failed to load dashboard data:', error);
-                showError('Unable to load dashboard data. Please try refreshing.');
+                alert('Failed to load dashboard data. Please try again.');
             } finally {
-                loadingSpinner.style.display = 'none';
+                showLoading(false);
             }
         }
 
+        function processInputData(csvData) {
+            const lines = csvData.trim().split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+            
+            const data = lines.slice(1).map(line => {
+                const values = line.split(',');
+                const row = {};
+                headers.forEach((header, i) => {
+                    const value = values[i].trim();
+                    row[header] = isNaN(value) ? value : parseFloat(value);
+                });
+                
+                if (row.year && row.month) {
+                    row.date = DateTime.fromObject({
+                        year: row.year,
+                        month: row.month,
+                        day: 1
+                    }).toISODate();
+                }
+                return row;
+            });
+            
+            return {
+                data,
+                stats: calculateStatistics(data)
+            };
+        }
+
+        function calculateStatistics(data) {
+            if (!data || data.length === 0) return {};
+            
+            const latest = data[data.length - 1];
+            const sum = (key) => data.reduce((total, item) => total + (item[key] || 0), 0);
+            const avg = (key) => sum(key) / data.length;
+            
+            return {
+                current_demand: latest.ddd_demand,
+                avg_temp: avg('avg_temp_max'),
+                min_temp_avg: avg('avg_temp_min'),
+                humidity_avg: avg('avg_humidity'),
+                precip_total: sum('total_precipitation'),
+                sunshine_total: sum('total_sunshine_hours')
+            };
+        }
+
         function updateDashboard() {
-            const { inputData, testMetrics, predictions } = dashboardData;
-            if (!inputData || !testMetrics || !predictions) {
-                console.error('Incomplete data:', dashboardData);
-                showError('Incomplete data received from server.');
-                return;
+            updateMetrics();
+            updateOverviewTab();
+            updateInputDataTab();
+            updatePredictionsTab();
+            updateComparisonTab();
+        }
+
+        function updateMetrics() {
+            const { stats } = dashboardData.inputData;
+            
+            document.getElementById('currentDemand').textContent = formatNumber(stats.current_demand);
+            document.getElementById('avgTemp').textContent = formatNumber(stats.avg_temp) + '°C';
+            document.getElementById('precipTotal').textContent = formatNumber(stats.precip_total) + ' mm';
+            document.getElementById('humidityAvg').textContent = formatNumber(stats.humidity_avg) + '%';
+            
+            updateTrend('demandTrend', stats.current_demand, 1.5, 0.8);
+            updateTrend('tempTrend', stats.avg_temp, 28, 24);
+            updateTrend('precipTrend', stats.precip_total, 15000, 10000);
+            updateTrend('humidityTrend', stats.humidity_avg, 75, 60);
+        }
+
+        function updateTrend(elementId, value, highThreshold, mediumThreshold) {
+            const element = document.getElementById(elementId);
+            
+            if (value >= highThreshold) {
+                element.textContent = 'High';
+                element.className = 'text-danger';
+            } else if (value >= mediumThreshold) {
+                element.textContent = 'Medium';
+                element.className = 'text-warning';
+            } else {
+                element.textContent = 'Low';
+                element.className = 'text-success';
             }
+        }
 
-            // Metrics Grid
-            document.getElementById('currentDemand').innerHTML = `<span class="number-tick">${formatNumber(inputData.stats.current_demand)}</span>`;
-            document.getElementById('avgTemp').innerHTML = `<span class="number-tick">${formatNumber((inputData.stats.max_temp_avg + inputData.stats.min_temp_avg) / 2)}°C</span>`;
-            document.getElementById('precipTotal').innerHTML = `<span class="number-tick">${formatNumber(inputData.stats.precip_total)} mm</span>`;
-            document.getElementById('humidityAvg').innerHTML = `<span class="number-tick">${formatNumber(inputData.stats.humidity_avg)}%</span>`;
-            document.getElementById('demandTrend').textContent = inputData.stats.current_demand > 0.8 ? 'High' : 'Stable';
-            document.getElementById('tempTrend').textContent = inputData.stats.max_temp_avg > 25 ? 'Warm' : 'Normal';
-            document.getElementById('precipTrend').textContent = inputData.stats.precip_total > 10000 ? 'High' : 'Normal';
-            document.getElementById('humidityTrend').textContent = inputData.stats.humidity_avg > 60 ? 'High' : 'Normal';
+        function updateOverviewTab() {
+            const { inputData, predictions } = dashboardData;
+            
+            // Get all unique prediction dates from the predictions data
+            const predictionDates = new Set();
+            Object.values(predictions.predictions).forEach(modelPreds => {
+                Object.keys(modelPreds).forEach(dateStr => {
+                    predictionDates.add(dateStr);
+                });
+            });
+            
+            // Convert to sorted array of DateTime objects
+            const sortedDates = Array.from(predictionDates)
+                .map(dateStr => DateTime.fromFormat(dateStr, 'MMMM yyyy'))
+                .sort((a, b) => a - b);
+            
+            // Get the best model's predictions
+            const bestModelPreds = predictions.predictions[predictions.best_model];
+            
+            // Prepare forecast data points
+            const forecastData = sortedDates.map(date => {
+                const dateStr = date.toFormat('MMMM yyyy');
+                return {
+                    x: date.toJSDate(),
+                    y: bestModelPreds[dateStr]
+                };
+            });
 
-            // Overview Tab
-            if (currentCharts.overviewChart) currentCharts.overviewChart.destroy();
-            currentCharts.overviewChart = new Chart(document.getElementById('overviewChart'), {
+            // Update overview chart
+            createLineChart('overviewChart', {
+                labels: inputData.data.map(d => DateTime.fromISO(d.date).toJSDate()),
+                datasets: [
+                    {
+                        label: 'Historical Demand',
+                        data: inputData.data.map(d => ({
+                            x: DateTime.fromISO(d.date).toJSDate(),
+                            y: d.ddd_demand
+                        })),
+                        borderColor: '#1a5cb8',
+                        backgroundColor: 'rgba(26, 92, 184, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: `Forecast (${predictions.best_model})`,
+                        data: forecastData,
+                        borderColor: '#00a86b',
+                        backgroundColor: 'rgba(0, 168, 107, 0.1)',
+                        borderDash: [5, 5],
+                        tension: 0.3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        fill: false
+                    }
+                ]
+            }, 'Demand Forecast Overview');
+
+            // Update risk chart
+            createRadarChart('riskChart', {
+                labels: ['Temperature', 'Humidity', 'Precipitation', 'Sunshine'],
+                datasets: [{
+                    label: 'Risk Score',
+                    data: [
+                        dashboardData.inputData.stats.avg_temp / 30 * 100,
+                        dashboardData.inputData.stats.humidity_avg,
+                        dashboardData.inputData.stats.precip_total / 20000 * 100,
+                        100 - (dashboardData.inputData.stats.sunshine_total / 40000 * 100)
+                    ],
+                    backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                    borderColor: '#e74c3c'
+                }]
+            }, 'Risk Indicators');
+        }
+
+        function updateInputDataTab() {
+            const { data } = dashboardData.inputData;
+            
+            // Input Data Table
+            document.getElementById('inputDataBody').innerHTML = data.map(row => `
+                <tr>
+                    <td>${DateTime.fromISO(row.date).toFormat('MMM yyyy')}</td>
+                    <td>${formatNumber(row.avg_temp_max, 1)}</td>
+                    <td>${formatNumber(row.avg_temp_min, 1)}</td>
+                    <td>${formatNumber(row.avg_humidity, 1)}</td>
+                    <td>${formatNumber(row.total_precipitation)}</td>
+                    <td>${formatNumber(row.total_sunshine_hours)}</td>
+                    <td>${formatNumber(row.ddd_demand)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function updatePredictionsTab() {
+            const { predictions } = dashboardData;
+            const bestModel = predictions.best_model;
+            const bestModelPreds = predictions.predictions[bestModel];
+            
+            document.getElementById('bestModelName').textContent = bestModel;
+            
+            // Get sorted prediction dates
+            const predictionDates = Object.keys(bestModelPreds)
+                .map(dateStr => DateTime.fromFormat(dateStr, 'MMMM yyyy'))
+                .sort((a, b) => a - b);
+            
+            // Update forecast values display
+            const forecastValuesContainer = document.getElementById('forecastValuesContainer');
+            forecastValuesContainer.innerHTML = predictionDates.map(date => {
+                const dateStr = date.toFormat('MMMM yyyy');
+                return `
+                    <div class="mb-3">
+                        <h5>${dateStr}</h5>
+                        <div class="h4 text-primary">${formatNumber(bestModelPreds[dateStr])}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Update forecast chart
+            createBarChart('forecastChart', {
+                labels: predictionDates.map(date => date.toFormat('MMMM yyyy')),
+                datasets: [{
+                    label: bestModel,
+                    data: predictionDates.map(date => bestModelPreds[date.toFormat('MMMM yyyy')]),
+                    backgroundColor: predictionDates.map((_, i) => 
+                        `hsl(${i * 360 / predictionDates.length}, 70%, 50%)`)
+                }]
+            }, 'Forecasted Demand');
+        }
+
+        function updateComparisonTab() {
+            const { testMetrics, predictions } = dashboardData;
+            
+            // Get sorted prediction dates from the first model's predictions
+            const predictionDates = Object.keys(predictions.predictions[Object.keys(predictions.predictions)[0]])
+                .map(dateStr => DateTime.fromFormat(dateStr, 'MMMM yyyy'))
+                .sort((a, b) => a - b);
+            
+            // Update table headers with actual dates
+            predictionDates.slice(0, 3).forEach((date, i) => {
+                document.getElementById(`predictionDate${i+1}`).textContent = date.toFormat('MMM yyyy');
+            });
+            
+            // MAE Chart
+            createBarChart('maeChart', {
+                labels: testMetrics.map(m => m.model_name),
+                datasets: [{
+                    label: 'Mean Absolute Error',
+                    data: testMetrics.map(m => m.mae),
+                    backgroundColor: testMetrics.map((_, i) => 
+                        `hsl(${i * 360 / testMetrics.length}, 70%, 50%)`)
+                }]
+            }, 'Model Performance (Lower is better)');
+            
+            // Prediction Comparison Chart
+            createBarChart('predictionChart', {
+                labels: predictionDates.map(date => date.toFormat('MMMM yyyy')),
+                datasets: Object.entries(predictions.predictions).map(([model, preds]) => ({
+                    label: model,
+                    data: predictionDates.map(date => preds[date.toFormat('MMMM yyyy')]),
+                    backgroundColor: `hsla(${Math.random() * 360}, 70%, 50%, 0.7)`
+                }))
+            }, 'Model Predictions Comparison');
+            
+            // Comparison Table
+            document.getElementById('comparisonTableBody').innerHTML = testMetrics.map(metric => {
+                const modelPreds = predictions.predictions[metric.model_name];
+                return `
+                    <tr>
+                        <td>${metric.model_name}</td>
+                        <td>${formatNumber(metric.mae, 4)}</td>
+                        ${predictionDates.slice(0, 3).map(date => `
+                            <td>${formatNumber(modelPreds[date.toFormat('MMMM yyyy')])}</td>
+                        `).join('')}
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function createLineChart(canvasId, data, title) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+            
+            charts[canvasId] = new Chart(ctx, {
                 type: 'line',
-                data: {
-                    datasets: [
-                        {
-                            label: 'Historical Demand',
-                            data: predictions.last_6_months.map(d => ({ x: DateTime.fromISO(d.date).toJSDate(), y: d.ddd_demand })),
-                            borderColor: '#355070',
-                            backgroundColor: '#355070',
-                            fill: false,
-                            tension: 0.4,
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Forecasted Demand (Best Model)',
-                            data: [
-                                { x: DateTime.fromFormat('April 2025', 'MMMM yyyy').toJSDate(), y: predictions.predictions[predictions.best_model]['April 2025'] },
-                                { x: DateTime.fromFormat('May 2025', 'MMMM yyyy').toJSDate(), y: predictions.predictions[predictions.best_model]['May 2025'] },
-                                { x: DateTime.fromFormat('June 2025', 'MMMM yyyy').toJSDate(), y: predictions.predictions[predictions.best_model]['June 2025'] }
-                            ],
-                            borderColor: '#E56B6F',
-                            backgroundColor: '#E56B6F',
-                            fill: false,
-                            tension: 0.4,
-                            borderDash: [5, 5],
-                            borderWidth: 2
-                        }
-                    ]
-                },
+                data: data,
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: {
+                        title: { 
+                            display: true, 
+                            text: title,
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += formatNumber(context.parsed.y);
+                                    }
+                                    return label;
+                                },
+                                afterLabel: function(context) {
+                                    if (context.datasetIndex === 1) { // Forecast dataset
+                                        const date = DateTime.fromJSDate(context.parsed.x).toFormat('MMMM yyyy');
+                                        return `Period: ${date}`;
+                                    }
+                                    return '';
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         x: {
                             type: 'time',
@@ -1021,334 +670,130 @@
                                 unit: 'month',
                                 displayFormats: { month: 'MMM yyyy' }
                             },
-                            title: { display: true, text: 'Date' }
-                        },
-                        y: { title: { display: true, text: 'Demand' } }
-                    },
-                    plugins: { 
-                        legend: { 
-                            position: 'top',
-                            labels: {
+                            title: { 
+                                display: true, 
+                                text: 'Date',
                                 font: {
-                                    family: 'var(--font-secondary)',
-                                    size: 12,
-                                    weight: '600'
-                                },
-                                padding: 20
+                                    weight: 'bold'
+                                }
                             }
-                        } 
-                    },
-                    elements: {
-                        line: {
-                            tension: 0.3,
-                            borderWidth: 2
                         },
-                        point: {
-                            radius: 4,
-                            hoverRadius: 6
+                        y: { 
+                            title: { 
+                                display: true, 
+                                text: 'Demand',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            beginAtZero: true
                         }
                     }
                 }
             });
+        }
 
-            // Risk Chart (Synthetic)
-            if (currentCharts.riskChart) currentCharts.riskChart.destroy();
-            currentCharts.riskChart = new Chart(document.getElementById('riskChart'), {
-                type: 'radar',
-                data: {
-                    labels: ['Precipitation', 'Temperature', 'Humidity', 'Sunshine'],
-                    datasets: [{
-                        label: 'Risk Score',
-                        data: [
-                            inputData.stats.precip_total / 500,
-                            (inputData.stats.max_temp_avg + inputData.stats.min_temp_avg) / 2,
-                            inputData.stats.humidity_avg,
-                            inputData.stats.sunshine_total / 1000
-                        ],
-                        backgroundColor: 'rgba(0, 168, 107, 0.2)',
-                        borderColor: '#00a86b',
-                        pointBackgroundColor: '#00a86b',
-                        borderWidth: 2
-                    }]
-                },
+        function createBarChart(canvasId, data, title) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+            
+            charts[canvasId] = new Chart(ctx, {
+                type: 'bar',
+                data: data,
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: {
+                        title: { 
+                            display: true, 
+                            text: title,
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${formatNumber(context.parsed.y)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createRadarChart(canvasId, data, title) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+            
+            charts[canvasId] = new Chart(ctx, {
+                type: 'radar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { 
+                            display: true, 
+                            text: title,
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        }
+                    },
                     scales: {
                         r: {
-                            beginAtZero: true,
+                            angleLines: { display: true },
+                            suggestedMin: 0,
                             suggestedMax: 100,
-                            ticks: { stepSize: 20 }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: {
-                                font: {
-                                    family: 'var(--font-secondary)',
-                                    size: 12,
-                                    weight: '600'
-                                }
+                            ticks: {
+                                stepSize: 20
                             }
                         }
                     }
                 }
             });
-
-            document.getElementById('precipRisk').textContent = formatNumber(inputData.stats.precip_total / 500);
-            document.getElementById('tempRisk').textContent = formatNumber((inputData.stats.max_temp_avg + inputData.stats.min_temp_avg) / 2);
-            document.getElementById('bestModelOverview').textContent = predictions.best_model || 'N/A';
-
-            // Input Data Tab
-            const inputDataBody = document.getElementById('inputDataBody');
-            inputDataBody.innerHTML = inputData.data.map(row => `
-                <tr class="animated-cell">
-                    <td>${DateTime.fromISO(row.date).toFormat('MMM yyyy')}</td>
-                    <td>${formatNumber(row.avg_temp_max)}</td>
-                    <td>${formatNumber(row.avg_temp_min)}</td>
-                    <td>${formatNumber(row.avg_humidity)}</td>
-                    <td>${formatNumber(row.total_precipitation)}</td>
-                    <td>${formatNumber(row.total_sunshine_hours)}</td>
-                    <td>${formatNumber(row.ddd_demand)}</td>
-                </tr>
-            `).join('');
-
-            // Environmental Trends (Synthetic)
-            if (currentCharts.environmentChart) currentCharts.environmentChart.destroy();
-            currentCharts.environmentChart = new Chart(document.getElementById('environmentChart'), {
-                type: 'line',
-                data: {
-                    datasets: [
-                        {
-                            label: 'Temperature',
-                            data: inputData.data.map(d => ({ x: DateTime.fromISO(d.date).toJSDate(), y: (d.avg_temp_max + d.avg_temp_min) / 2 })),
-                            borderColor: '#ff7d00',
-                            backgroundColor: '#ff7d00',
-                            yAxisID: 'y',
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Precipitation',
-                            data: inputData.data.map(d => ({ x: DateTime.fromISO(d.date).toJSDate(), y: d.total_precipitation / 100 })),
-                            borderColor: '#1a5cb8',
-                            backgroundColor: '#1a5cb8',
-                            yAxisID: 'y1',
-                            borderWidth: 2
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            type: 'time',
-                            time: { unit: 'month', displayFormats: { month: 'MMM yyyy' } },
-                            title: { display: true, text: 'Date' }
-                        },
-                        y: {
-                            title: { display: true, text: 'Temperature (°C)' },
-                            position: 'left'
-                        },
-                        y1: {
-                            title: { display: true, text: 'Precipitation (mm/100)' },
-                            position: 'right',
-                            grid: { drawOnChartArea: false }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: {
-                                font: {
-                                    family: 'var(--font-secondary)',
-                                    size: 12,
-                                    weight: '600'
-                                }
-                            }
-                        }
-                    },
-                    elements: {
-                        line: {
-                            tension: 0.3,
-                            borderWidth: 2
-                        },
-                        point: {
-                            radius: 4,
-                            hoverRadius: 6
-                        }
-                    }
-                }
-            });
-
-            document.getElementById('demandCorrelation').textContent = 'High (Precipitation)';
-
-            // Predictions Tab
-            document.getElementById('bestModelName').textContent = predictions.best_model || 'N/A';
-            const bestPreds = predictions.predictions[predictions.best_model] || {};
-            document.getElementById('aprForecast').textContent = formatNumber(bestPreds['April 2025']);
-            document.getElementById('mayForecast').textContent = formatNumber(bestPreds['May 2025']);
-            document.getElementById('junForecast').textContent = formatNumber(bestPreds['June 2025']);
-            document.getElementById('totalForecast').textContent = formatNumber(
-                (bestPreds['April 2025'] || 0) + (bestPreds['May 2025'] || 0) + (bestPreds['June 2025'] || 0)
-            );
-
-            if (currentCharts.forecastChart) currentCharts.forecastChart.destroy();
-            currentCharts.forecastChart = new Chart(document.getElementById('forecastChart'), {
-                type: 'bar',
-                data: {
-                    labels: ['April 2025', 'May 2025', 'June 2025'],
-                    datasets: [{
-                        label: predictions.best_model || 'Best Model',
-                        data: [
-                            bestPreds['April 2025'],
-                            bestPreds['May 2025'],
-                            bestPreds['June 2025']
-                        ],
-                        backgroundColor: '#91C8E4',
-                        borderColor: '#91C8E4',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, title: { display: true, text: 'Demand' } }
-                    },
-                    plugins: { 
-                        legend: { 
-                            position: 'top',
-                            labels: {
-                                font: {
-                                    family: 'var(--font-secondary)',
-                                    size: 12,
-                                    weight: '600'
-                                }
-                            }
-                        } 
-                    }
-                }
-            });
-
-            // Comparison Tab
-            if (currentCharts.maeChart) currentCharts.maeChart.destroy();
-            currentCharts.maeChart = new Chart(document.getElementById('maeChart'), {
-                type: 'bar',
-                data: {
-                    labels: testMetrics.map(m => m.model_name),
-                    datasets: [{
-                        label: 'MAE',
-                        data: testMetrics.map(m => m.mae),
-                        backgroundColor: testMetrics.map((_, i) => skylineShades[i % skylineShades.length]),
-                        borderColor: testMetrics.map((_, i) => skylineShades[i % skylineShades.length]),
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, title: { display: true, text: 'MAE' } }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        animation: {
-                            onComplete: () => {
-                                const bestModelRow = document.querySelector(`#comparisonTableBody tr[data-model="${predictions.best_model}"] .mae-cell`);
-                                if (bestModelRow) bestModelRow.classList.add('highlight-pulse');
-                            }
-                        }
-                    }
-                }
-            });
-
-            if (currentCharts.predictionChart) currentCharts.predictionChart.destroy();
-            currentCharts.predictionChart = new Chart(document.getElementById('predictionChart'), {
-                type: 'bar',
-                data: {
-                    labels: ['April 2025', 'May 2025', 'June 2025'],
-                    datasets: predictions.model_names.map((model, i) => ({
-                        label: model,
-                        data: [
-                            predictions.predictions[model]['April 2025'],
-                            predictions.predictions[model]['May 2025'],
-                            predictions.predictions[model]['June 2025']
-                        ],
-                        backgroundColor: skylineShades[i % skylineShades.length],
-                        borderColor: skylineShades[i % skylineShades.length],
-                        borderWidth: 1
-                    }))
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, title: { display: true, text: 'Demand' } }
-                    },
-                    plugins: { 
-                        legend: { 
-                            position: 'top',
-                            labels: {
-                                font: {
-                                    family: 'var(--font-secondary)',
-                                    size: 12,
-                                    weight: '600'
-                                }
-                            }
-                        } 
-                    }
-                }
-            });
-
-            const comparisonTableHead = document.getElementById('comparisonTableHead');
-            comparisonTableHead.innerHTML = `
-                <tr>
-                    <th>Model</th>
-                    <th>MAE</th>
-                    <th>Apr 2025</th>
-                    <th>May 2025</th>
-                    <th>Jun 2025</th>
-                </tr>
-            `;
-
-            const comparisonTableBody = document.getElementById('comparisonTableBody');
-            comparisonTableBody.innerHTML = testMetrics.map(m => `
-                <tr data-model="${m.model_name}" class="animated-cell">
-                    <td>${m.model_name}</td>
-                    <td class="mae-cell">${formatNumber(m.mae, 4)}</td>
-                    <td>${formatNumber(predictions.predictions[m.model_name]['April 2025'])}</td>
-                    <td>${formatNumber(predictions.predictions[m.model_name]['May 2025'])}</td>
-                    <td>${formatNumber(predictions.predictions[m.model_name]['June 2025'])}</td>
-                </tr>
-            `).join('');
-
-            // Footer
-            document.getElementById('currentDate').textContent = DateTime.now().toFormat('MMMM dd, yyyy');
         }
 
-        function toggleTheme() {
-            const isDark = document.body.getAttribute('data-theme') === 'dark';
-            document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            document.getElementById('themeToggle').innerHTML = `<i class="fas ${isDark ? 'fa-moon' : 'fa-sun'}"></i>`;
-            
-            // Update charts for theme change
-            if (currentCharts.overviewChart) currentCharts.overviewChart.update();
-            if (currentCharts.riskChart) currentCharts.riskChart.update();
-            if (currentCharts.environmentChart) currentCharts.environmentChart.update();
-            if (currentCharts.forecastChart) currentCharts.forecastChart.update();
-            if (currentCharts.maeChart) currentCharts.maeChart.update();
-            if (currentCharts.predictionChart) currentCharts.predictionChart.update();
+        function formatNumber(value, decimals = 2) {
+            if (value === undefined || value === null || isNaN(value)) return 'N/A';
+            return value.toLocaleString(undefined, {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: decimals
+            });
         }
 
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-        document.getElementById('refreshData').addEventListener('click', (e) => {
-            e.preventDefault();
-            console.log('Refreshing data...');
-            loadDashboardData();
-        });
-
-        // Initial load
-        loadDashboardData();
+        function showLoading(show) {
+            document.getElementById('loadingSpinner').style.display = show ? 'flex' : 'none';
+        }
     </script>
 </body>
 </html>
