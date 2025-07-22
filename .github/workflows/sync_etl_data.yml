@@ -5,11 +5,13 @@ on:
     branches:
       - etl
     paths:
-      - 'data/**'  # Trigger only when data folder changes
+      - 'data/**'
 
 jobs:
   sync-data:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Critical for pushing
 
     steps:
       - name: Checkout ETL branch
@@ -23,7 +25,7 @@ jobs:
         with:
           ref: main
           path: main
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # token is automatically provided by GITHUB_TOKEN
 
       - name: Sync data folder
         run: |
@@ -35,7 +37,13 @@ jobs:
           cd main
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
+          
           git add data/
-          git diff --cached --quiet || git commit -m "Sync data folder from etl branch"
-          git push origin main
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+          else
+            git pull origin main  # Ensure we're up to date
+            git commit -m "Sync data folder from etl branch [skip ci]"
+            git push origin main
+          fi
+          
