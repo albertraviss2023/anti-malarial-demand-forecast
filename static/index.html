@@ -1,299 +1,325 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anti-Malarial Demand Forecasting Dashboard</title>
+    <title>MalariaShield - Demand Forecasting Dashboard</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-blue: #1a5cb8;
-            --health-green: #00a86b;
-            --warning-orange: #ff7d00;
-            --epidemic-red: #e63946;
+            --primary-color: #0d6efd;
+            --primary-rgb: 13, 110, 253;
+            --success-color: #198754;
+            --danger-color: #dc3545;
+            --info-color: #0dcaf0;
             --medical-teal: #00a8cc;
-            --secondary-blue: #e3f2fd;
-            --light-gray: #f8f9fa;
-            --white: #ffffff;
+
+            --body-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --heading-color: #343a40;
+            --border-color: #dee2e6;
+            --sidebar-bg: #212529;
+            --sidebar-text: #adb5bd;
+            --sidebar-active: #ffffff;
+            --sidebar-hover-bg: #343a40;
+            
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            --border-radius: 0.75rem;
+            --transition-speed: 0.3s;
         }
 
-        [data-theme="dark"] {
-            --primary-blue: #4dabf7;
-            --health-green: #51cf66;
-            --warning-orange: #ffa94d;
-            --epidemic-red: #ff6b6b;
+        [data-bs-theme="dark"] {
+            --body-bg: #1a1a1a;
+            --card-bg: #2b2b2b;
+            --text-color: #e9ecef;
+            --heading-color: #ffffff;
+            --border-color: #495057;
             --medical-teal: #3bc9db;
-            --secondary-blue: #1a3a5a;
-            --light-gray: #1a1e21;
-            --white: #2d3436;
         }
-
+        
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--light-gray);
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
             margin: 0;
-            min-height: 100vh;
+        }
+
+        .dashboard-wrapper { display: flex; min-height: 100vh; }
+        .main-content {
+            flex-grow: 1;
+            margin-left: 260px;
+            padding: 2rem;
+            transition: margin-left var(--transition-speed) ease;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
             display: flex;
             flex-direction: column;
-            transition: background-color 0.3s ease;
-        }
-
-        .dashboard-header {
-            background: linear-gradient(135deg, var(--primary-blue), #2d3747);
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .dashboard-main {
-            flex: 1;
-            padding: 2rem;
-        }
-
-        .dashboard-card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-bottom: 1.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-        }
-
-        .chart-container {
-            height: 350px;
-            width: 100%;
-            position: relative;
-        }
-
-        .metric-card {
-            background-color: var(--white);
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-            border-top: 4px solid var(--medical-teal);
-        }
-
-        .metric-value {
-            font-size: 2rem;
-            font-weight: bold;
-            background: linear-gradient(to right, var(--primary-blue), var(--medical-teal));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .loading-spinner {
+            padding: 1.5rem 1rem;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            height: 100%;
+            transition: width var(--transition-speed) ease;
             z-index: 1000;
         }
-
-        .data-table {
-            max-height: 500px;
-            overflow-y: auto;
+        .sidebar-header {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0 0.5rem 1.5rem; border-bottom: 1px solid #495057;
         }
+        .sidebar-header .fa-shield-virus { font-size: 2rem; color: var(--primary-color); }
+        .sidebar-title { font-size: 1.5rem; font-weight: 700; color: var(--sidebar-active); margin: 0; }
+        .sidebar-nav { flex-grow: 1; margin-top: 1.5rem; }
+        .sidebar-nav .nav-link {
+            display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem;
+            border-radius: 0.5rem; color: var(--sidebar-text); font-weight: 500;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+        .sidebar-nav .nav-link:hover, .sidebar-nav .nav-link.active { background-color: var(--primary-color); color: var(--sidebar-active); }
+        .sidebar-nav .nav-link .fas { font-size: 1.1rem; width: 20px; text-align: center;}
+        .sidebar-footer {
+            padding-top: 1.5rem; border-top: 1px solid #495057;
+            display: flex; flex-direction: column; gap: 1rem;
+        }
+        .last-updated { font-size: 0.8rem; color: var(--sidebar-text); text-align: center; }
+        .last-updated .fas { margin-right: 0.5rem; }
 
+        /* --- Main Content --- */
+        .main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        #pageTitle { font-size: 1.75rem; font-weight: 700; color: var(--heading-color); }
+        .dashboard-card {
+            background-color: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: var(--border-radius); box-shadow: var(--box-shadow);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            margin-bottom: 1.5rem;
+        }
+        .dashboard-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .card-body { padding: 1.5rem; }
+        .card-title { font-weight: 600; color: var(--heading-color); margin-bottom: 1rem; }
+        .chart-container { height: 350px; width: 100%;}
+        
+        /* --- Metric Cards --- */
+        .metric-card {
+            background-color: var(--card-bg); padding: 1.5rem; text-align: center;
+            border: 1px solid var(--border-color); border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+        .metric-card:hover { transform: translateY(-5px); }
+        .metric-card h5 {
+            font-size: 1rem; font-weight: 500; color: var(--secondary-color);
+            margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .metric-value {
+            font-size: 2.25rem; font-weight: 700;
+            background: linear-gradient(to right, var(--primary-color), var(--medical-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* --- Other --- */
+        .table { border-color: var(--border-color); }
+        .data-table { max-height: 500px; overflow-y: auto; }
+        .loading-spinner {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.5); display: none; justify-content: center;
+            align-items: center; z-index: 9999;
+        }
+        .loading-spinner .spinner-border { width: 3rem; height: 3rem; }
+        .alert { position: fixed; top: 20px; right: 20px; z-index: 10000; }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar { width: 70px; }
+            .sidebar-header .sidebar-title, .sidebar-nav span, .sidebar-footer { display: none; }
+            .sidebar-header, .sidebar-nav .nav-link { justify-content: center; }
+            .main-content { margin-left: 70px; }
+        }
         @media (max-width: 768px) {
-            .dashboard-header {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
+            .sidebar {
+                width: 100%; height: auto; flex-direction: row; position: static;
+                padding: 0.5rem; align-items: center;
             }
+            .sidebar-header { display: none; }
+            .sidebar-nav { display: flex; flex-direction: row; justify-content: space-around; width: 100%; margin-top: 0; }
+            .main-content { margin-left: 0; padding: 1rem; }
+            .main-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
-    <header class="dashboard-header">
-        <div class="logo">
-            <i class="fas fa-virus"></i> Anti-Malarial Demand Forecast
-        </div>
-        <div>
-            <button class="btn btn-sm btn-outline-light me-2" id="refreshData">
-                <i class="fas fa-sync-alt"></i> Refresh
-            </button>
-            <button class="btn btn-sm btn-outline-light" id="themeToggle">
-                <i class="fas fa-moon"></i>
-            </button>
-        </div>
-    </header>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-shield-virus"></i>
+                <h1 class="sidebar-title">MalariaShield</h1>
+            </div>
+            <nav class="sidebar-nav nav flex-column">
+                <a href="#overview" class="nav-link active" data-bs-toggle="tab">
+                    <i class="fas fa-chart-line"></i><span>Overview</span>
+                </a>
+                <a href="#inputData" class="nav-link" data-bs-toggle="tab">
+                    <i class="fas fa-table"></i><span>Input Data</span>
+                </a>
+                <a href="#predictions" class="nav-link" data-bs-toggle="tab">
+                    <i class="fas fa-magic"></i><span>Forecasts</span>
+                </a>
+                <a href="#comparison" class="nav-link" data-bs-toggle="tab">
+                    <i class="fas fa-balance-scale"></i><span>Model Comparison</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="last-updated" id="lastUpdated">
+                    <i class="fas fa-clock"></i>
+                    <span>Updated: Loading...</span>
+                </div>
+            </div>
+        </aside>
 
-    <main class="dashboard-main container-fluid">
-        <div class="loading-spinner" id="loadingSpinner" style="display: none;">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
-        </div>
-
-        <h1 class="mb-4">Anti-Malarial Demand Forecasting</h1>
-
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="metric-card">
+        <main class="main-content">
+            <header class="main-header">
+                <h2 id="pageTitle">Anti-Malarial Demand Forecasting</h2>
+                <div class="header-actions">
+                    <button class="btn btn-primary me-2" id="refreshData">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button class="btn btn-outline-secondary" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </header>
+            
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner-border text-primary"></div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6 mb-4"><div class="metric-card">
                     <h5>Current Demand</h5>
                     <div class="metric-value" id="currentDemand">-</div>
                     <small id="demandTrend">-</small>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="metric-card">
+                </div></div>
+                <div class="col-xl-3 col-md-6 mb-4"><div class="metric-card">
                     <h5>Avg Temperature</h5>
                     <div class="metric-value" id="avgTemp">-</div>
                     <small id="tempTrend">-</small>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="metric-card">
+                </div></div>
+                <div class="col-xl-3 col-md-6 mb-4"><div class="metric-card">
                     <h5>Precipitation</h5>
                     <div class="metric-value" id="precipTotal">-</div>
                     <small id="precipTrend">-</small>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="metric-card">
+                </div></div>
+                <div class="col-xl-3 col-md-6 mb-4"><div class="metric-card">
                     <h5>Humidity</h5>
                     <div class="metric-value" id="humidityAvg">-</div>
                     <small id="humidityTrend">-</small>
-                </div>
-            </div>
-        </div>
-
-        <ul class="nav nav-tabs mb-3" id="dashboardTabs">
-            <li class="nav-item">
-                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#overview">Overview</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#inputData">Input Data</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#predictions">Forecasts</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#comparison">Model Comparison</button>
-            </li>
-        </ul>
-
-        <div class="tab-content">
-            <div class="tab-pane fade show active" id="overview">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="dashboard-card">
-                            <h3>Demand Forecast Overview</h3>
-                            <div class="chart-container">
-                                <canvas id="overviewChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="dashboard-card">
-                            <h3>Risk Indicators</h3>
-                            <div class="chart-container">
-                                <canvas id="riskChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </div></div>
             </div>
 
-            <div class="tab-pane fade" id="inputData">
-                <div class="dashboard-card">
-                    <h3>Input Data</h3>
-                    <div class="table-responsive data-table">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Max Temp</th>
-                                    <th>Min Temp</th>
-                                    <th>Humidity</th>
-                                    <th>Precipitation</th>
-                                    <th>Sunshine</th>
-                                    <th>Demand</th>
-                                </tr>
-                            </thead>
-                            <tbody id="inputDataBody"></tbody>
-                        </table>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="overview">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="dashboard-card"><div class="card-body">
+                                <h3 class="card-title">Demand Forecast Overview</h3>
+                                <div class="chart-container"><canvas id="overviewChart"></canvas></div>
+                            </div></div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="dashboard-card"><div class="card-body">
+                                <h3 class="card-title">Risk Indicators</h3>
+                                <div class="chart-container"><canvas id="riskChart"></canvas></div>
+                            </div></div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="tab-pane fade" id="predictions">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="dashboard-card">
-                            <h3>Forecast: <span id="bestModelName">-</span></h3>
-                            <div class="chart-container">
-                                <canvas id="forecastChart"></canvas>
-                            </div>
+                <div class="tab-pane fade" id="inputData">
+                    <div class="dashboard-card"><div class="card-body">
+                        <h3 class="card-title">Input Data</h3>
+                        <div class="table-responsive data-table">
+                            <table class="table table-striped">
+                                <thead><tr>
+                                    <th>Date</th><th>Max Temp</th><th>Min Temp</th><th>Humidity</th>
+                                    <th>Precipitation</th><th>Sunshine</th><th>Demand</th>
+                                </tr></thead>
+                                <tbody id="inputDataBody"></tbody>
+                            </table>
                         </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="dashboard-card">
-                            <h3>Forecast Values</h3>
-                            <div id="forecastValuesContainer"></div>
-                        </div>
-                    </div>
+                    </div></div>
                 </div>
-            </div>
 
-            <div class="tab-pane fade" id="comparison">
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="dashboard-card">
-                            <h3>Model Performance</h3>
-                            <div class="chart-container">
-                                <canvas id="maeChart"></canvas>
-                            </div>
+                <div class="tab-pane fade" id="predictions">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="dashboard-card"><div class="card-body">
+                                <h3 class="card-title">Forecast: <span id="bestModelName">-</span></h3>
+                                <div class="chart-container"><canvas id="forecastChart"></canvas></div>
+                            </div></div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="dashboard-card">
-                            <h3>Prediction Comparison</h3>
-                            <div class="chart-container">
-                                <canvas id="predictionChart"></canvas>
-                            </div>
+                        <div class="col-lg-4">
+                            <div class="dashboard-card"><div class="card-body">
+                                <h3 class="card-title">Forecast Values</h3>
+                                <div id="forecastValuesContainer"></div>
+                            </div></div>
                         </div>
                     </div>
                 </div>
-                <div class="dashboard-card">
-                    <h3>Model Metrics</h3>
-                    <div class="table-responsive data-table">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Model</th>
-                                    <th>MAE</th>
-                                    <th id="predictionDate1">-</th>
-                                    <th id="predictionDate2">-</th>
-                                    <th id="predictionDate3">-</th>
-                                </tr>
-                            </thead>
-                            <tbody id="comparisonTableBody"></tbody>
-                        </table>
+
+                <div class="tab-pane fade" id="comparison">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="dashboard-card"><div class="card-body">
+                                <h3 class="card-title">Model Performance</h3>
+                                <div class="chart-container"><canvas id="maeChart"></canvas></div>
+                            </div></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="dashboard-card"><div class="card-body">
+                                <h3 class="card-title">Prediction Comparison</h3>
+                                <div class="chart-container"><canvas id="predictionChart"></canvas></div>
+                            </div></div>
+                        </div>
                     </div>
+                    <div class="dashboard-card"><div class="card-body">
+                        <h3 class="card-title">Model Metrics</h3>
+                        <div class="table-responsive data-table">
+                            <table class="table table-striped">
+                                <thead><tr>
+                                    <th>Model</th><th>MAE</th>
+                                    <th id="predictionDate1">-</th><th id="predictionDate2">-</th><th id="predictionDate3">-</th>
+                                </tr></thead>
+                                <tbody id="comparisonTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div></div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js"></script>
+    
     <script>
         const { DateTime } = luxon;
+        const API_ENDPOINTS = {
+            INPUT_DATA: '/api/input-data',
+            TEST_METRICS: '/api/test-metrics',
+            PREDICTIONS: '/api/predictions'
+        };
+
         let charts = {};
         let dashboardData = {};
 
@@ -306,7 +332,7 @@
 
         function initializeTheme() {
             const savedTheme = localStorage.getItem('theme') || 'light';
-            document.body.setAttribute('data-theme', savedTheme);
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
             updateThemeIcon(savedTheme);
         }
 
@@ -321,92 +347,119 @@
         }
 
         function toggleTheme() {
-            const currentTheme = document.body.getAttribute('data-theme');
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', newTheme);
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
-            refreshCharts();
+            updateDashboard();
         }
 
-        function refreshCharts() {
-            Object.values(charts).forEach(chart => {
-                if (chart && typeof chart.update === 'function') {
-                    chart.update();
+        async function fetchWithRetry(url, options = {}, retries = 3) {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return response.headers.get('content-type')?.includes('application/json') 
+                    ? await response.json() 
+                    : await response.text();
+            } catch (error) {
+                if (retries > 0) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    return fetchWithRetry(url, options, retries - 1);
                 }
-            });
+                throw error;
+            }
         }
 
         async function loadDashboardData() {
             showLoading(true);
             try {
                 const [inputData, testMetrics, predictions] = await Promise.all([
-                    fetch('/api/input-data').then(res => res.text()),
-                    fetch('/api/test-metrics').then(res => res.json()),
-                    fetch('/api/predictions').then(res => res.json())
+                    fetchWithRetry(API_ENDPOINTS.INPUT_DATA),
+                    fetchWithRetry(API_ENDPOINTS.TEST_METRICS),
+                    fetchWithRetry(API_ENDPOINTS.PREDICTIONS)
                 ]);
-                
+
                 dashboardData = {
                     inputData: processInputData(inputData),
-                    testMetrics,
-                    predictions
+                    testMetrics: testMetrics.test_metrics || testMetrics,
+                    predictions: predictions
                 };
                 
                 updateDashboard();
+                updateLastUpdated();
             } catch (error) {
                 console.error('Failed to load dashboard data:', error);
-                alert('Failed to load dashboard data. Please try again.');
+                showError('Failed to load data. Please try refreshing.');
             } finally {
                 showLoading(false);
             }
         }
 
-        function processInputData(csvData) {
-            const lines = csvData.trim().split('\n');
-            const headers = lines[0].split(',').map(h => h.trim());
-            
-            const data = lines.slice(1).map(line => {
-                const values = line.split(',');
-                const row = {};
-                headers.forEach((header, i) => {
-                    const value = values[i].trim();
-                    row[header] = isNaN(value) ? value : parseFloat(value);
+        function processInputData(inputData) {
+            // Handle both CSV and JSON input
+            let data;
+            if (typeof inputData === 'string') {
+                const lines = inputData.trim().split('\n');
+                const headers = lines[0].split(',').map(h => h.trim());
+                data = lines.slice(1).map(line => {
+                    const values = line.split(',');
+                    const row = {};
+                    headers.forEach((header, i) => {
+                        const value = values[i] ? values[i].trim() : '';
+                        row[header] = isNaN(value) || value === '' ? value : parseFloat(value);
+                    });
+                    if (row.year && row.month) {
+                        row.date = DateTime.fromObject({ 
+                            year: row.year, 
+                            month: row.month, 
+                            day: 1 
+                        }).toISODate();
+                    }
+                    return row;
                 });
-                
-                if (row.year && row.month) {
-                    row.date = DateTime.fromObject({
-                        year: row.year,
-                        month: row.month,
-                        day: 1
-                    }).toISODate();
-                }
-                return row;
-            });
-            
-            return {
-                data,
-                stats: calculateStatistics(data)
+            } else if (Array.isArray(inputData)) {
+                data = inputData.map(item => {
+                    if (item.date) {
+                        item.date = DateTime.fromISO(item.date).toISODate();
+                    }
+                    return item;
+                });
+            } else {
+                throw new Error('Unsupported input data format');
+            }
+
+            return { 
+                data, 
+                stats: calculateStatistics(data) 
             };
         }
 
         function calculateStatistics(data) {
             if (!data || data.length === 0) return {};
             
-            const latest = data[data.length - 1];
+            const latest = data[data.length - 1] || {};
+            const previous = data.length > 1 ? data[data.length - 2] : {};
+            
             const sum = (key) => data.reduce((total, item) => total + (item[key] || 0), 0);
-            const avg = (key) => sum(key) / data.length;
+            const avg = (key) => data.length > 0 ? sum(key) / data.length : 0;
             
             return {
                 current_demand: latest.ddd_demand,
+                demand_change: latest.ddd_demand - (previous.ddd_demand || latest.ddd_demand),
                 avg_temp: avg('avg_temp_max'),
-                min_temp_avg: avg('avg_temp_min'),
+                temp_change: latest.avg_temp_max - (previous.avg_temp_max || latest.avg_temp_max),
                 humidity_avg: avg('avg_humidity'),
+                humidity_change: latest.avg_humidity - (previous.avg_humidity || latest.avg_humidity),
                 precip_total: sum('total_precipitation'),
+                precip_change: latest.total_precipitation - (previous.total_precipitation || latest.total_precipitation),
                 sunshine_total: sum('total_sunshine_hours')
             };
         }
 
         function updateDashboard() {
+            if (!dashboardData || !dashboardData.inputData) return;
+            
             updateMetrics();
             updateOverviewTab();
             updateInputDataTab();
@@ -417,168 +470,147 @@
         function updateMetrics() {
             const { stats } = dashboardData.inputData;
             
-            document.getElementById('currentDemand').textContent = formatNumber(stats.current_demand);
-            document.getElementById('avgTemp').textContent = formatNumber(stats.avg_temp) + '°C';
-            document.getElementById('precipTotal').textContent = formatNumber(stats.precip_total) + ' mm';
-            document.getElementById('humidityAvg').textContent = formatNumber(stats.humidity_avg) + '%';
+            document.getElementById('currentDemand').textContent = formatNumber(stats.current_demand, 0);
+            document.getElementById('avgTemp').textContent = formatNumber(stats.avg_temp, 1) + '°C';
+            document.getElementById('precipTotal').textContent = formatNumber(stats.precip_total, 0) + ' mm';
+            document.getElementById('humidityAvg').textContent = formatNumber(stats.humidity_avg, 1) + '%';
             
-            updateTrend('demandTrend', stats.current_demand, 1.5, 0.8);
-            updateTrend('tempTrend', stats.avg_temp, 28, 24);
-            updateTrend('precipTrend', stats.precip_total, 15000, 10000);
-            updateTrend('humidityTrend', stats.humidity_avg, 75, 60);
+            updateTrend('demandTrend', stats.demand_change);
+            updateTrend('tempTrend', stats.temp_change);
+            updateTrend('precipTrend', stats.precip_change);
+            updateTrend('humidityTrend', stats.humidity_change);
         }
 
-        function updateTrend(elementId, value, highThreshold, mediumThreshold) {
+        function updateTrend(elementId, value) {
             const element = document.getElementById(elementId);
+            if (value === undefined || isNaN(value)) {
+                element.textContent = 'N/A';
+                element.className = '';
+                return;
+            }
             
-            if (value >= highThreshold) {
-                element.textContent = 'High';
-                element.className = 'text-danger';
-            } else if (value >= mediumThreshold) {
-                element.textContent = 'Medium';
-                element.className = 'text-warning';
-            } else {
-                element.textContent = 'Low';
+            if (value > 0) {
+                element.innerHTML = `<i class="fas fa-arrow-up"></i> ${formatNumber(Math.abs(value))}`;
                 element.className = 'text-success';
+            } else if (value < 0) {
+                element.innerHTML = `<i class="fas fa-arrow-down"></i> ${formatNumber(Math.abs(value))}`;
+                element.className = 'text-danger';
+            } else {
+                element.textContent = 'No change';
+                element.className = 'text-muted';
             }
         }
 
         function updateOverviewTab() {
             const { inputData, predictions } = dashboardData;
             
-            // Get all unique prediction dates from the predictions data
-            const predictionDates = new Set();
-            Object.values(predictions.predictions).forEach(modelPreds => {
-                Object.keys(modelPreds).forEach(dateStr => {
-                    predictionDates.add(dateStr);
-                });
-            });
+            // Historical data
+            const historicalData = inputData.data.map(d => ({
+                x: DateTime.fromISO(d.date).toJSDate(),
+                y: d.ddd_demand
+            }));
             
-            // Convert to sorted array of DateTime objects
-            const sortedDates = Array.from(predictionDates)
-                .map(dateStr => DateTime.fromFormat(dateStr, 'MMMM yyyy'))
-                .sort((a, b) => a - b);
+            // Forecast data
+            const forecastEntries = Object.entries(predictions.predictions[predictions.best_model]);
+            const forecastData = forecastEntries.map(([dateStr, value]) => ({
+                x: DateTime.fromFormat(dateStr, 'MMMM yyyy').toJSDate(),
+                y: value
+            }));
             
-            // Get the best model's predictions
-            const bestModelPreds = predictions.predictions[predictions.best_model];
-            
-            // Prepare forecast data points
-            const forecastData = sortedDates.map(date => {
-                const dateStr = date.toFormat('MMMM yyyy');
-                return {
-                    x: date.toJSDate(),
-                    y: bestModelPreds[dateStr]
-                };
-            });
-
-            // Update overview chart
             createLineChart('overviewChart', {
-                labels: inputData.data.map(d => DateTime.fromISO(d.date).toJSDate()),
-                datasets: [
-                    {
-                        label: 'Historical Demand',
-                        data: inputData.data.map(d => ({
-                            x: DateTime.fromISO(d.date).toJSDate(),
-                            y: d.ddd_demand
-                        })),
-                        borderColor: '#1a5cb8',
-                        backgroundColor: 'rgba(26, 92, 184, 0.1)',
-                        tension: 0.3,
-                        fill: true
-                    },
-                    {
-                        label: `Forecast (${predictions.best_model})`,
-                        data: forecastData,
-                        borderColor: '#00a86b',
-                        backgroundColor: 'rgba(0, 168, 107, 0.1)',
-                        borderDash: [5, 5],
-                        tension: 0.3,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        fill: false
-                    }
-                ]
-            }, 'Demand Forecast Overview');
-
-            // Update risk chart
+                datasets: [{
+                    label: 'Historical Demand',
+                    data: historicalData,
+                    borderColor: '#1a5cb8',
+                    backgroundColor: 'rgba(26, 92, 184, 0.1)',
+                    tension: 0.3,
+                    fill: true
+                }, {
+                    label: `Forecast (${predictions.best_model})`,
+                    data: forecastData,
+                    borderColor: '#00a86b',
+                    backgroundColor: 'rgba(0, 168, 107, 0.1)',
+                    borderDash: [5, 5],
+                    tension: 0.3,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    fill: false
+                }]
+            });
+            
+            // Risk chart
             createRadarChart('riskChart', {
                 labels: ['Temperature', 'Humidity', 'Precipitation', 'Sunshine'],
                 datasets: [{
                     label: 'Risk Score',
                     data: [
-                        dashboardData.inputData.stats.avg_temp / 30 * 100,
-                        dashboardData.inputData.stats.humidity_avg,
-                        dashboardData.inputData.stats.precip_total / 20000 * 100,
-                        100 - (dashboardData.inputData.stats.sunshine_total / 40000 * 100)
+                        inputData.stats.avg_temp / 30 * 100,
+                        inputData.stats.humidity_avg,
+                        inputData.stats.precip_total / 20000 * 100,
+                        100 - (inputData.stats.sunshine_total / (25 * 365 * 0.8) * 100)
                     ],
                     backgroundColor: 'rgba(231, 76, 60, 0.2)',
                     borderColor: '#e74c3c'
                 }]
-            }, 'Risk Indicators');
+            });
         }
 
         function updateInputDataTab() {
-            const { data } = dashboardData.inputData;
-            
-            // Input Data Table
-            document.getElementById('inputDataBody').innerHTML = data.map(row => `
+            const tableBody = document.getElementById('inputDataBody');
+            tableBody.innerHTML = dashboardData.inputData.data.map(row => `
                 <tr>
                     <td>${DateTime.fromISO(row.date).toFormat('MMM yyyy')}</td>
-                    <td>${formatNumber(row.avg_temp_max, 1)}</td>
-                    <td>${formatNumber(row.avg_temp_min, 1)}</td>
-                    <td>${formatNumber(row.avg_humidity, 1)}</td>
-                    <td>${formatNumber(row.total_precipitation)}</td>
-                    <td>${formatNumber(row.total_sunshine_hours)}</td>
-                    <td>${formatNumber(row.ddd_demand)}</td>
+                    <td>${formatNumber(row.avg_temp_max, 1)}°C</td>
+                    <td>${formatNumber(row.avg_temp_min, 1)}°C</td>
+                    <td>${formatNumber(row.avg_humidity, 1)}%</td>
+                    <td>${formatNumber(row.total_precipitation, 0)}mm</td>
+                    <td>${formatNumber(row.total_sunshine_hours, 0)}hrs</td>
+                    <td><strong>${formatNumber(row.ddd_demand, 0)}</strong></td>
                 </tr>
-            `).join('');
+            `).reverse().join('');
         }
 
         function updatePredictionsTab() {
-            const { predictions } = dashboardData;
-            const bestModel = predictions.best_model;
-            const bestModelPreds = predictions.predictions[bestModel];
+            const { best_model, predictions } = dashboardData.predictions;
+            const bestModelPreds = predictions[best_model];
             
-            document.getElementById('bestModelName').textContent = bestModel;
+            document.getElementById('bestModelName').textContent = best_model;
             
-            // Get sorted prediction dates
+            // Sort prediction dates chronologically
             const predictionDates = Object.keys(bestModelPreds)
-                .map(dateStr => DateTime.fromFormat(dateStr, 'MMMM yyyy'))
+                .map(d => DateTime.fromFormat(d, 'MMMM yyyy'))
                 .sort((a, b) => a - b);
             
-            // Update forecast values display
-            const forecastValuesContainer = document.getElementById('forecastValuesContainer');
-            forecastValuesContainer.innerHTML = predictionDates.map(date => {
-                const dateStr = date.toFormat('MMMM yyyy');
-                return `
-                    <div class="mb-3">
-                        <h5>${dateStr}</h5>
-                        <div class="h4 text-primary">${formatNumber(bestModelPreds[dateStr])}</div>
-                    </div>
-                `;
-            }).join('');
+            // Update forecast values
+            document.getElementById('forecastValuesContainer').innerHTML = predictionDates.map(date => `
+                <div class="mb-3">
+                    <h5>${date.toFormat('MMMM yyyy')}</h5>
+                    <div class="h4 text-primary">${formatNumber(bestModelPreds[date.toFormat('MMMM yyyy')], 0)}</div>
+                </div>
+            `).join('');
             
-            // Update forecast chart
+            // Create forecast chart
             createBarChart('forecastChart', {
-                labels: predictionDates.map(date => date.toFormat('MMMM yyyy')),
+                labels: predictionDates.map(d => d.toFormat('MMM yyyy')),
                 datasets: [{
-                    label: bestModel,
-                    data: predictionDates.map(date => bestModelPreds[date.toFormat('MMMM yyyy')]),
+                    label: best_model,
+                    data: predictionDates.map(d => bestModelPreds[d.toFormat('MMMM yyyy')]),
                     backgroundColor: predictionDates.map((_, i) => 
-                        `hsl(${i * 360 / predictionDates.length}, 70%, 50%)`)
+                        `hsl(${i * 120}, 70%, 50%)`)
                 }]
-            }, 'Forecasted Demand');
+            });
         }
 
         function updateComparisonTab() {
             const { testMetrics, predictions } = dashboardData;
             
-            // Get sorted prediction dates from the first model's predictions
-            const predictionDates = Object.keys(predictions.predictions[Object.keys(predictions.predictions)[0]])
-                .map(dateStr => DateTime.fromFormat(dateStr, 'MMMM yyyy'))
+            // Get sorted prediction dates from the first model
+            const firstModel = Object.keys(predictions.predictions)[0];
+            const predictionDates = Object.keys(predictions.predictions[firstModel])
+                .map(d => DateTime.fromFormat(d, 'MMMM yyyy'))
                 .sort((a, b) => a - b);
             
-            // Update table headers with actual dates
+            // Update date headers
             predictionDates.slice(0, 3).forEach((date, i) => {
                 document.getElementById(`predictionDate${i+1}`).textContent = date.toFormat('MMM yyyy');
             });
@@ -590,19 +622,19 @@
                     label: 'Mean Absolute Error',
                     data: testMetrics.map(m => m.mae),
                     backgroundColor: testMetrics.map((_, i) => 
-                        `hsl(${i * 360 / testMetrics.length}, 70%, 50%)`)
+                        `hsl(${i * 120}, 70%, 50%)`)
                 }]
-            }, 'Model Performance (Lower is better)');
+            });
             
             // Prediction Comparison Chart
             createBarChart('predictionChart', {
-                labels: predictionDates.map(date => date.toFormat('MMMM yyyy')),
-                datasets: Object.entries(predictions.predictions).map(([model, preds]) => ({
+                labels: predictionDates.map(d => d.toFormat('MMM yyyy')),
+                datasets: Object.entries(predictions.predictions).map(([model, preds], i) => ({
                     label: model,
                     data: predictionDates.map(date => preds[date.toFormat('MMMM yyyy')]),
-                    backgroundColor: `hsla(${Math.random() * 360}, 70%, 50%, 0.7)`
+                    backgroundColor: `hsl(${i * 120}, 70%, 60%)`
                 }))
-            }, 'Model Predictions Comparison');
+            });
             
             // Comparison Table
             document.getElementById('comparisonTableBody').innerHTML = testMetrics.map(metric => {
@@ -610,189 +642,152 @@
                 return `
                     <tr>
                         <td>${metric.model_name}</td>
-                        <td>${formatNumber(metric.mae, 4)}</td>
-                        ${predictionDates.slice(0, 3).map(date => `
-                            <td>${formatNumber(modelPreds[date.toFormat('MMMM yyyy')])}</td>
-                        `).join('')}
-                    </tr>
-                `;
+                        <td>${formatNumber(metric.mae, 2)}</td>
+                        ${predictionDates.slice(0,3).map(d => 
+                            `<td>${formatNumber(modelPreds[d.toFormat('MMMM yyyy')], 0)}</td>`
+                        ).join('')}
+                    </tr>`;
             }).join('');
         }
 
-        function createLineChart(canvasId, data, title) {
+        function createChart(canvasId, type, data, options = {}) {
             const ctx = document.getElementById(canvasId).getContext('2d');
-            
             if (charts[canvasId]) {
                 charts[canvasId].destroy();
             }
             
-            charts[canvasId] = new Chart(ctx, {
-                type: 'line',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: { 
-                            display: true, 
-                            text: title,
+            const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
+            const textColor = isDark ? '#e9ecef' : '#495057';
+            
+            const defaultOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        labels: { 
+                            color: textColor,
                             font: {
-                                size: 16,
-                                weight: 'bold'
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += formatNumber(context.parsed.y);
-                                    }
-                                    return label;
-                                },
-                                afterLabel: function(context) {
-                                    if (context.datasetIndex === 1) { // Forecast dataset
-                                        const date = DateTime.fromJSDate(context.parsed.x).toFormat('MMMM yyyy');
-                                        return `Period: ${date}`;
-                                    }
-                                    return '';
-                                }
+                                family: 'Inter'
                             }
                         }
                     },
-                    scales: {
-                        x: {
-                            type: 'time',
-                            time: {
-                                unit: 'month',
-                                displayFormats: { month: 'MMM yyyy' }
-                            },
-                            title: { 
-                                display: true, 
-                                text: 'Date',
-                                font: {
-                                    weight: 'bold'
-                                }
-                            }
+                    tooltip: {
+                        backgroundColor: isDark ? '#2b2b2b' : '#ffffff',
+                        titleColor: textColor,
+                        bodyColor: textColor,
+                        borderColor: gridColor,
+                        borderWidth: 1,
+                        titleFont: {
+                            family: 'Inter',
+                            weight: 'bold'
                         },
-                        y: { 
-                            title: { 
-                                display: true, 
-                                text: 'Demand',
-                                font: {
-                                    weight: 'bold'
+                        bodyFont: {
+                            family: 'Inter'
+                        },
+                        callbacks: {
+                            label: context => {
+                                let label = context.dataset.label || '';
+                                if (label) label += ': ';
+                                if (context.parsed.y !== null) {
+                                    label += formatNumber(context.parsed.y);
                                 }
-                            },
-                            beginAtZero: true
+                                return label;
+                            }
                         }
                     }
+                },
+                scales: {
+                    x: {
+                        grid: { color: gridColor },
+                        ticks: { color: textColor },
+                        type: data.datasets?.[0]?.data?.[0]?.x instanceof Date ? 'time' : 'category',
+                        time: { unit: 'month' }
+                    },
+                    y: {
+                        grid: { color: gridColor },
+                        ticks: { color: textColor },
+                        beginAtZero: true
+                    }
                 }
+            };
+            
+            // Special options for radar chart
+            if (type === 'radar') {
+                defaultOptions.scales = {
+                    r: {
+                        angleLines: { color: gridColor },
+                        grid: { color: gridColor },
+                        pointLabels: { color: textColor },
+                        ticks: { 
+                            color: textColor,
+                            backdropColor: 'transparent'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                };
+            }
+            
+            charts[canvasId] = new Chart(ctx, { 
+                type, 
+                data, 
+                options: { ...defaultOptions, ...options } 
             });
         }
 
-        function createBarChart(canvasId, data, title) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            
-            if (charts[canvasId]) {
-                charts[canvasId].destroy();
-            }
-            
-            charts[canvasId] = new Chart(ctx, {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: { 
-                            display: true, 
-                            text: title,
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.dataset.label}: ${formatNumber(context.parsed.y)}`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: { 
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                font: {
-                                    weight: 'bold'
-                                }
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                font: {
-                                    weight: 'bold'
-                                }
-                            }
-                        }
-                    }
-                }
-            });
+        function createLineChart(id, data) { 
+            createChart(id, 'line', data); 
         }
 
-        function createRadarChart(canvasId, data, title) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            
-            if (charts[canvasId]) {
-                charts[canvasId].destroy();
-            }
-            
-            charts[canvasId] = new Chart(ctx, {
-                type: 'radar',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: { 
-                            display: true, 
-                            text: title,
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            }
-                        }
-                    },
-                    scales: {
-                        r: {
-                            angleLines: { display: true },
-                            suggestedMin: 0,
-                            suggestedMax: 100,
-                            ticks: {
-                                stepSize: 20
-                            }
-                        }
-                    }
-                }
-            });
+        function createBarChart(id, data) { 
+            createChart(id, 'bar', data); 
+        }
+
+        function createRadarChart(id, data) { 
+            createChart(id, 'radar', data); 
         }
 
         function formatNumber(value, decimals = 2) {
             if (value === undefined || value === null || isNaN(value)) return 'N/A';
             return value.toLocaleString(undefined, {
-                minimumFractionDigits: 0,
+                minimumFractionDigits: decimals,
                 maximumFractionDigits: decimals
             });
         }
 
         function showLoading(show) {
             document.getElementById('loadingSpinner').style.display = show ? 'flex' : 'none';
+            document.getElementById('refreshData').disabled = show;
+            
+            if (show) {
+                document.querySelectorAll('.metric-value').forEach(el => {
+                    el.textContent = 'Loading...';
+                });
+            }
+        }
+
+        function showError(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+                setTimeout(() => alertDiv.remove(), 150);
+            }, 5000);
+        }
+
+        function updateLastUpdated() {
+            const now = DateTime.now().setZone('Africa/Kampala');
+            document.getElementById('lastUpdated').querySelector('span').textContent = 
+                `Updated: ${now.toFormat('MMM dd, HH:mm')}`;
         }
     </script>
 </body>
