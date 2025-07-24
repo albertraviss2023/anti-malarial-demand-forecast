@@ -1,255 +1,188 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uganda Malaria Dashboard</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css?v=2" />
-    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js?v=2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>MalariaShield - Uganda Malaria Dashboard</title>
+    
+    <!-- CSS Dependencies -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+    
     <style>
         :root {
-            --primary-color: #2c7be5;
-            --secondary-color: #6e84a3;
-            --success-color: #00d97e;
-            --warning-color: #f6c343;
-            --danger-color: #e63757;
-            --info-color: #39afd1;
-            --light-bg: #f9fbfd;
-            --dark-bg: #1a1a1a;
-            --card-shadow: 0 0.375rem 1.5rem 0 rgba(140, 152, 164, 0.125);
-            --transition: all 0.3s ease;
+            /* Color Scheme */
+            --primary-color: #00BFA5;
+            --primary-rgb: 0, 191, 165;
+            --primary-dark: #008f7a;
+            --primary-light: #a7ffeb;
+            
+            --success-color: #4CAF50;
+            --warning-color: #FFC107;
+            --danger-color: #F44336;
+            --info-color: #2196F3;
+            
+            /* Light Theme */
+            --body-bg: #F4F7FC;
+            --card-bg: #FFFFFF;
+            --text-color: #475569;
+            --heading-color: #1E293B;
+            --border-color: #E2E8F0;
+            --sidebar-bg: #1E293B;
+            --sidebar-text: #CBD5E1;
+            --sidebar-active-text: #FFFFFF;
+            --sidebar-hover-bg: #334155;
+            --sidebar-active-border: var(--primary-color);
+            
+            /* Shared Variables */
+            --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07);
+            --box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --border-radius: 0.5rem;
+            --transition-speed: 0.3s;
+        }
+
+        [data-bs-theme="dark"] {
+            /* Dark Theme */
+            --body-bg: #131722;
+            --card-bg: #1E293B;
+            --text-color: #CBD5E1;
+            --heading-color: #F8FAFC;
+            --border-color: #334155;
+            --sidebar-bg: #1E293B;
+            --sidebar-text: #94A3B8;
+            --sidebar-active-text: #FFFFFF;
+            --sidebar-hover-bg: #334155;
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            transition: var(--transition);
-            line-height: 1.6;
-        }
-        
-        body.light-mode {
-            background-color: var(--light-bg);
-            color: #12263f;
-        }
-        
-        body.dark-mode {
-            background-color: #0e1726;
-            color: #d8e2ef;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
         }
 
-        .header {
-            padding: 1.5rem 2rem;
-            text-align: center;
-            transition: var(--transition);
-            position: relative;
-            box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
-        }
+        .dashboard-wrapper { display: flex; min-height: 100vh; }
         
-        .header.light-mode {
-            background-color: var(--primary-color);
-            color: white;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #1a5dc6 100%);
-        }
-        
-        .header.dark-mode {
-            background-color: #1e293b;
-            color: #ffffff;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-        }
-        
-        .header h1 {
-            margin: 0;
-            font-size: 1.75rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        
-        .header .subtitle {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-top: 0.5rem;
-        }
-
-        .theme-toggle {
-            position: absolute;
-            top: 1.5rem;
-            right: 2rem;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: var(--transition);
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            flex-direction: column;
+            position: fixed;
+            top: 0; left: 0; height: 100vh;
+            transition: width var(--transition-speed) ease;
+            z-index: 1030;
+            border-right: 1px solid var(--border-color);
         }
-        
-        .theme-toggle.light-mode {
-            background-color: rgba(255, 255, 255, 0.9);
-            color: var(--primary-color);
-            box-shadow: var(--card-shadow);
+        .sidebar-header {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            height: 65px;
+            white-space: nowrap;
         }
-        
-        .theme-toggle.dark-mode {
-            background-color: rgba(30, 41, 59, 0.9);
-            color: #e0e0e0;
-            box-shadow: 0 0.375rem 1.5rem 0 rgba(0, 0, 0, 0.2);
+        .sidebar-header .fa-shield-virus { font-size: 1.75rem; color: var(--primary-color); }
+        .sidebar-title { font-size: 1.5rem; font-weight: 700; color: var(--sidebar-active-text); margin: 0; }
+        .sidebar-nav { flex-grow: 1; padding: 1rem; }
+        .sidebar-nav .nav-link {
+            display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1.25rem;
+            border-radius: var(--border-radius); color: var(--sidebar-text); font-weight: 500;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            border-left: 3px solid transparent;
         }
-        
-        .theme-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+        .sidebar-nav .nav-link:hover { background-color: var(--sidebar-hover-bg); color: var(--sidebar-active-text); }
+        .sidebar-nav .nav-link.active {
+            background-color: var(--sidebar-hover-bg);
+            color: var(--sidebar-active-text);
+            border-left-color: var(--sidebar-active-border);
         }
+        .sidebar-nav .nav-link .fas { font-size: 1.1rem; width: 20px; text-align: center; }
+        .sidebar-footer { padding: 1rem; border-top: 1px solid #334155; }
+        .last-updated { font-size: 0.8rem; color: var(--sidebar-text); text-align: center; margin-top: 1rem; }
 
-        .tab {
-            overflow: hidden;
-            transition: var(--transition);
-            position: relative;
-            z-index: 10;
-            display: flex;
-            justify-content: center;
-            box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
-        }
-        
-        .tab.light-mode {
-            background-color: white;
-        }
-        
-        .tab.dark-mode {
-            background-color: #1e293b;
-        }
-        
-        .tab button.tablinks {
-            background-color: inherit;
-            color: inherit;
-            float: left;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 1rem 1.5rem;
-            transition: var(--transition);
-            font-size: 0.95rem;
-            font-weight: 500;
-            position: relative;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .tab button.tablinks:hover {
-            color: var(--primary-color);
-        }
-        
-        .tab button.tablinks.active.light-mode {
-            color: var(--primary-color);
-        }
-        
-        .tab button.tablinks.active.dark-mode {
-            color: #3b82f6;
-        }
-        
-        .tab button.tablinks.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50%;
-            height: 3px;
-            border-radius: 3px 3px 0 0;
-        }
-        
-        .tab button.tablinks.active.light-mode::after {
-            background-color: var(--primary-color);
-        }
-        
-        .tab button.tablinks.active.dark-mode::after {
-            background-color: #3b82f6;
-        }
-
-        .tabcontent {
-            display: none;
+        /* --- Main Content --- */
+        .main-content {
+            flex-grow: 1;
+            margin-left: 260px;
             padding: 2rem;
-            margin: 1.5rem;
-            border-radius: 0.5rem;
-            box-shadow: var(--card-shadow);
-            transition: var(--transition);
-            animation: fadeIn 0.5s ease-out;
+            transition: margin-left var(--transition-speed) ease;
         }
-        
-        .tabcontent.light-mode {
-            background-color: white;
-            color: #12263f;
+        .main-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 2rem;
         }
-        
-        .tabcontent.dark-mode {
-            background-color: #1e293b;
-            color: #d8e2ef;
-        }
-        
-        .tabcontent.active {
-            display: block;
-        }
+        #pageTitle { font-size: 1.75rem; font-weight: 700; color: var(--heading-color); }
+        .header-actions { display: flex; gap: 1rem; align-items: center; }
+        #sidebarToggle { color: var(--heading-color); }
 
-        .info {
-            padding: 0.75rem 1rem;
-            font: 14px/16px 'Roboto', sans-serif;
-            background: rgba(255,255,255,0.9);
-            box-shadow: 0 0 1rem rgba(0,0,0,0.2);
-            border-radius: 0.5rem;
-            transition: var(--transition);
+        /* --- Cards & Charts --- */
+        .dashboard-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            margin-bottom: 1.5rem;
+            border-top: 3px solid transparent;
         }
-        
-        .info.dark-mode {
-            background: rgba(30, 41, 59, 0.9);
-            color: #d8e2ef;
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow-lg);
         }
-        
-        .info h4 {
-            margin: 0 0 0.5rem;
-            color: var(--secondary-color);
-            font-size: 0.95rem;
+        .card-body { padding: 1.5rem; }
+        .card-title {
+            font-weight: 600; font-size: 1.1rem;
+            color: var(--heading-color); margin-bottom: 1rem;
+            display: flex; align-items: center; gap: 0.75rem;
         }
-        
-        .info.dark-mode h4 {
-            color: #94a3b8;
-        }
+        .chart-container { min-height: 400px; width: 100%; }
 
-        .legend {
-            line-height: 1.5;
-            color: var(--secondary-color);
-            font-size: 0.9rem;
+        /* --- KPI Cards --- */
+        .kpi-card {
+            flex: 1; min-width: 200px; padding: 1.5rem;
+            text-align: left;
+            border-left: 4px solid var(--primary-color);
         }
-        
-        .legend.dark-mode {
-            color: #94a3b8;
+        .kpi-label { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.25rem; }
+        .kpi-value {
+            font-size: 2.25rem; font-weight: 700;
+            color: var(--heading-color);
         }
-        
-        .legend i {
-            width: 1rem;
-            height: 1rem;
-            float: left;
-            margin-right: 0.5rem;
-            opacity: 0.8;
-            border-radius: 50%;
+        .kpi-change {
+            font-size: 0.85rem; margin-top: 0.5rem;
+            display: flex; align-items: center; gap: 0.25rem;
         }
+        .kpi-change.positive { color: var(--danger-color); }
+        .kpi-change.negative { color: var(--success-color); }
 
+        /* --- Map Styles --- */
+        #map {
+            height: 550px; width: 100%;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+        }
+        
+        /* Enhanced Map Markers */
         .district-marker {
-            animation: glow 2s infinite alternate;
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
         }
         
-        .high-glow {
+        .district-marker.high-risk {
             animation: high-glow 2s infinite alternate, flicker 0.3s infinite alternate;
         }
         
-        .medium-glow {
-            animation: medium-glow 2s infinite alternate, flicker 0.3s infinite alternate;
+        .district-marker.medium-risk {
+            animation: medium-glow 2s infinite alternate;
         }
         
-        .low-glow {
+        .district-marker.low-risk {
             animation: low-glow 2s infinite alternate;
         }
         
@@ -273,1694 +206,774 @@
             to { opacity: 0.7; }
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .marker-circle {
-            width: 1rem;
-            height: 1rem;
-            border-radius: 50%;
-            border: 2px solid white;
-            position: relative;
+        /* Enhanced Popups */
+        .leaflet-popup-content-wrapper {
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-lg);
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
         }
         
-        .marker-circle.dark-mode {
-            border: 2px solid #1e293b;
-        }
-
-        .filter-controls {
-            margin-bottom: 1.5rem;
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .filter-controls select, .filter-controls input {
-            padding: 0.75rem 1rem;
-            font-size: 0.95rem;
-            border-radius: 0.5rem;
-            border: 1px solid #e3ebf6;
-            transition: var(--transition);
+        .leaflet-popup-content {
+            margin: 0.75rem;
+            font-family: 'Inter', sans-serif;
             min-width: 200px;
         }
         
-        .filter-controls select.light-mode {
-            background-color: #fff;
-            color: #12263f;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
-        }
-        
-        .filter-controls select.dark-mode {
-            background-color: #1e293b;
-            color: #d8e2ef;
-            border-color: #334155;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
-        }
-        
-        .filter-controls label {
-            font-weight: 500;
+        .leaflet-popup-content h5 {
+            color: var(--heading-color);
             margin-bottom: 0.5rem;
-            display: block;
-            font-size: 0.95rem;
+            font-weight: 600;
         }
         
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .map-and-chart-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-        
-        #map {
-            flex: 2;
-            min-width: 300px;
-            height: 500px;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            box-shadow: var(--card-shadow);
-        }
-        
-        .chart-container {
-            flex: 1;
-            min-width: 300px;
-            height: 500px;
-            background-color: transparent;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            box-shadow: var(--card-shadow);
-        }
-        
-        .plotly-chart {
+        .leaflet-popup-content .risk-meter {
+            height: 6px;
             width: 100%;
-            height: 100%;
-            background-color: transparent;
-        }
-
-        .metrics-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 2rem;
-            box-shadow: var(--card-shadow);
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
-        
-        .metrics-table th, .metrics-table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #e3ebf6;
-        }
-        
-        .metrics-table.light-mode th {
-            background-color: #f8fafd;
-            color: #12263f;
-            font-weight: 600;
-        }
-        
-        .metrics-table.dark-mode th {
-            background-color: #1e293b;
-            color: #d8e2ef;
-            font-weight: 600;
-            border-bottom-color: #334155;
-        }
-        
-        .metrics-table.light-mode td {
-            background-color: white;
-            color: #12263f;
-        }
-        
-        .metrics-table.dark-mode td {
-            background-color: #1e293b;
-            color: #d8e2ef;
-            border-bottom-color: #334155;
-        }
-        
-        .metrics-table.light-mode tr.best-model {
-            background-color: #f0f7ff;
-        }
-        
-        .metrics-table.dark-mode tr.best-model {
-            background-color: rgba(59, 130, 246, 0.2);
-        }
-        
-        .metrics-table tr:hover td {
-            background-color: rgba(44, 123, 229, 0.05);
-        }
-        
-        .metrics-table.dark-mode tr:hover td {
-            background-color: rgba(59, 130, 246, 0.1);
-        }
-
-        .overview-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            margin-top: 1.5rem;
-        }
-        
-        .insight-card {
-            flex: 1;
-            min-width: 250px;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            box-shadow: var(--card-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s, color 0.3s;
-            animation: slideIn 0.5s ease-out forwards;
-            position: relative;
-            perspective: 1000px;
-        }
-        
-        .insight-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
-        }
-        
-        .insight-card.light-mode {
-            background-color: white;
-            color: #12263f;
-        }
-        
-        .insight-card.dark-mode {
-            background-color: #1e293b;
-            color: #d8e2ef;
-        }
-        
-        .insight-card h3 {
-            margin: 0 0 1rem;
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: inherit;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-        
-        .insight-card h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 3rem;
-            height: 3px;
+            background: linear-gradient(to right, var(--success-color), var(--warning-color), var(--danger-color));
             border-radius: 3px;
-            background-color: var(--primary-color);
-        }
-        
-        .insight-card.dark-mode h3::after {
-            background-color: #3b82f6;
-        }
-        
-        .insight-card p, .insight-card ul {
-            margin: 0 0 1rem;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--secondary-color);
-        }
-        
-        .insight-card.dark-mode p, .insight-card.dark-mode ul {
-            color: #94a3b8;
-        }
-        
-        .insight-card ul {
-            padding-left: 1.5rem;
-        }
-        
-        .insight-card li {
-            margin-bottom: 0.5rem;
-            position: relative;
-        }
-        
-        .insight-card li::before {
-            content: '•';
-            color: var(--primary-color);
-            font-weight: bold;
-            display: inline-block;
-            width: 1em;
-            margin-left: -1em;
-        }
-        
-        .insight-card.dark-mode li::before {
-            color: #3b82f6;
-        }
-
-        .status-high {
-            color: var(--danger-color);
-            font-weight: 600;
-        }
-        
-        .status-medium {
-            color: var(--warning-color);
-            font-weight: 600;
-        }
-        
-        .status-low {
-            color: var(--success-color);
-            font-weight: 600;
-        }
-        
-        .change-significant.change-up::before {
-            content: '↑ ';
-            color: var(--danger-color);
-        }
-        
-        .change-significant.change-down::before {
-            content: '↓ ';
-            color: var(--success-color);
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: inherit;
-            position: relative;
-            padding-bottom: 0.75rem;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 4rem;
-            height: 4px;
-            border-radius: 4px;
-            background-color: var(--primary-color);
-        }
-        
-        .dark-mode .section-title::after {
-            background-color: #3b82f6;
-        }
-        
-        .section-description {
-            margin-bottom: 2rem;
-            color: var(--secondary-color);
-            font-size: 1rem;
-            max-width: 800px;
-        }
-        
-        .dark-mode .section-description {
-            color: #94a3b8;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        .trends-container {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-        
-        .correlation-plots {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-        
-        .correlation-plot {
-            flex: 1;
-            min-width: 300px;
-            height: 300px;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            box-shadow: var(--card-shadow);
-        }
-        
-        .metrics-analysis {
-            background-color: #f8fafd;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            margin-top: 2rem;
-            box-shadow: var(--card-shadow);
-        }
-        
-        .dark-mode .metrics-analysis {
-            background-color: #1e293b;
-        }
-        
-        .metrics-analysis h3 {
-            margin-top: 0;
-            color: inherit;
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-        
-        .metrics-analysis p {
-            margin-bottom: 1rem;
-            color: var(--secondary-color);
-            line-height: 1.6;
-        }
-        
-        .dark-mode .metrics-analysis p {
-            color: #94a3b8;
-        }
-        
-        .metrics-analysis strong {
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-        
-        .dark-mode .metrics-analysis strong {
-            color: #3b82f6;
-        }
-
-        .kpi-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .kpi-card {
-            flex: 1;
-            min-width: 200px;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            box-shadow: var(--card-shadow);
-            transition: var(--transition);
-            text-align: center;
-        }
-        
-        .kpi-card.light-mode {
-            background-color: white;
-        }
-        
-        .kpi-card.dark-mode {
-            background-color: #1e293b;
-        }
-        
-        .kpi-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
-        }
-        
-        .kpi-value {
-            font-size: 2rem;
-            font-weight: 700;
             margin: 0.5rem 0;
-            color: var(--primary-color);
         }
         
-        .dark-mode .kpi-value {
-            color: #3b82f6;
+        /* Enhanced Legend */
+        .leaflet-control.legend {
+            padding: 0.75rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
         }
         
-        .kpi-label {
+        .leaflet-control.legend h4 {
+            margin: 0 0 0.5rem;
+            color: var(--heading-color);
             font-size: 0.9rem;
-            color: var(--secondary-color);
-            margin: 0;
+            font-weight: 600;
         }
         
-        .dark-mode .kpi-label {
-            color: #94a3b8;
-        }
-        
-        .kpi-change {
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
+        .leaflet-control.legend .legend-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.25rem;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
         }
         
-        .kpi-change.positive {
-            color: var(--danger-color);
-        }
-        
-        .kpi-change.negative {
-            color: var(--success-color);
+        .leaflet-control.legend .legend-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid var(--card-bg);
         }
 
+        /* --- Tables --- */
+        .table { --bs-table-bg: var(--card-bg); --bs-table-striped-bg: var(--body-bg); --bs-table-color: var(--text-color); --bs-table-border-color: var(--border-color); }
+        .table-hover > tbody > tr { transition: background-color 0.2s; }
+        .table-hover > tbody > tr:hover { background-color: rgba(var(--primary-rgb), 0.1); cursor: pointer; }
+        .best-model { background-color: rgba(var(--primary-rgb), 0.15) !important; }
+        .table thead th {
+            background-color: var(--body-bg); color: var(--heading-color);
+            font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;
+        }
+
+        /* --- Status Indicators --- */
+        .status-high { color: var(--danger-color); font-weight: 600; }
+        .status-medium { color: var(--warning-color); font-weight: 600; }
+        .status-low { color: var(--success-color); font-weight: 600; }
+
+        /* --- Loading Spinner --- */
+        .loading-spinner {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            display: none; justify-content: center; align-items: center; z-index: 9999;
+        }
+        .loading-spinner .spinner-border { width: 3rem; height: 3rem; color: var(--primary-color); }
+
+        /* --- Responsive Design --- */
         @media (max-width: 992px) {
-            .header h1 {
-                font-size: 1.5rem;
-            }
-            
-            .header .subtitle {
-                font-size: 0.8rem;
-            }
-            
-            .theme-toggle {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.8rem;
-                top: 1rem;
-                right: 1rem;
-            }
-            
-            .tab button.tablinks {
-                padding: 0.75rem 1rem;
-                font-size: 0.85rem;
-            }
-            
-            .tabcontent {
-                padding: 1.5rem;
-                margin: 1rem;
-            }
-            
-            .filter-controls {
-                gap: 1rem;
-            }
-            
-            .filter-controls select, .filter-controls input {
-                min-width: 160px;
-                padding: 0.6rem 0.8rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .map-and-chart-container {
-                flex-direction: column;
-            }
-            
-            #map, .chart-container {
-                width: 100%;
-                height: 400px;
-            }
-            
-            .tab button.tablinks { 
-                padding: 0.6rem 0.8rem; 
-                font-size: 0.8rem; 
-            }
-            
-            .filter-controls { 
-                flex-direction: column; 
-                align-items: flex-start; 
-                gap: 1rem; 
-            }
-            
-            .correlation-plots { 
-                flex-direction: column; 
-            }
-            
-            .correlation-plot { 
-                height: 250px; 
-                min-width: 100%;
-            }
-            
-            .overview-container {
-                flex-direction: column;
-            }
-            
-            .insight-card {
-                min-width: 100%;
-            }
-            
-            .section-title {
-                font-size: 1.3rem;
-            }
-            
-            .kpi-card {
-                min-width: calc(50% - 0.75rem);
-            }
-        }
-
-        @media (max-width: 576px) {
-            .header {
-                padding: 1rem;
-            }
-            
-            .header h1 {
-                font-size: 1.3rem;
-                padding-right: 100px;
-            }
-            
-            .theme-toggle {
-                top: 0.5rem;
-                right: 0.5rem;
-                padding: 0.3rem 0.6rem;
-                font-size: 0.7rem;
-            }
-            
-            .tab {
-                flex-wrap: wrap;
-                justify-content: flex-start;
-            }
-            
-            .tab button.tablinks {
-                padding: 0.5rem 0.75rem;
-                font-size: 0.75rem;
-            }
-            
-            .tabcontent {
-                padding: 1rem;
-                margin: 0.5rem;
-            }
-            
-            .kpi-card {
-                min-width: 100%;
-            }
+            .sidebar { width: 80px; }
+            .sidebar-title, .sidebar-nav span, .sidebar-footer .btn span { display: none; }
+            .sidebar-header, .nav-link { justify-content: center; }
+            .main-content { margin-left: 80px; }
         }
     </style>
 </head>
-<body class="light-mode">
-    <div class="header light-mode">
-        <h1>Uganda Malaria Surveillance Dashboard</h1>
-        <div class="subtitle">Monitoring and Predictive Analysis | May - August 2025</div>
-        <button class="theme-toggle light-mode" id="themeToggle">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-            Dark Mode
-        </button>
-    </div>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-shield-virus"></i>
+                <h1 class="sidebar-title">MalariaShield</h1>
+            </div>
+            <nav class="sidebar-nav nav flex-column">
+                <a href="#overview" class="nav-link active" data-bs-toggle="tab"><i class="fas fa-chart-pie"></i><span>Overview</span></a>
+                <a href="#trends" class="nav-link" data-bs-toggle="tab"><i class="fas fa-chart-line"></i><span>Trends</span></a>
+                <a href="#map-view" class="nav-link" data-bs-toggle="tab"><i class="fas fa-map-marked-alt"></i><span>Geospatial</span></a>
+                <a href="#models" class="nav-link" data-bs-toggle="tab"><i class="fas fa-cogs"></i><span>Models</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn btn-outline-secondary w-100" id="themeToggle"><i class="fas fa-moon"></i> <span>Dark Mode</span></button>
+                <div class="last-updated" id="lastUpdated"><i class="fas fa-clock"></i> <span>Loading...</span></div>
+            </div>
+        </aside>
 
-    <div class="tab light-mode">
-        <button class="tablinks active" id="overviewTab" data-tab="Overview">Overview</button>
-        <button class="tablinks" id="trendsTab" data-tab="Trends">Trends</button>
-        <button class="tablinks" id="mapTab" data-tab="Map">Geospatial Analysis</button>
-        <button class="tablinks" id="modelMetricsTab" data-tab="ModelMetrics">Model Performance</button>
-    </div>
-
-    <div id="Overview" class="tabcontent light-mode active">
-        <h2 class="section-title">Dashboard Overview</h2>
-        <p class="section-description">Welcome to the Uganda Malaria Surveillance Dashboard. This interactive platform provides predictive insights into malaria case trends across Ugandan districts from May to August 2025, powered by advanced machine learning models.</p>
-        
-        <div class="kpi-container">
-            <div class="kpi-card light-mode">
-                <div class="kpi-label">Total Predicted Cases (May-Aug)</div>
-                <div class="kpi-value" id="totalCasesKPI">-</div>
-                <div class="kpi-change" id="casesChangeKPI">Loading...</div>
-            </div>
-            <div class="kpi-card light-mode">
-                <div class="kpi-label">High Risk Districts (Aug)</div>
-                <div class="kpi-value" id="highRiskKPI">-</div>
-                <div class="kpi-change" id="riskChangeKPI">Loading...</div>
-            </div>
-            <div class="kpi-card light-mode">
-                <div class="kpi-label">Best Model Accuracy</div>
-                <div class="kpi-value" id="modelAccuracyKPI">-</div>
-                <div class="kpi-label">(MAE Score)</div>
-            </div>
-            <div class="kpi-card light-mode">
-                <div class="kpi-label">Climate Correlation</div>
-                <div class="kpi-value" id="climateCorrelationKPI">-</div>
-                <div class="kpi-label">(Max Temp)</div>
-            </div>
-        </div>
-        
-        <div id="overviewInsights" class="overview-container"></div>
-    </div>
-
-    <div id="Trends" class="tabcontent light-mode">
-        <h2 class="section-title">Malaria & Climate Trends</h2>
-        <p class="section-description">Historical trends and correlations between malaria cases and climate factors. Explore how temperature, humidity, precipitation, and sunshine hours relate to malaria incidence patterns.</p>
-        
-        <div class="trends-container">
-            <div class="chart-container">
-                <div id="malariaTrendChart" class="plotly-chart"></div>
-            </div>
-            <div class="chart-container">
-                <div id="climateTrendChart" class="plotly-chart"></div>
-            </div>
+        <main class="main-content" id="mainContent">
+            <header class="main-header">
+                <h2 id="pageTitle">Uganda Malaria Surveillance</h2>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="refreshData"><i class="fas fa-sync-alt"></i> Refresh Data</button>
+                    <button class="btn btn-light" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+                </div>
+            </header>
             
-            <h3 style="margin: 1rem 0 0.5rem; font-weight: 500; color: var(--secondary-color);">Climate Factor Correlations</h3>
-            <p style="margin-bottom: 1.5rem; color: var(--secondary-color); font-size: 0.95rem;">Pearson correlation coefficients between malaria cases and climate variables (r values range from -1 to 1, where 1 indicates perfect positive correlation).</p>
-            
-            <div class="correlation-plots">
-                <div id="corrTempMax" class="correlation-plot"></div>
-                <div id="corrTempMin" class="correlation-plot"></div>
-                <div id="corrHumidity" class="correlation-plot"></div>
-                <div id="corrPrecipitation" class="correlation-plot"></div>
-                <div id="corrSunshine" class="correlation-plot"></div>
+            <div class="loading-spinner" id="loadingSpinner"><div class="spinner-border"></div></div>
+
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                           <div class="dashboard-card kpi-card">
+                               <div class="kpi-label">Total Predicted Cases</div>
+                               <div class="kpi-value" id="totalCasesKPI">-</div>
+                               <div class="kpi-change" id="casesChangeKPI">May - Aug 2025</div>
+                           </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                           <div class="dashboard-card kpi-card">
+                               <div class="kpi-label">High Risk Districts (Aug)</div>
+                               <div class="kpi-value" id="highRiskKPI">-</div>
+                               <div class="kpi-change" id="riskChangeKPI">vs May 2025</div>
+                           </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                           <div class="dashboard-card kpi-card">
+                               <div class="kpi-label">Best Model (MAE)</div>
+                               <div class="kpi-value" id="modelAccuracyKPI">-</div>
+                               <div class="kpi-change" id="bestModelName">Loading...</div>
+                           </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                           <div class="dashboard-card kpi-card">
+                               <div class="kpi-label">Climate Correlation</div>
+                               <div class="kpi-value" id="climateCorrelationKPI">-</div>
+                               <div class="kpi-change">Max Temp vs. Cases</div>
+                           </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-7 mb-4">
+                            <div class="dashboard-card h-100" data-aos="fade-up" data-aos-delay="500">
+                                <div class="card-body">
+                                    <h4 class="card-title"><i class="fas fa-map-marked-alt text-primary"></i> Top 5 High-Burden Districts</h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="topDistrictsTable">
+                                            <thead><tr><th>District</th><th>Total Cases</th><th>May</th><th>June</th><th>August</th></tr></thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 mb-4">
+                            <div class="dashboard-card h-100" data-aos="fade-up" data-aos-delay="600">
+                                <div class="card-body">
+                                    <h4 class="card-title"><i class="fas fa-exclamation-triangle text-danger"></i> Key Insights</h4>
+                                    <div id="keyInsightsContent"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="trends" role="tabpanel">
+                    <div class="dashboard-card">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fas fa-chart-line text-primary"></i> National Malaria & Climate Trends (2020-2025)</h3>
+                            <p>Explore historical trends and correlations between total monthly malaria cases and key climate factors across Uganda.</p>
+                             <div class="row">
+                                <div class="col-lg-6"><div class="chart-container" id="malariaTrendChart"></div></div>
+                                <div class="col-lg-6"><div class="chart-container" id="climateTrendChart"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fas fa-thermometer-half text-primary"></i> Climate Factor Correlation Plots</h3>
+                             <div class="row">
+                                <div class="col-lg-4 col-md-6"><div class="chart-container" id="corrTempMax"></div></div>
+                                <div class="col-lg-4 col-md-6"><div class="chart-container" id="corrHumidity"></div></div>
+                                <div class="col-lg-4 col-md-6"><div class="chart-container" id="corrPrecipitation"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="map-view" role="tabpanel">
+                    <div class="dashboard-card">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fas fa-map-marked-alt text-primary"></i> Geospatial Analysis of Predicted Risk</h3>
+                            <p>Interactive map showing predicted malaria case status by district. Filter by month and risk level to identify high-priority areas.</p>
+                            <div class="d-flex flex-wrap gap-3 mb-4">
+                                <div>
+                                    <label for="monthFilter" class="form-label fw-bold">Select Month</label>
+                                    <select id="monthFilter" class="form-select">
+                                        <option value="May">May 2025</option>
+                                        <option value="June">June 2025</option>
+                                        <option value="August" selected>August 2025</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="statusFilter" class="form-label fw-bold">Filter by Risk Level</label>
+                                    <select id="statusFilter" class="form-select">
+                                        <option value="all">All Districts</option>
+                                        <option value="high">High Risk</option>
+                                        <option value="medium">Medium Risk</option>
+                                        <option value="low">Low Risk</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-8"><div id="map"></div></div>
+                                <div class="col-lg-4"><div class="chart-container" id="statusTrendChart"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="models" role="tabpanel">
+                     <div class="dashboard-card">
+                        <div class="card-body">
+                             <h3 class="card-title"><i class="fas fa-cogs text-primary"></i> Model Performance Metrics (MAE)</h3>
+                            <p>Comparative analysis of predictive model performance using Mean Absolute Error (MAE). Lower MAE values indicate better predictive accuracy. The best-performing model is highlighted.</p>
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="metricsTable">
+                                            <thead><tr><th>Model</th><th>MAE Sum</th><th>MAE</th><th>t+1 MAE</th><th>t+2 MAE</th><th>t+3 MAE</th></tr></thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="mt-4" id="metricsAnalysisContent"></div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="chart-container" id="maeChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </main>
     </div>
 
-    <div id="Map" class="tabcontent light-mode">
-        <h2 class="section-title">Geospatial Analysis</h2>
-        <p class="section-description">Interactive map showing predicted malaria case status by district. Filter by month and risk level to identify high-priority areas for intervention.</p>
-        
-        <div class="filter-controls">
-            <div class="filter-group">
-                <label for="monthFilter">Select Month</label>
-                <select id="monthFilter" class="light-mode" onchange="updateMap()">
-                    <option value="May">May 2025</option>
-                    <option value="June">June 2025</option>
-                    <option value="August">August 2025</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="statusFilter">Filter by Risk Level</label>
-                <select id="statusFilter" class="light-mode" onchange="filterMarkers()">
-                    <option value="all">All Districts</option>
-                    <option value="high">High Risk</option>
-                    <option value="medium">Medium Risk</option>
-                    <option value="low">Low Risk</option>
-                </select>
-            </div>
-        </div>
-        
-        <div class="map-and-chart-container">
-            <div id="map"></div>
-            <div class="chart-container">
-                <div id="statusTrendChart" class="plotly-chart"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="ModelMetrics" class="tabcontent light-mode">
-        <h2 class="section-title">Model Performance Metrics</h2>
-        <p class="section-description">Comparative analysis of predictive model performance using Mean Absolute Error (MAE) metrics. Lower MAE values indicate better predictive accuracy.</p>
-        
-        <table class="metrics-table light-mode" id="metricsTable">
-            <thead>
-                <tr>
-                    <th>Model</th>
-                    <th>MAE Sum</th>
-                    <th>MAE</th>
-                    <th>t+1 MAE</th>
-                    <th>t+2 MAE</th>
-                    <th>t+3 MAE</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        
-        <div class="chart-container">
-            <div id="maeChart" class="plotly-chart"></div>
-        </div>
-        
-        <div class="metrics-analysis light-mode" id="metricsAnalysis">
-            <h3>Model Performance Analysis</h3>
-            <p>The table and chart above display MAE metrics for five malaria prediction models: dense, LSTM, GRU, transformer, and XGBoost. The MAE Sum represents the total MAE across predictions, while individual MAEs (MAE, t+1 MAE, t+2 MAE, t+3 MAE) indicate errors for different prediction horizons.</p>
-            <p><strong>Best Model: <span id="bestModelName">-</span></strong></p>
-            <p>The <strong id="bestModelName2">-</strong> model has the lowest MAE Sum of <span id="bestModelScore">-</span>, indicating the best overall performance. This model is used for the malaria case predictions displayed in the dashboard. Its consistent performance across prediction horizons (t+1 MAE: <span id="t1mae">-</span>, t+2 MAE: <span id="t2mae">-</span>, t+3 MAE: <span id="t3mae">-</span>) makes it reliable for forecasting malaria cases in May, June, and August 2025.</p>
-        </div>
-    </div>
-
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js?v=2"></script>
+    <!-- JavaScript Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script>
-        let malariaData = [];
-        let modelMetrics = [];
-        let historicalData = null;
-        let map, districtsLayer;
-        let currentMonth = 'May';
-        let isDarkMode = localStorage.getItem('theme') === 'dark';
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- GLOBAL STATE & CONSTANTS ---
+          const API_ENDPOINTS = {
+            DISTRICTS: '/api/districts',
+            MALARIA_PREDICTIONS: '/api/malaria_predictions',
+            MODEL_METRICS: '/api/model_metrics',
+            MALARIA_HISTORICAL: '/api/malaria_historical'
+        };
 
-        function logDebug(message) {
-            console.log(`[DEBUG ${new Date().toISOString()}] ${message}`);
+        let state = {
+            malariaData: [],
+            modelMetrics: [],
+            historicalData: null,
+            currentMonth: 'August',
+            isSidebarCollapsed: localStorage.getItem('sidebarCollapsed') === 'true'
+        };
+
+        let map, districtsLayer, tileLayers, mapInfoControl, districtMarkers = {};
+        
+        // --- INITIALIZATION ---
+        function initializeDashboard() {
+            AOS.init({ duration: 800, once: true });
+            initializeTheme();
+            initializeSidebar();
+            setupEventListeners();
+            fetchData();
         }
 
-        function logError(message, error) {
-            console.error(`[ERROR ${new Date().toISOString()}] ${message}`, error);
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+            updateThemeIcon(savedTheme);
         }
 
+        function initializeSidebar() {
+             if (state.isSidebarCollapsed) {
+                document.getElementById('sidebar').classList.add('collapsed');
+                document.getElementById('mainContent').classList.add('sidebar-collapsed');
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+        function setupEventListeners() {
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
+            document.getElementById('refreshData').addEventListener('click', fetchData);
+            document.getElementById('monthFilter').addEventListener('change', (e) => {
+                state.currentMonth = e.target.value;
+                updateMap();
+            });
+            document.getElementById('statusFilter').addEventListener('change', filterMarkers);
+            
+            document.querySelectorAll('a[data-bs-toggle="tab"]').forEach(tab => {
+                tab.addEventListener('shown.bs.tab', (event) => {
+                    const targetId = event.target.getAttribute('href').substring(1);
+                    if (targetId === 'map-view' && !map) initMap();
+                    // Resize Plotly charts when their tab becomes visible
+                    window.dispatchEvent(new Event('resize')); 
+                });
+            });
+
+            document.getElementById('topDistrictsTable').addEventListener('click', (e) => {
+                const row = e.target.closest('tr');
+                if (row && row.dataset.districtId) {
+                    highlightMapMarker(row.dataset.districtId);
+                }
+            });
+        }
+        
+        // --- UI & THEME ---
         function toggleTheme() {
-            try {
-                logDebug('Toggling theme');
-                isDarkMode = !isDarkMode;
-                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-                document.body.className = isDarkMode ? 'dark-mode' : 'light-mode';
-                document.querySelector('.header').className = `header ${isDarkMode ? 'dark-mode' : 'light-mode'}`;
-                document.querySelector('.tab').className = `tab ${isDarkMode ? 'dark-mode' : 'light-mode'}`;
-                document.querySelectorAll('.tabcontent').forEach(el => {
-                    el.className = `tabcontent ${isDarkMode ? 'dark-mode' : 'light-mode'}${el.classList.contains('active') ? ' active' : ''}`;
-                });
-                document.querySelectorAll('.filter-controls select').forEach(el => {
-                    el.className = isDarkMode ? 'dark-mode' : 'light-mode';
-                });
-                document.querySelector('.metrics-table').className = `metrics-table ${isDarkMode ? 'dark-mode' : 'light-mode'}`;
-                document.querySelectorAll('.insight-card').forEach(el => {
-                    el.className = `insight-card ${isDarkMode ? 'dark-mode' : 'light-mode'}`;
-                });
-                document.querySelectorAll('.kpi-card').forEach(el => {
-                    el.className = `kpi-card ${isDarkMode ? 'dark-mode' : 'light-mode'}`;
-                });
-                document.querySelector('.metrics-analysis').className = `metrics-analysis ${isDarkMode ? 'dark-mode' : 'light-mode'}`;
-                document.getElementById('themeToggle').innerHTML = isDarkMode ? 
-                    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg> Light Mode' : 
-                    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg> Dark Mode';
-                document.getElementById('themeToggle').className = `theme-toggle ${isDarkMode ? 'dark-mode' : 'light-mode'}`;
-                if (map) {
-                    updateMap();
-                }
-                renderStatusTrendChart();
-                if (historicalData) {
-                    renderMalariaTrendChart();
-                    renderClimateTrendsChart();
-                    renderCorrelationPlots();
-                }
-                renderModelMetrics();
-                renderOverviewInsights();
-            } catch (e) {
-                logError('Failed to toggle theme', e);
-            }
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+            updateUIForThemeChange();
         }
 
-        function openTab(tabName) {
-            try {
-                logDebug(`Opening tab: ${tabName}`);
-                const tabcontents = document.querySelectorAll('.tabcontent');
-                tabcontents.forEach(content => {
-                    content.classList.remove('active');
-                });
-
-                const tablinks = document.querySelectorAll('.tablinks');
-                tablinks.forEach(link => {
-                    link.classList.remove('active');
-                });
-
-                const targetContent = document.getElementById(tabName);
-                if (targetContent) {
-                    targetContent.classList.add('active');
-                    logDebug(`Activated content for tab: ${tabName}`);
-                } else {
-                    logError(`Tab content not found for: ${tabName}`);
-                    return;
-                }
-
-                const targetLink = document.querySelector(`#${tabName.toLowerCase()}Tab`);
-                if (targetLink) {
-                    targetLink.classList.add('active');
-                    logDebug(`Activated button for tab: ${tabName}`);
-                } else {
-                    logError(`Tab link not found for: ${tabName}`);
-                }
-
-                if (tabName === 'Overview') {
-                    renderOverviewInsights();
-                } else if (tabName === 'Trends' && historicalData) {
-                    renderMalariaTrendChart();
-                    renderClimateTrendsChart();
-                    renderCorrelationPlots();
-                    setTimeout(() => {
-                        try {
-                            Plotly.Plots.resize(document.getElementById('malariaTrendChart'));
-                            Plotly.Plots.resize(document.getElementById('climateTrendChart'));
-                            ['corrTempMax', 'corrTempMin', 'corrHumidity', 'corrPrecipitation', 'corrSunshine'].forEach(id => {
-                                Plotly.Plots.resize(document.getElementById(id));
-                            });
-                            logDebug('Resized Trends charts');
-                        } catch (e) {
-                            logError('Failed to resize Trends charts', e);
-                        }
-                    }, 100);
-                } else if (tabName === 'Map') {
-                    initMap();
-                    setTimeout(() => {
-                        try {
-                            if (map) {
-                                map.invalidateSize();
-                                updateMap();
-                                logDebug('Map resized and updated');
-                            }
-                        } catch (e) {
-                            logError('Failed to resize/update map', e);
-                        }
-                    }, 200);
-                } else if (tabName === 'ModelMetrics') {
-                    renderModelMetrics();
-                }
-            } catch (e) {
-                logError(`Failed to open tab: ${tabName}`, e);
-            }
+        function updateThemeIcon(theme) {
+            const button = document.getElementById('themeToggle');
+            const icon = button.querySelector('i');
+            const text = button.querySelector('span');
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            if(text) text.textContent = theme === 'dark' ? ' Light Mode' : ' Dark Mode';
         }
 
-        function setupTabListeners() {
-            try {
-                logDebug('Setting up tab listeners');
-                const tablinks = document.querySelectorAll('.tablinks');
-                if (tablinks.length === 0) {
-                    logError('No tablinks found');
-                    return;
-                }
-                tablinks.forEach(button => {
-                    const tabName = button.getAttribute('data-tab');
-                    if (!tabName) {
-                        logError(`Missing data-tab for button ID: ${button.id}`);
-                        return;
-                    }
-                    button.addEventListener('click', () => {
-                        logDebug(`Tab button clicked: ${tabName}`);
-                        openTab(tabName);
-                    });
-                    logDebug(`Added listener for tab: ${tabName}`);
-                });
-            } catch (e) {
-                logError('Failed to setup tab listeners', e);
+        function updateUIForThemeChange() {
+            if (map && tileLayers) {
+                const newTheme = document.documentElement.getAttribute('data-bs-theme');
+                map.removeLayer(newTheme === 'dark' ? tileLayers.light : tileLayers.dark);
+                map.addLayer(newTheme === 'dark' ? tileLayers.dark : tileLayers.light);
             }
+            renderAllCharts();
         }
 
+        function toggleSidebar() {
+            state.isSidebarCollapsed = !state.isSidebarCollapsed;
+            document.getElementById('sidebar').classList.toggle('collapsed');
+            document.getElementById('mainContent').classList.toggle('sidebar-collapsed');
+            localStorage.setItem('sidebarCollapsed', state.isSidebarCollapsed);
+            setTimeout(() => window.dispatchEvent(new Event('resize')), 300); // Allow sidebar animation to finish
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingSpinner').style.display = show ? 'flex' : 'none';
+            document.getElementById('refreshData').disabled = show;
+        }
+
+        // --- DATA FETCHING & PROCESSING ---
         async function fetchData() {
+            showLoading(true);
             try {
-                logDebug('Fetching data');
-                const endpoints = [
-                    { url: '/api/districts', key: 'districts' },
-                    { url: '/api/malaria_predictions', key: 'malaria' },
-                    { url: '/api/model_metrics', key: 'modelMetrics' },
-                    { url: '/api/malaria_historical', key: 'historicalData' }
-                ];
+                const [districts, malaria, metrics, historical] = await Promise.all([
+                    fetch(API_ENDPOINTS.DISTRICTS).then(res => res.json()),
+                    fetch(API_ENDPOINTS.MALARIA_PREDICTIONS).then(res => res.json()),
+                    fetch(API_ENDPOINTS.MODEL_METRICS).then(res => res.json()),
+                    fetch(API_ENDPOINTS.MALARIA_HISTORICAL).then(res => res.json())
+                ]);
 
-                for (const endpoint of endpoints) {
-                    const response = await fetch(endpoint.url);
-                    const data = await response.json();
-                    if (data.error) {
-                        throw new Error(`Error in ${endpoint.key}: ${data.error}`);
-                    }
-                    if (endpoint.key === 'districts') {
-                        window[endpoint.key] = data;
-                    } else if (endpoint.key === 'malaria') {
-                        window[endpoint.key] = data;
-                    } else if (endpoint.key === 'modelMetrics') {
-                        modelMetrics = data;
-                    } else if (endpoint.key === 'historicalData') {
-                        historicalData = data;
-                    }
-                    logDebug(`Fetched ${endpoint.key} data: ${data.length || Object.keys(data).length} records`);
-                }
-
-                malariaData = window.districts.map(district => {
-                    const malariaDistrict = window.malaria.find(m => m.district.toLowerCase() === district.district.toLowerCase());
+                state.malariaData = districts.map(district => {
+                    const malariaDistrict = malaria.find(m => m.district.toLowerCase() === district.district.toLowerCase());
                     return {
                         ...district,
                         cases: malariaDistrict ? malariaDistrict.cases : { May: 0, June: 0, August: 0 },
                         status: malariaDistrict ? malariaDistrict.status : { May: 'low', June: 'low', August: 'low' }
                     };
                 });
+                state.modelMetrics = metrics;
+                state.historicalData = historical;
 
-                logDebug(`Processed malariaData: ${malariaData.length} districts`);
-                updateKPIs();
-                renderModelMetrics();
-                renderOverviewInsights();
+                updateDashboard();
+
             } catch (error) {
-                logError('Error fetching data', error);
-                const overviewInsights = document.getElementById('overviewInsights');
-                if (overviewInsights) {
-                    overviewInsights.innerHTML += '<p style="color: red;">Failed to load data. Please check console for details.</p>';
-                }
+                console.error('Error fetching data:', error);
+                alert('Failed to load dashboard data. Please check the API endpoints and try again.');
+            } finally {
+                showLoading(false);
             }
+        }
+
+        function updateDashboard() {
+            updateKPIs();
+            renderOverviewContent();
+            renderAllCharts();
+            
+            if (document.querySelector('#map-view').classList.contains('show')) {
+                 if (!map) initMap(); else updateMap();
+            }
+            updateLastUpdated();
+            
+            // Re-trigger animations on data refresh
+            setTimeout(() => AOS.refresh(), 100);
+        }
+
+        // --- KPIs & OVERVIEW ---
+        function animateCountUp(element, endValue, isLocale = true) {
+            let startValue = 0;
+            const duration = 1500;
+            const stepTime = Math.abs(Math.floor(duration / endValue));
+            
+            const timer = setInterval(() => {
+                startValue += Math.ceil(endValue / (duration / 10));
+                if (startValue >= endValue) {
+                    startValue = endValue;
+                    clearInterval(timer);
+                }
+                element.textContent = isLocale ? Math.round(startValue).toLocaleString() : startValue.toFixed(2);
+            }, 10);
+             element.textContent = isLocale ? Math.round(endValue).toLocaleString() : endValue.toFixed(2);
         }
 
         function updateKPIs() {
-            try {
-                logDebug('Updating KPIs');
-                
-                // Calculate total predicted cases
-                const totalCases = malariaData.reduce((sum, district) => {
-                    return sum + district.cases.May + district.cases.June + district.cases.August;
-                }, 0);
-                
-                document.getElementById('totalCasesKPI').textContent = Math.round(totalCases).toLocaleString();
-                
-                // Calculate high risk districts
-                const highRiskMay = malariaData.filter(d => d.status.May === 'high').length;
-                const highRiskAug = malariaData.filter(d => d.status.August === 'high').length;
-                const highRiskChange = ((highRiskAug - highRiskMay) / highRiskMay) * 100;
-                
-                document.getElementById('highRiskKPI').textContent = highRiskAug;
-                
-                const riskChangeElement = document.getElementById('riskChangeKPI');
-                riskChangeElement.textContent = `${Math.abs(highRiskChange).toFixed(1)}% ${highRiskChange > 0 ? 'increase' : 'decrease'}`;
-                riskChangeElement.className = `kpi-change ${highRiskChange > 0 ? 'positive' : 'negative'}`;
-                
-                // Update model accuracy KPI
-                if (modelMetrics.length) {
-                    const bestModel = modelMetrics.reduce((min, curr) => curr.mae_sum < min.mae_sum ? curr : min, modelMetrics[0]);
-                    document.getElementById('modelAccuracyKPI').textContent = bestModel.mae_sum.toFixed(2);
-                }
-                
-                // Update climate correlation KPI
-                if (historicalData && historicalData.correlation_coeffs) {
-                    document.getElementById('climateCorrelationKPI').textContent = historicalData.correlation_coeffs.avg_temp_max.toFixed(2);
-                }
-                
-                logDebug('KPIs updated');
-            } catch (e) {
-                logError('Error updating KPIs', e);
+            const totalCases = state.malariaData.reduce((sum, d) => sum + d.cases.May + d.cases.June + d.cases.August, 0);
+            animateCountUp(document.getElementById('totalCasesKPI'), totalCases);
+
+            const highRiskMay = state.malariaData.filter(d => d.status.May === 'high').length;
+            const highRiskAug = state.malariaData.filter(d => d.status.August === 'high').length;
+            const highRiskChange = highRiskMay > 0 ? ((highRiskAug - highRiskMay) / highRiskMay) * 100 : 0;
+            
+            animateCountUp(document.getElementById('highRiskKPI'), highRiskAug);
+            const riskChangeElement = document.getElementById('riskChangeKPI');
+            riskChangeElement.innerHTML = `<i class="fas fa-arrow-${highRiskChange >= 0 ? 'up' : 'down'}"></i> ${Math.abs(highRiskChange).toFixed(0)}%`;
+            riskChangeElement.className = `kpi-change ${highRiskChange >= 0 ? 'positive' : 'negative'}`;
+
+            if (state.modelMetrics.length) {
+                const bestModel = state.modelMetrics.reduce((min, curr) => curr.mae_sum < min.mae_sum ? curr : min);
+                animateCountUp(document.getElementById('modelAccuracyKPI'), bestModel.mae_sum, false);
+                document.getElementById('bestModelName').textContent = bestModel.model_name;
+            }
+
+            if (state.historicalData && state.historicalData.correlation_coeffs) {
+                animateCountUp(document.getElementById('climateCorrelationKPI'), state.historicalData.correlation_coeffs.avg_temp_max, false);
             }
         }
 
-        function renderOverviewInsights() {
-            try {
-                logDebug('Rendering Overview insights');
-                const overviewInsights = document.getElementById('overviewInsights');
-                if (!overviewInsights) {
-                    logError('overviewInsights element not found');
-                    return;
-                }
-                overviewInsights.innerHTML = '';
-                if (!malariaData.length) {
-                    overviewInsights.innerHTML = '<p>No data available.</p>';
-                    return;
-                }
+        function renderOverviewContent() {
+            // Key Insights
+            const highRiskAug = state.malariaData.filter(d => d.status.August === 'high').length;
+            const highRiskMay = state.malariaData.filter(d => d.status.May === 'high').length;
+            const consistentHigh = state.malariaData.filter(d => d.status.May === 'high' && d.status.June === 'high' && d.status.August === 'high');
+            document.getElementById('keyInsightsContent').innerHTML = `
+                <p>Predictions indicate <strong>${highRiskAug}</strong> districts will be at <span class="status-high">High-risk</span> in August 2025, compared to <strong>${highRiskMay}</strong> in May.</p>
+                <p><strong>${consistentHigh.length} districts</strong> remain consistently at high risk throughout the forecast period: ${consistentHigh.length > 0 ? consistentHigh.map(d => d.district).slice(0, 3).join(', ') + (consistentHigh.length > 3 ? '...' : '') : 'None'}.</p>
+            `;
 
-                const months = ['May', 'June', 'August'];
-                const statuses = ['high', 'medium', 'low'];
-                const statusCounts = {};
-
-                statuses.forEach(status => {
-                    statusCounts[status] = months.map(month => 
-                        malariaData.filter(d => d.status[month] === status).length
-                    );
-                });
-
-                const percentChanges = {};
-                statuses.forEach(status => {
-                    const counts = statusCounts[status];
-                    percentChanges[status] = [
-                        counts[0] === 0 ? 0 : ((counts[1] - counts[0]) / counts[0]) * 100,
-                        counts[1] === 0 ? 0 : ((counts[2] - counts[1]) / counts[1]) * 100
-                    ];
-                });
-
-                const highDistricts = malariaData.filter(d => d.status.May === 'high' || d.status.June === 'high' || d.status.August === 'high');
-                const consistentHigh = highDistricts.filter(d => d.status.May === 'high' && d.status.June === 'high' && d.status.August === 'high');
-                const trendText = percentChanges.high[1] < -20 ? 'decreasing' : percentChanges.high[1] > 20 ? 'increasing' : 'stable';
-
-                const summaryCard = document.createElement('div');
-                summaryCard.className = `insight-card ${isDarkMode ? 'dark-mode' : 'light-mode'}`;
-                summaryCard.innerHTML = `
-                    <h3>Key Insights</h3>
-                    <p>Malaria predictions for May to August 2025 show a <strong>${trendText}</strong> trend in <span class="status-high">High-risk</span> districts, with <strong>${statusCounts.high[2]}</strong> districts classified as High in August compared to <strong>${statusCounts.high[0]}</strong> in May.</p>
-                    <p><strong>Consistent High-Risk Districts:</strong> ${consistentHigh.length > 0 ? consistentHigh.map(d => d.district).join(', ') : 'None'}</p>
-                    <p><strong>Notable Change:</strong> ${Math.abs(percentChanges.high[1]).toFixed(1)}% ${percentChanges.high[1] > 0 ? 'increase' : 'decrease'} in High-risk districts from June to August.</p>
-                `;
-                overviewInsights.appendChild(summaryCard);
-
-                const statusCard = document.createElement('div');
-                statusCard.className = `insight-card ${isDarkMode ? 'dark-mode' : 'light-mode'}`;
-                statusCard.innerHTML = `
-                    <h3>District Risk Distribution</h3>
-                    <ul>
-                        ${statuses.map(status => {
-                            const capitalizedStatus = status.charAt(0).toUpperCase() + status.slice(1);
-                            return `
-                                <li>
-                                    <span class="status-${status}">${capitalizedStatus}:</span>
-                                    May: ${statusCounts[status][0]},
-                                    June: ${statusCounts[status][1]},
-                                    August: ${statusCounts[status][2]}<br>
-                                    May to June: <span class="${percentChanges[status][0] > 20 ? 'change-significant change-up' : percentChanges[status][0] < -20 ? 'change-significant change-down' : ''}">
-                                        ${percentChanges[status][0].toFixed(1)}%
-                                    </span><br>
-                                    June to August: <span class="${percentChanges[status][1] > 20 ? 'change-significant change-up' : percentChanges[status][1] < -20 ? 'change-significant change-down' : ''}">
-                                        ${percentChanges[status][1].toFixed(1)}%
-                                    </span>
-                                </li>
-                            `;
-                        }).join('')}
-                    </ul>
-                `;
-                overviewInsights.appendChild(statusCard);
-
-                const districtsWithTotals = malariaData.map(d => ({
-                    district: d.district,
-                    cases: d.cases,
-                    status: d.status,
-                    totalCases: d.cases.May + d.cases.June + d.cases.August
-                })).sort((a, b) => b.totalCases - a.totalCases).slice(0, 5);
-
-                const topDistrictsCard = document.createElement('div');
-                topDistrictsCard.className = `insight-card ${isDarkMode ? 'dark-mode' : 'light-mode'}`;
-                topDistrictsCard.innerHTML = `
-                    <h3>Top 5 Districts by Total Predicted Cases</h3>
-                    <ul>
-                        ${districtsWithTotals.map(d => `
-                            <li>
-                                <strong>${d.district}</strong><br>
-                                Total Cases: ${d.totalCases.toLocaleString()}<br>
-                                May: ${d.cases.May.toLocaleString()} (<span class="status-${d.status.May}">${d.status.May.charAt(0).toUpperCase() + d.status.May.slice(1)}</span>)<br>
-                                June: ${d.cases.June.toLocaleString()} (<span class="status-${d.status.June}">${d.status.June.charAt(0).toUpperCase() + d.status.June.slice(1)}</span>)<br>
-                                August: ${d.cases.August.toLocaleString()} (<span class="status-${d.status.August}">${d.status.August.charAt(0).toUpperCase() + d.status.August.slice(1)}</span>)
-                            </li>
-                        `).join('')}
-                    </ul>
-                `;
-                overviewInsights.appendChild(topDistrictsCard);
-
-                logDebug('Rendered overview insights cards');
-            } catch (e) {
-                logError('Error rendering overview insights', e);
-                const overviewInsights = document.getElementById('overviewInsights');
-                if (overviewInsights) {
-                    overviewInsights.innerHTML += '<p style="color: red;">Error rendering insights. Please check console.</p>';
-                }
-            }
+            // Top Districts Table
+            const districtsWithTotals = state.malariaData.map(d => ({
+                district: d.district,
+                totalCases: d.cases.May + d.cases.June + d.cases.August,
+                status: d.status
+            })).sort((a, b) => b.totalCases - a.totalCases).slice(0, 5);
+            
+            const tbody = document.querySelector('#topDistrictsTable tbody');
+            tbody.innerHTML = districtsWithTotals.map(d => `
+                <tr data-district-id="${d.district}">
+                    <td><strong>${d.district}</strong></td>
+                    <td>${Math.round(d.totalCases).toLocaleString()}</td>
+                    <td><span class="status-${d.status.May}">●</span></td>
+                    <td><span class="status-${d.status.June}">●</span></td>
+                    <td><span class="status-${d.status.August}">●</span></td>
+                </tr>
+            `).join('');
         }
 
+        // --- MAP ---
         function initMap() {
-            try {
-                logDebug('Initializing map');
-                if (map) return;
+            if (map) return;
+            map = L.map('map', { zoomControl: false }).setView([1.3733, 32.2903], 7);
+            L.control.zoom({ position: 'topright' }).addTo(map);
 
-                const mapEl = document.getElementById('map');
-                if (!mapEl) {
-                    logError('Map element not found');
-                    return;
-                }
+            tileLayers = {
+                light: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                }),
+                dark: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                })
+            };
+            
+            (document.documentElement.getAttribute('data-bs-theme') === 'dark' ? tileLayers.dark : tileLayers.light).addTo(map);
+            districtsLayer = L.layerGroup().addTo(map);
+            
+            // Enhanced Legend
+            const legend = L.control({ position: 'bottomright' });
+            legend.onAdd = function () {
+                const div = L.DomUtil.create('div', 'legend');
+                div.innerHTML = `
+                    <h4>Malaria Risk Status</h4>
+                    <div class="legend-item">
+                        <div class="legend-icon" style="background:var(--danger-color);"></div>
+                        <span>High Risk</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon" style="background:var(--warning-color);"></div>
+                        <span>Medium Risk</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon" style="background:var(--success-color);"></div>
+                        <span>Low Risk</span>
+                    </div>
+                `;
+                return div;
+            };
+            legend.addTo(map);
 
-                map = L.map('map').setView([1.3733, 32.2903], 7);
-                const lightTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                });
-                const darkTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                    attribution: '© <a href="https://carto.com/attributions">CARTO</a>'
-                });
-                (isDarkMode ? darkTiles : lightTiles).addTo(map);
-
-                districtsLayer = L.layerGroup().addTo(map);
-
-                const legend = L.control({ position: 'bottomright' });
-                legend.onAdd = function () {
-                    const div = L.DomUtil.create('div', `info legend ${isDarkMode ? 'dark-mode' : ''}`);
-                    const statuses = ['high', 'medium', 'low'];
-                    const colors = ['#e63757', '#f6c343', '#00d97e'];
-                    const labels = ['High Risk (Flickering)', 'Medium Risk', 'Low Risk'];
-
-                    div.innerHTML = '<h4>Malaria Risk Status</h4>';
-                    for (let i = 0; i < statuses.length; i++) {
-                        div.innerHTML += `<i style="background:${colors[i]}"></i> ${labels[i]}<br>`;
-                    }
-                    return div;
-                };
-                legend.addTo(map);
-
-                const info = L.control({ position: 'topright' });
-                info.onAdd = function () {
-                    this._div = L.DomUtil.create('div', `info ${isDarkMode ? 'dark-mode' : ''}`);
-                    this.update();
-                    return this._div;
-                };
-                info.update = function (props) {
-                    this._div.innerHTML = '<h4>Uganda Malaria Risk</h4>' +
-                        (props ?
-                            `<b>${props.district}</b><br>Cases in ${currentMonth} 2025: ${props.cases[currentMonth].toLocaleString()}<br>Status: <span style="color: ${getColor(props.status[currentMonth])}">${props.status[currentMonth].charAt(0).toUpperCase() + props.status[currentMonth].slice(1)}</span>` :
-                            `Click on a district for details<br>Data for: ${currentMonth} 2025`);
-                };
-                info.addTo(map);
-                logDebug('Map initialized');
-            } catch (e) {
-                logError('Error initializing map', e);
-            }
+            updateMap();
         }
 
         function updateMap() {
-            try {
-                logDebug('Updating map');
-                currentMonth = document.getElementById('monthFilter').value;
-                districtsLayer.clearLayers();
-                if (map) {
-                    map.eachLayer(layer => {
-                        if (layer instanceof L.TileLayer) map.removeLayer(layer);
-                    });
-                    const tiles = isDarkMode ?
-                        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                            attribution: '© <a href="https://carto.com/attributions">CARTO</a>'
-                        }) :
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        });
-                    tiles.addTo(map);
-                }
+            districtsLayer.clearLayers();
+            districtMarkers = {};
+            const theme = document.documentElement.getAttribute('data-bs-theme');
 
-                function getColor(status) {
-                    return status === 'high' ? '#e63757' :
-                        status === 'medium' ? '#f6c343' : '#00d97e';
-                }
+            function getStatusColor(status) {
+                if (status === 'high') return getComputedStyle(document.body).getPropertyValue('--danger-color');
+                if (status === 'medium') return getComputedStyle(document.body).getPropertyValue('--warning-color');
+                return getComputedStyle(document.body).getPropertyValue('--success-color');
+            }
 
-                function getGlowClass(status) {
-                    return status === 'high' ? 'high-glow' :
-                        status === 'medium' ? 'medium-glow' : 'low-glow';
-                }
+            function getStatusClass(status) {
+                if (status === 'high') return 'high-risk';
+                if (status === 'medium') return 'medium-risk';
+                return 'low-risk';
+            }
 
-                malariaData.forEach(data => {
-                    const currentCases = parseFloat(data.cases[currentMonth]) || 0;
-                    const currentStatus = data.status[currentMonth] || 'low';
-                    const percentage = Math.min(100, Math.max(0, (currentCases / 10000) * 100));
+            state.malariaData.forEach(data => {
+                const currentStatus = data.status[state.currentMonth] || 'low';
+                const color = getStatusColor(currentStatus);
+                const statusClass = getStatusClass(currentStatus);
+                const cases = data.cases[state.currentMonth];
+                const percentage = Math.min(100, Math.max(0, (cases / 10000) * 100)); // Assuming 10,000 is max for scale
 
-                    const icon = L.divIcon({
-                        className: `district-marker ${getGlowClass(currentStatus)}`,
-                        html: `<div class="marker-circle ${isDarkMode ? 'dark-mode' : ''}" style="background-color: ${getColor(currentStatus)};"></div>`,
-                        iconSize: [16, 16],
-                        iconAnchor: [8, 8]
-                    });
-
-                    const marker = L.marker([data.latitude, data.longitude], {
-                        icon: icon,
-                        riseOnHover: true,
-                        data: data
-                    });
-
-                    marker.bindPopup(`
-                        <div style="min-width: 200px;">
-                            <b>${data.district}</b><br>
-                            Malaria Cases in ${currentMonth} 2025: <strong>${currentCases.toLocaleString()}</strong><br>
-                            Status: <span style="color: ${getColor(currentStatus)}">${currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)}</span>
-                            <div style="margin-top: 5px; height: 5px; width: 100%; 
-                                 background: linear-gradient(to right, #00d97e, #f6c343, #e63757); 
-                                 background-position: ${percentage}% 0;
-                                 border-radius: 3px;"></div>
-                        </div>
-                    `);
-
-                    marker.bindTooltip(
-                        `${data.district}: ${currentCases.toLocaleString()} cases (${currentMonth} 2025)`,
-                        { direction: 'top', offset: [0, -10] }
-                    );
-
-                    marker.addTo(districtsLayer);
+                const icon = L.divIcon({
+                    className: `district-marker ${statusClass}`,
+                    html: `<div style="background-color:${color}; width:16px; height:16px; border-radius:50%; border: 2px solid ${theme === 'dark' ? '#1E293B' : '#FFFFFF'};"></div>`,
+                    iconSize: [20, 20], 
+                    iconAnchor: [10, 10]
                 });
 
-                const infoControl = document.querySelector('.info');
-                if (infoControl) {
-                    infoControl.innerHTML = `<h4>Uganda Malaria Risk</h4>Click on a district for details<br>Data for: ${currentMonth} 2025`;
-                    infoControl.className = `info ${isDarkMode ? 'dark-mode' : ''}`;
-                    logDebug('Updated info control');
-                }
+                const marker = L.marker([data.latitude, data.longitude], { 
+                    icon: icon, 
+                    data: data, 
+                    riseOnHover: true 
+                });
 
-                filterMarkers();
-                renderStatusTrendChart();
-                logDebug('Map updated');
-            } catch (e) {
-                logError('Error updating map', e);
-            }
+                marker.bindPopup(`
+                    <h5>${data.district}</h5>
+                    <div class="d-flex justify-content-between">
+                        <div><strong>Predicted Cases:</strong></div>
+                        <div>${Math.round(cases).toLocaleString()}</div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div><strong>Risk Level:</strong></div>
+                        <div class="status-${currentStatus}">${currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)}</div>
+                    </div>
+                    <div class="risk-meter" style="background-position: ${percentage}% 0;"></div>
+                    <small>Data for ${state.currentMonth} 2025</small>
+                `);
+
+                marker.on('mouseover', function() {
+                    this.openPopup();
+                    this.getElement().style.transform = 'scale(1.5)';
+                });
+
+                marker.on('mouseout', function() {
+                    this.getElement().style.transform = 'scale(1)';
+                });
+
+                marker.addTo(districtsLayer);
+                districtMarkers[data.district] = marker;
+            });
+            filterMarkers();
+            renderStatusTrendChart();
         }
 
         function filterMarkers() {
-            try {
-                logDebug('Filtering markers');
-                const filterValue = document.getElementById('statusFilter').value;
-                districtsLayer.eachLayer(layer => {
-                    const markerData = layer.options.data;
-                    const currentStatus = markerData.status[currentMonth] || 'low';
-                    const shouldShow = filterValue === 'all' || currentStatus === filterValue;
-                    layer.setOpacity(shouldShow ? 1 : 0);
-                    if (layer.getElement()) {
-                        layer.getElement().style.display = shouldShow ? 'block' : 'none';
-                    }
-                });
-                logDebug('Markers filtered');
-            } catch (e) {
-                logError('Error filtering markers', e);
+            const filterValue = document.getElementById('statusFilter').value;
+            districtsLayer.eachLayer(layer => {
+                const currentStatus = layer.options.data.status[state.currentMonth];
+                if (filterValue === 'all' || currentStatus === filterValue) {
+                    layer.getElement().style.display = 'block';
+                } else {
+                    layer.getElement().style.display = 'none';
+                }
+            });
+        }
+        
+        function highlightMapMarker(districtName) {
+            document.querySelector('a[href="#map-view"]').click();
+            const marker = districtMarkers[districtName];
+            if (marker) {
+                map.flyTo(marker.getLatLng(), 10);
+                marker.openPopup();
+                 // Add a temporary highlight class
+                marker.getElement().classList.add('marker-highlight');
+                setTimeout(() => {
+                    marker.getElement().classList.remove('marker-highlight');
+                }, 3000);
             }
         }
+        
+        // --- CHARTS ---
+        function getPlotlyLayout(title) {
+            const theme = document.documentElement.getAttribute('data-bs-theme');
+            return {
+                title: { text: title, font: { color: getComputedStyle(document.body).getPropertyValue('--heading-color'), size: 16 } },
+                paper_bgcolor: 'transparent',
+                plot_bgcolor: 'transparent',
+                margin: { l: 60, r: 30, b: 50, t: 60, pad: 4 },
+                font: { color: getComputedStyle(document.body).getPropertyValue('--text-color'), family: 'Inter, sans-serif' },
+                xaxis: { gridcolor: getComputedStyle(document.body).getPropertyValue('--border-color') },
+                yaxis: { gridcolor: getComputedStyle(document.body).getPropertyValue('--border-color') },
+                hovermode: 'x unified',
+                legend: { orientation: 'h', y: -0.2, x: 0.5, xanchor: 'center' }
+            };
+        }
 
-        function renderStatusTrendChart() {
-            try {
-                logDebug('Rendering status trend chart');
-                const statusTrendChartEl = document.getElementById('statusTrendChart');
-                if (!statusTrendChartEl) {
-                    logError('statusTrendChart element not found');
-                    return;
-                }
-                const months = ['May', 'June', 'August'];
-                const counts = {
-                    high: months.map(month => malariaData.filter(d => d.status[month] === 'high').length),
-                    medium: months.map(month => malariaData.filter(d => d.status[month] === 'medium').length),
-                    low: months.map(month => malariaData.filter(d => d.status[month] === 'low').length)
-                };
-
-                const traces = [
-                    {
-                        x: months.map(m => `${m} 2025`),
-                        y: counts.high,
-                        name: 'High',
-                        mode: 'lines+markers',
-                        line: { color: isDarkMode ? '#ff5555' : '#EF553B', width: 3, shape: 'spline' },
-                        marker: { size: 8, color: isDarkMode ? '#ff5555' : '#EF553B' }
-                    },
-                    {
-                        x: months.map(m => `${m} 2025`),
-                        y: counts.medium,
-                        name: 'Medium',
-                        mode: 'lines+markers',
-                        line: { color: isDarkMode ? '#ffaa55' : '#FFA15A', width: 3, shape: 'spline' },
-                        marker: { size: 8, color: isDarkMode ? '#ffaa55' : '#FFA15A' }
-                    },
-                    {
-                        x: months.map(m => `${m} 2025`),
-                        y: counts.low,
-                        name: 'Low',
-                        mode: 'lines+markers',
-                        line: { color: isDarkMode ? '#55cc99' : '#00CC96', width: 3, shape: 'spline' },
-                        marker: { size: 8, color: isDarkMode ? '#55cc99' : '#00CC96' }
-                    }
-                ];
-
-                const layout = {
-                    plot_bgcolor: 'rgba(0,0,0,0)',
-                    paper_bgcolor: 'rgba(0,0,0,0)',
-                    font: { family: 'Roboto, sans-serif', size: 12, color: isDarkMode ? '#d8e2ef' : '#12263f' },
-                    margin: { l: 60, r: 30, b: 50, t: 50 },
-                    xaxis: {
-                        title: { text: 'Month', font: { size: 12 } },
-                        showgrid: true,
-                        gridcolor: isDarkMode ? '#334155' : '#e3ebf6',
-                        linecolor: isDarkMode ? '#475569' : '#cbd5e1',
-                        linewidth: 2,
-                        tickfont: { size: 12, color: isDarkMode ? '#d8e2ef' : '#12263f' }
-                    },
-                    yaxis: {
-                        title: { text: 'Number of Districts', font: { size: 12 } },
-                        showgrid: true,
-                        gridcolor: isDarkMode ? '#334155' : '#e3ebf6',
-                        linecolor: isDarkMode ? '#475569' : '#cbd5e1',
-                        linewidth: 2,
-                        tickfont: { size: 12, color: isDarkMode ? '#d8e2ef' : '#12263f' }
-                    },
-                    legend: { 
-                        orientation: 'h', 
-                        y: -0.2, 
-                        x: 0.5, 
-                        xanchor: 'center', 
-                        font: { 
-                            color: isDarkMode ? '#d8e2ef' : '#12263f' 
-                        } 
-                    },
-                    hovermode: 'closest',
-                    title: { 
-                        text: 'Trend of District Risk Levels', 
-                        font: { 
-                            size: 14, 
-                            color: isDarkMode ? '#d8e2ef' : '#12263f' 
-                        }, 
-                        x: 0.5, 
-                        xanchor: 'center',
-                        y: 0.95
-                    }
-                };
-
-                Plotly.newPlot('statusTrendChart', traces, layout, { responsive: true, displayModeBar: false });
-                logDebug('Status trend chart rendered');
-            } catch (e) {
-                logError('Error rendering status trend chart', e);
-            }
+        function renderAllCharts() {
+            if (!state.historicalData) return;
+            renderMalariaTrendChart();
+            renderClimateTrendsChart();
+            renderCorrelationPlots();
+            renderStatusTrendChart();
+            renderModelMetrics();
         }
 
         function renderMalariaTrendChart() {
-            try {
-                logDebug('Rendering malaria trend chart');
-                if (!historicalData) {
-                    logDebug('No historical data available');
-                    return;
-                }
-                const malariaTrendChartEl = document.getElementById('malariaTrendChart');
-                if (!malariaTrendChartEl) {
-                    logError('malariaTrendChart element not found');
-                    return;
-                }
-
-                const trace = {
-                    x: historicalData['malaria_cases'].map(d => d.date),
-                    y: historicalData['malaria_cases'].map(d => d.cases),
-                    mode: 'lines',
-                    line: { color: isDarkMode ? '#3b82f6' : '#2c7be5', width: 3, shape: 'spline' },
-                    fill: 'tozeroy',
-                    fillcolor: isDarkMode ? 'rgba(59, 130, 246, 0.3)' : 'rgba(44, 123, 229, 0.2)',
-                    name: 'Malaria Cases'
-                };
-
-                const layout = {
-                    title: { 
-                        text: 'Monthly Malaria Cases (National Total, 2020-2025)', 
-                        font: { 
-                            size: 14, 
-                            color: isDarkMode ? '#d8e2ef' : '#12263f' 
-                        }, 
-                        x: 0,
-                        y: 0.95
-                    },
-                    xaxis: {
-                        title: 'Date',
-                        tickfont: { size: 12, color: isDarkMode ? '#d8e2ef' : '#12263f' },
-                        tickangle: 45,
-                        showgrid: false,
-                        linecolor: isDarkMode ? '#475569' : '#cbd5e1',
-                        linewidth: 2,
-                        tickformat: '%Y-%m'
-                    },
-                    yaxis: {
-                        title: 'Malaria Cases',
-                        tickfont: { size: 12, color: isDarkMode ? '#d8e2ef' : '#12263f' },
-                        showgrid: true,
-                        gridcolor: isDarkMode ? '#334155' : '#e3ebf6',
-                        linecolor: isDarkMode ? '#475569' : '#cbd5e1',
-                        linewidth: 2
-                    },
-                    plot_bgcolor: 'rgba(0,0,0,0)',
-                    paper_bgcolor: 'rgba(0,0,0,0)',
-                    margin: { l: 60, r: 30, b: 80, t: 50 },
-                    hovermode: 'x unified',
-                    hoverlabel: { 
-                        bgcolor: isDarkMode ? '#1e293b' : '#fff', 
-                        bordercolor: isDarkMode ? '#334155' : '#cbd5e1', 
-                        font: { 
-                            color: isDarkMode ? '#d8e2ef' : '#12263f' 
-                        } 
-                    }
-                };
-
-                Plotly.newPlot('malariaTrendChart', [trace], layout, { responsive: true, displayModeBar: false });
-                logDebug('Malaria trend chart rendered');
-            } catch (e) {
-                logError('Error rendering malaria trend chart', e);
-            }
+            const trace = {
+                x: state.historicalData.malaria_cases.map(d => d.date),
+                y: state.historicalData.malaria_cases.map(d => d.cases),
+                mode: 'lines',
+                line: { color: getComputedStyle(document.body).getPropertyValue('--primary-color'), width: 3, shape: 'spline' },
+                fill: 'tozeroy',
+                fillcolor: `rgba(${getComputedStyle(document.body).getPropertyValue('--primary-rgb')}, 0.1)`
+            };
+            const layout = getPlotlyLayout('Monthly Malaria Cases (National Total)');
+            Plotly.newPlot('malariaTrendChart', [trace], layout, { responsive: true, displayModeBar: false });
         }
 
         function renderClimateTrendsChart() {
-            try {
-                logDebug('Rendering climate trends chart');
-                if (!historicalData) {
-                    logDebug('No historical data available');
-                    return;
-                }
-                const climateTrendChartEl = document.getElementById('climateTrendChart');
-                if (!climateTrendChartEl) {
-                    logError('climateTrendChart element not found');
-                    return;
-                }
-
-                const traces = [
-                    {
-                        x: historicalData['climate'].map(d => d.date),
-                        y: historicalData['climate'].map(d => d.avg_temp_max),
-                        name: 'Max Temp (°C)',
-                        mode: 'lines',
-                        line: { color: isDarkMode ? '#ff5555' : '#EF553B', width: 3, shape: 'spline' },
-                        fill: 'tozeroy',
-                        fillcolor: isDarkMode ? 'rgba(255, 85, 85, 0.3)' : 'rgba(239, 85, 59, 0.2)'
-                    },
-                    {
-                        x: historicalData['climate'].map(d => d.date),
-                        y: historicalData['climate'].map(d => d.avg_temp_min),
-                        name: 'Min Temp (°C)',
-                        mode: 'lines',
-                        line: { color: isDarkMode ? '#ffaa55' : '#FFA15A', width: 3, shape: 'spline' },
-                        fill: 'tozeroy',
-                        fillcolor: isDarkMode ? 'rgba(255, 170, 85, 0.2)' : 'rgba(255, 161, 90, 0.2)'
-                    },
-                    {
-                        x: historicalData['climate'].map(d => d.date),
-                        y: historicalData['climate'].map(d => d.avg_humidity),
-                        name: 'Humidity (%)',
-                        mode: 'lines',
-                        line: { color: isDarkMode ? '#55cc99' : '#00CC96', width: 3, shape: 'spline' },
-                        fill: 'none',
-                        yaxis: 'y2'
-                    },
-                    {
-                        x: historicalData['climate'].map(d => d.date),
-                        y: historicalData['climate'].map(d => d.sum_precipitation),
-                        name: 'Precipitation (mm)',
-                        mode: 'lines',
-                        line: { color: isDarkMode ? '#7799ff' : '#636EFA', width: 3, shape: 'spline' },
-                        fill: 'none',
-                        yaxis: 'y2'
-                    },
-                    {
-                        x: historicalData['climate'].map(d => d.date),
-                        y: historicalData['climate'].map(d => d.sum_sunshine_hours),
-                        name: 'Sunshine (hrs)',
-                        mode: 'lines',
-                        line: { color: isDarkMode ? '#cc99cc' : '#AB47BC', width: 3, shape: 'spline' },
-                        fill: 'none',
-                        yaxis: 'y2'
-                    }
-                ];
-
-                const layout = {
-                    title: { 
-                        text: 'Climate Factors Trends (2020-2025)', 
-                        font: { 
-                            size: 14, 
-                            color: isDarkMode ? '#d8e2ef' : '#12263f' 
-                        }, 
-                        x: 0.5, 
-                        xanchor: 'center',
-                        y: 0.95
-                    },
-                    xaxis: {
-                        title: 'Date',
-                        tickfont: { size: 12, color: isDarkMode ? '#d8e2ef' : '#12263f' },
-                        tickangle: 45,
-                        showgrid: false,
-                        linecolor: isDarkMode ? '#475569' : '#cbd5e1',
-                        linewidth: 2,
-                        tickformat: '%Y-%m'
-                    },
-                    yaxis: {
-                        title: 'Temperature (°C)',
-                        tickfont: { size: 12, color: isDarkMode ? '#d8e2ef' : '#12263f' },
-                        showgrid: true,
-                        gridcolor: isDarkMode ? '#334155' : '#e3ebf6',
-                        linecolor: isDarkMode ? '#475569' : '#cbd5e1',
-                        linewidth: 2
-                    },
-                    yaxis2: {
-                        title: 'Humidity/Precip/Sunshine',
-                        overlaying: 'y',
-                        side: 'right',
-                        tickfont: { size: 12, color: isDarkMode ? '#d8e2ef' : '#12263f' },
-                        showgrid: false,
-                        linecolor: isDarkMode ? '#475569' : '#cbd5e1',
-                        linewidth: 2
-                    },
-                    plot_bgcolor: 'rgba(0,0,0,0)',
-                    paper_bgcolor: 'rgba(0,0,0,0)',
-                    margin: { l: 60, r: 60, b: 80, t: 50 },
-                    hovermode: 'x unified',
-                    hoverlabel: { 
-                        bgcolor: isDarkMode ? '#1e293b' : '#fff', 
-                        bordercolor: isDarkMode ? '#334155' : '#cbd5e1', 
-                        font: { 
-                            size: 12, 
-                            color: isDarkMode ? '#d8e2ef' : '#12263f' 
-                        } 
-                    },
-                    legend: { 
-                        orientation: 'h', 
-                        y: -0.3, 
-                        x: 0.5, 
-                        xanchor: 'center', 
-                        font: { 
-                            size: 12, 
-                            color: isDarkMode ? '#d8e2ef' : '#12263f' 
-                        } 
-                    }
-                };
-
-                Plotly.newPlot('climateTrendChart', traces, layout, { responsive: true, displayModeBar: false });
-                logDebug('Climate trends chart rendered');
-            } catch (e) {
-                logError('Error rendering climate trends chart', e);
-            }
+            const traces = [{
+                x: state.historicalData.climate.map(d => d.date),
+                y: state.historicalData.climate.map(d => d.avg_temp_max),
+                name: 'Max Temp',
+                mode: 'lines',
+                line: { color: getComputedStyle(document.body).getPropertyValue('--danger-color'), width: 2, shape: 'spline' }
+            }, {
+                x: state.historicalData.climate.map(d => d.date),
+                y: state.historicalData.climate.map(d => d.avg_humidity),
+                name: 'Humidity',
+                mode: 'lines',
+                line: { color: getComputedStyle(document.body).getPropertyValue('--info-color'), width: 2, shape: 'spline' },
+                yaxis: 'y2'
+            }];
+            const layout = getPlotlyLayout('Climate Factors vs. Time');
+            layout.yaxis = { title: 'Temp (°C)', gridcolor: getComputedStyle(document.body).getPropertyValue('--border-color') };
+            layout.yaxis2 = { title: 'Humidity (%)', overlaying: 'y', side: 'right', showgrid: false };
+            Plotly.newPlot('climateTrendChart', traces, layout, { responsive: true, displayModeBar: false });
         }
-
+        
         function renderCorrelationPlots() {
-            try {
-                logDebug('Rendering correlation plots');
-                if (!historicalData) {
-                    logDebug('No historical data available');
-                    return;
-                }
+             const factors = [
+                { key: 'avg_temp_max', label: 'Max Temp', div: 'corrTempMax', color: getComputedStyle(document.body).getPropertyValue('--danger-color') },
+                { key: 'avg_humidity', label: 'Humidity', div: 'corrHumidity', color: getComputedStyle(document.body).getPropertyValue('--info-color') },
+                { key: 'sum_precipitation', label: 'Precipitation', div: 'corrPrecipitation', color: getComputedStyle(document.body).getPropertyValue('--primary-color') }
+            ];
 
-                const factors = [
-                    { key: 'avg_temp_max', label: 'Max Temp (°C)', div: 'corrTempMax', color: isDarkMode ? '#ff5555' : '#EF553B' },
-                    { key: 'avg_temp_min', label: 'Min Temp (°C)', div: 'corrTempMin', color: isDarkMode ? '#ffaa55' : '#FFA15A' },
-                    { key: 'avg_humidity', label: 'Humidity (%)', div: 'corrHumidity', color: isDarkMode ? '#55cc99' : '#00CC96' },
-                    { key: 'sum_precipitation', label: 'Precipitation (mm)', div: 'corrPrecipitation', color: isDarkMode ? '#7799ff' : '#636EFA' },
-                    { key: 'sum_sunshine_hours', label: 'Sunshine (hrs)', div: 'corrSunshine', color: isDarkMode ? '#cc99cc' : '#AB47BC' }
-                ];
-
-                factors.forEach(factor => {
-                    const plotEl = document.getElementById(factor.div);
-                    if (!plotEl) {
-                        logError(`${factor.div} element not found`);
-                        return;
-                    }
-                    const trace = {
-                        x: historicalData['correlations'].map(d => d[factor.key]),
-                        y: historicalData['correlations'].map(d => d.mal_cases),
-                        mode: 'markers',
-                        marker: { size: 8, color: factor.color },
-                        type: 'scatter'
-                    };
-
-                    const correlation = historicalData['correlation_coeffs'][factor.key];
-                    const layout = {
-                        title: { 
-                            text: `${factor.label} vs Malaria Cases (r = ${correlation.toFixed(2)})`, 
-                            font: { 
-                                size: 12, 
-                                color: isDarkMode ? '#d8e2ef' : '#12263f' 
-                            }, 
-                            x: 0.5, 
-                            xanchor: 'center' 
-                        },
-                        xaxis: {
-                            title: factor.label,
-                            tickfont: { size: 11, color: isDarkMode ? '#d8e2ef' : '#12263f' },
-                            showgrid: true,
-                            gridcolor: isDarkMode ? '#334155' : '#e3ebf6',
-                            linecolor: isDarkMode ? '#475569' : '#cbd5e1',
-                            linewidth: 2
-                        },
-                        yaxis: {
-                            title: 'Malaria Cases',
-                            tickfont: { size: 11, color: isDarkMode ? '#d8e2ef' : '#12263f' },
-                            showgrid: true,
-                            gridcolor: isDarkMode ? '#334155' : '#e3ebf6',
-                            linecolor: isDarkMode ? '#475569' : '#cbd5e1',
-                            linewidth: 2
-                        },
-                        plot_bgcolor: 'rgba(0,0,0,0)',
-                        paper_bgcolor: 'rgba(0,0,0,0)',
-                        margin: { l: 60, r: 30, b: 50, t: 50 },
-                        hovermode: 'closest',
-                        hoverlabel: { 
-                            bgcolor: isDarkMode ? '#1e293b' : '#fff', 
-                            bordercolor: isDarkMode ? '#334155' : '#cbd5e1', 
-                            font: { 
-                                size: 11, 
-                                color: isDarkMode ? '#d8e2ef' : '#12263f' 
-                            } 
-                        }
-                    };
-
-                    Plotly.newPlot(factor.div, [trace], layout, { responsive: true, displayModeBar: false });
-                    logDebug(`Rendered ${factor.div} plot`);
-                });
-                logDebug('Correlation plots rendered');
-            } catch (e) {
-                logError('Error rendering correlation plots', e);
-            }
+            factors.forEach(factor => {
+                const trace = {
+                    x: state.historicalData.correlations.map(d => d[factor.key]),
+                    y: state.historicalData.correlations.map(d => d.mal_cases),
+                    mode: 'markers', marker: { size: 6, color: factor.color, opacity: 0.7 }
+                };
+                const corr = state.historicalData.correlation_coeffs[factor.key];
+                const layout = getPlotlyLayout(`${factor.label} vs. Cases (r=${corr.toFixed(2)})`);
+                layout.xaxis.title = factor.label;
+                layout.yaxis.title = 'Malaria Cases';
+                Plotly.newPlot(factor.div, [trace], layout, { responsive: true, displayModeBar: false });
+            });
+        }
+        
+        function renderStatusTrendChart() {
+            const months = ['May', 'June', 'August'];
+            const counts = {
+                high: months.map(m => state.malariaData.filter(d => d.status[m] === 'high').length),
+                medium: months.map(m => state.malariaData.filter(d => d.status[m] === 'medium').length),
+                low: months.map(m => state.malariaData.filter(d => d.status[m] === 'low').length)
+            };
+            const traces = [{
+                x: months, y: counts.high, name: 'High', type: 'bar', marker: { color: getComputedStyle(document.body).getPropertyValue('--danger-color') }
+            }, {
+                x: months, y: counts.medium, name: 'Medium', type: 'bar', marker: { color: getComputedStyle(document.body).getPropertyValue('--warning-color') }
+            }, {
+                x: months, y: counts.low, name: 'Low', type: 'bar', marker: { color: getComputedStyle(document.body).getPropertyValue('--success-color') }
+            }];
+            const layout = getPlotlyLayout('District Risk Level Counts');
+            layout.barmode = 'stack';
+            layout.yaxis.title = '# of Districts';
+            Plotly.newPlot('statusTrendChart', traces, layout, { responsive: true, displayModeBar: false });
         }
 
         function renderModelMetrics() {
-            try {
-                logDebug('Rendering model metrics');
-                const metricsTableEl = document.getElementById('metricsTable');
-                if (!metricsTableEl) {
-                    logError('metricsTable element not found');
-                    return;
-                }
-                if (!modelMetrics.length) {
-                    logDebug('No model metrics available');
-                    return;
-                }
+            if (!state.modelMetrics.length) return;
+            const bestModel = state.modelMetrics.reduce((min, curr) => curr.mae_sum < min.mae_sum ? curr : min);
+            const tbody = document.querySelector('#metricsTable tbody');
+            tbody.innerHTML = state.modelMetrics.map(model => `
+                <tr class="${model.model_name === bestModel.model_name ? 'best-model' : ''}">
+                    <td>${model.model_name}</td>
+                    <td>${model.mae_sum.toFixed(2)}</td>
+                    <td>${model.mae.toFixed(2)}</td>
+                    <td>${model['t+1_mae'].toFixed(2)}</td>
+                    <td>${model['t+2_mae'].toFixed(2)}</td>
+                    <td>${model['t+3_mae'].toFixed(2)}</td>
+                </tr>
+            `).join('');
+            
+            const trace = {
+                x: state.modelMetrics.map(m => m.mae_sum),
+                y: state.modelMetrics.map(m => m.model_name),
+                type: 'bar', orientation: 'h',
+                marker: { color: state.modelMetrics.map(m => m.model_name === bestModel.model_name ? getComputedStyle(document.body).getPropertyValue('--primary-color') : '#94a3b8') }
+            };
+            const layout = getPlotlyLayout('Model MAE Sum Comparison');
+            layout.xaxis.title = 'MAE Sum (Lower is Better)';
+            Plotly.newPlot('maeChart', [trace], layout, { responsive: true, displayModeBar: false });
 
-                const tbody = document.querySelector('#metricsTable tbody');
-                if (!tbody) {
-                    logError('metricsTable tbody not found');
-                    return;
-                }
-                tbody.innerHTML = '';
-                const bestModel = modelMetrics.reduce((min, curr) => curr.mae_sum < min.mae_sum ? curr : min, modelMetrics[0]);
-
-                modelMetrics.forEach(model => {
-                    const row = document.createElement('tr');
-                    if (model.model_name === bestModel.model_name) {
-                        row.className = 'best-model';
-                    }
-                    row.innerHTML = `
-                        <td>${model.model_name}</td>
-                        <td>${model.mae_sum.toFixed(2)}</td>
-                        <td>${model.mae.toFixed(2)}</td>
-                        <td>${model['t+1_mae'].toFixed(2)}</td>
-                        <td>${model['t+2_mae'].toFixed(2)}</td>
-                        <td>${model['t+3_mae'].toFixed(2)}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
-
-                const maeChartEl = document.getElementById('maeChart');
-                if (!maeChartEl) {
-                    logError('maeChart element not found');
-                    return;
-                }
-                const trace = {
-                    x: modelMetrics.map(m => m.model_name),
-                    y: modelMetrics.map(m => m.mae_sum),
-                    type: 'bar',
-                    marker: { 
-                        color: modelMetrics.map(m => m.model_name === bestModel.model_name ? (isDarkMode ? '#3b82f6' : '#2c7be5') : (isDarkMode ? '#475569' : '#e3ebf6')) 
-                    },
-                    text: modelMetrics.map(m => m.mae_sum.toFixed(2)),
-                    textposition: 'auto'
-                };
-
-                const layout = {
-                    title: { 
-                        text: 'Model Performance Comparison (MAE Sum)', 
-                        font: { 
-                            size: 14, 
-                            color: isDarkMode ? '#d8e2ef' : '#12263f' 
-                        }, 
-                        x: 0.5, 
-                        xanchor: 'center',
-                        y: 0.95
-                    },
-                    xaxis: {
-                        title: 'Model',
-                        tickfont: { size: 12, color: isDarkMode ? '#d8e2ef' : '#12263f' },
-                        showgrid: false,
-                        linecolor: isDarkMode ? '#475569' : '#cbd5e1',
-                        linewidth: 2
-                    },
-                    yaxis: {
-                        title: 'MAE Sum',
-                        tickfont: { size: 12, color: isDarkMode ? '#d8e2ef' : '#12263f' },
-                        showgrid: true,
-                        gridcolor: isDarkMode ? '#334155' : '#e3ebf6',
-                        linecolor: isDarkMode ? '#475569' : '#cbd5e1',
-                        linewidth: 2
-                    },
-                    plot_bgcolor: 'rgba(0,0,0,0)',
-                    paper_bgcolor: 'rgba(0,0,0,0)',
-                    margin: { l: 60, r: 30, b: 50, t: 50 },
-                    hovermode: 'closest',
-                    hoverlabel: { 
-                        bgcolor: isDarkMode ? '#1e293b' : '#fff', 
-                        bordercolor: isDarkMode ? '#334155' : '#cbd5e1', 
-                        font: { 
-                            size: 12, 
-                            color: isDarkMode ? '#d8e2ef' : '#12263f' 
-                        } 
-                    }
-                };
-
-                Plotly.newPlot('maeChart', [trace], layout, { responsive: true, displayModeBar: false });
-
-                // Update the metrics analysis section
-                document.getElementById('bestModelName').textContent = bestModel.model_name;
-                document.getElementById('bestModelName2').textContent = bestModel.model_name;
-                document.getElementById('bestModelScore').textContent = bestModel.mae_sum.toFixed(2);
-                document.getElementById('t1mae').textContent = bestModel['t+1_mae'].toFixed(2);
-                document.getElementById('t2mae').textContent = bestModel['t+2_mae'].toFixed(2);
-                document.getElementById('t3mae').textContent = bestModel['t+3_mae'].toFixed(2);
-
-                logDebug('Model metrics rendered');
-            } catch (e) {
-                logError('Error rendering model metrics', e);
-            }
+            document.getElementById('metricsAnalysisContent').innerHTML = `
+                <p>The <strong>${bestModel.model_name}</strong> model demonstrates the highest accuracy with the lowest overall MAE Sum of <strong>${bestModel.mae_sum.toFixed(2)}</strong>. This model's predictions are used throughout the dashboard.</p>
+            `;
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                logDebug('DOM loaded, initializing dashboard');
-                if (isDarkMode) toggleTheme();
-
-                setupTabListeners();
-                setTimeout(setupTabListeners, 500); // Fallback for late-loaded DOM
-
-                document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-
-                openTab('Overview');
-                fetchData();
-            } catch (e) {
-                logError('Error in DOMContentLoaded', e);
-            }
-        });
+        function updateLastUpdated() {
+            const now = luxon.DateTime.now().setZone('Africa/Kampala');
+            document.getElementById('lastUpdated').querySelector('span').textContent = `Updated: ${now.toFormat('MMM dd, HH:mm')}`;
+        }
+        
+        // --- START THE APP ---
+        initializeDashboard();
+    });
     </script>
 </body>
 </html>
