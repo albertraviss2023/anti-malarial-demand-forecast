@@ -2,21 +2,29 @@ name: Run Monthly Predictions
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # Monthly at midnight on the 1st
-  workflow_dispatch:
+    - cron: '*/10 * * * *'  # Run at midnight on the 1st of each month
+  workflow_dispatch:  # Allow manual triggering
+  push:
+    branches:
+      - etl  # Run on pushes to etl branch
+  pull_request:
+    branches:
+      - etl
 
 jobs:
   run-prediction:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-
+      contents: write  # For checkout, committing, and merging
+      actions: write   # For uploading artifacts
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout repository (etl branch)
+        uses: actions/checkout@v4
+        with:
+          ref: etl  # Ensure we checkout the etl branch
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
@@ -28,11 +36,12 @@ jobs:
       - name: Run prediction notebook
         run: |
           export TF_CPP_MIN_LOG_LEVEL=2
-          papermill docker/notebooks/generate_predictions.ipynb docker/notebooks/output_predictions.ipynb -p cwd .
+          mkdir -p results
+          papermill docker/notebooks/generate_predictions.ipynb docker/notebooks/output_predictions.ipynb -p output_dir results -p month_str $(date +"%Y_%m")
           
           # Verify output was created
           MONTH_STR=$(date +"%Y_%m")
-          if [ ! -f "data/predictions_${MONTH_STR}.csv" ]; then
+          if [ ! -f "results/predictions_${MONTH_STR}.csv" ]; then
             echo "::error::Prediction file not generated!"
             exit 1
           fi
@@ -40,34 +49,55 @@ jobs:
       - name: Combine predictions
         run: |
           # Get current month's file
-          CURRENT_FILE="data/predictions_$(date +'%Y_%m').csv"
+          CURRENT_FILE="results/predictions_$(date +'%Y_%m').csv"
           
           # Check if master file exists
-          if [ -f "data/predictions.csv" ]; then
+          if [ -f "results/predictions.csv" ]; then
             echo "Appending new predictions to master file"
             # Verify headers match
-            if ! diff <(head -1 "$CURRENT_FILE") <(head -1 "data/predictions.csv"); then
+            if ! diff <(head -1 "$CURRENT_FILE") <(head -1 "results/predictions.csv"); then
               echo "::error::CSV headers don't match!"
               exit 1
             fi
             # Append data (skip header)
-            tail -n +2 "$CURRENT_FILE" >> "data/predictions.csv"
+            tail -n +2 "$CURRENT_FILE" >> "results/predictions.csv"
           else
             echo "Creating new master predictions file"
-            cp "$CURRENT_FILE" "data/predictions.csv"
+            cp "$CURRENT_FILE" "results/predictions.csv"
           fi
 
       - name: Archive monthly file
         run: |
-          mkdir -p data/archive
-          mv "data/predictions_$(date +'%Y_%m').csv" "data/archive/"
+          mkdir -p results/archive
+          mv "results/predictions_$(date +'%Y_%m').csv" "results/archive/"
 
-      - name: Commit and push changes
+      - name: Commit and push changes to etl branch
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git pull --ff-only
-          git add data/predictions.csv
-          git add data/archive/
-          git commit -m "Update predictions for $(date +'%Y-%m')" || echo "No changes to commit"
-          git push origin ${{ github.ref }}
+          git add results/predictions.csv
+          git add results/archive/
+          git commit -m "Update predictions for $(date +'%Y-%m') on etl branch" || echo "No changes to commit"
+          git push origin etl
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: success()
+
+      - name: Merge etl into anti-malarial-ddd-prediction-dashboard
+        run: |
+          git fetch origin
+          git checkout anti-malarial-ddd-prediction-dashboard
+          git merge -X theirs etl --no-ff -m "Merge prediction results from etl to anti-malarial-ddd-prediction-dashboard for $(date +'%Y-%m')"
+          git push origin anti-malarial-ddd-prediction-dashboard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: success()
+
+      - name: Upload prediction results
+        uses: actions/upload-artifact@v4
+        with:
+          name: monthly-predictions-output-${{ github.run_id }}
+          path: results/*.csv
+          retention-days: 7
+          
