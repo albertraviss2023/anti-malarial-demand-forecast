@@ -1,22 +1,22 @@
-2025-07-25 05:43:39,131 - INFO - Starting malaria prediction pipeline...
-2025-07-25 05:43:39,141 - INFO - Successfully loaded data from /home/runner/work/anti-malarial-demand-forecast/anti-malarial-demand-forecast/data/malaria_historical.csv
-2025-07-25 05:43:39,222 - INFO - Loaded Keras model 'Dense'
-2025-07-25 05:43:39,282 - INFO - Loaded Keras model 'LSTM'
-2025-07-25 05:43:39,343 - INFO - Loaded Keras model 'GRU'
-2025-07-25 05:43:39,786 - INFO - Loaded Keras model 'Transformer'
-2025-07-25 05:43:39,832 - INFO - Loaded XGBoost model 'XGBoost'
-2025-07-25 05:43:39,843 - INFO - Latest historical data available up to: 2025-04
-2025-07-25 05:43:39,843 - INFO - Using input data window from 2024-11 to 2025-04.
-2025-07-25 05:43:39,843 - INFO - Forecasting for months: May_2025, June_2025, July_2025
-2025-07-25 05:43:39,845 - INFO - Removed 'Kamuli' district from the dataset (if present).
-2025-07-25 05:43:39,942 - INFO - Calculated normalization stats for 118 districts.
-2025-07-25 05:43:40,030 - INFO - Prepared input data for 118 districts for prediction.
-2025-07-25 05:43:40,176 - INFO - Generated predictions for model: Dense
-2025-07-25 05:43:40,427 - INFO - Generated predictions for model: LSTM
-2025-07-25 05:43:40,575 - WARNING - 5 out of the last 9 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7f7bc8644900> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
-2025-07-25 05:43:40,704 - WARNING - 6 out of the last 12 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7f7bc8644900> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
-2025-07-25 05:43:40,717 - INFO - Generated predictions for model: GRU
-2025-07-25 05:43:41,415 - INFO - Generated predictions for model: Transformer
-2025-07-25 05:43:41,421 - INFO - Generated predictions for model: XGBoost
-2025-07-25 05:43:41,431 - INFO - All predictions saved to single long-format file: /home/runner/work/anti-malarial-demand-forecast/anti-malarial-demand-forecast/results/predictions_May_2025_June_2025_July_2025.csv
-2025-07-25 05:43:41,431 - INFO - Pipeline finished successfully!
+2025-07-25 06:00:18,905 - INFO - Starting malaria prediction pipeline...
+2025-07-25 06:00:18,915 - INFO - Successfully loaded data from /home/runner/work/anti-malarial-demand-forecast/anti-malarial-demand-forecast/data/malaria_historical.csv
+2025-07-25 06:00:19,001 - INFO - Loaded Keras model 'Dense'
+2025-07-25 06:00:19,062 - INFO - Loaded Keras model 'LSTM'
+2025-07-25 06:00:19,126 - INFO - Loaded Keras model 'GRU'
+2025-07-25 06:00:19,580 - INFO - Loaded Keras model 'Transformer'
+2025-07-25 06:00:19,626 - INFO - Loaded XGBoost model 'XGBoost'
+2025-07-25 06:00:19,637 - INFO - Latest historical data available up to: 2025-04
+2025-07-25 06:00:19,637 - INFO - Using input data window from 2024-11 to 2025-04.
+2025-07-25 06:00:19,638 - INFO - Forecasting for months: May_2025, June_2025, July_2025
+2025-07-25 06:00:19,639 - INFO - Removed 'Kamuli' district from the dataset (if present).
+2025-07-25 06:00:19,739 - INFO - Calculated normalization stats for 118 districts.
+2025-07-25 06:00:19,827 - INFO - Prepared input data for 118 districts for prediction.
+2025-07-25 06:00:19,974 - INFO - Generated predictions for model: Dense
+2025-07-25 06:00:20,226 - INFO - Generated predictions for model: LSTM
+2025-07-25 06:00:20,377 - WARNING - 5 out of the last 9 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7f111c4c8900> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+2025-07-25 06:00:20,506 - WARNING - 6 out of the last 12 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7f111c4c8900> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+2025-07-25 06:00:20,520 - INFO - Generated predictions for model: GRU
+2025-07-25 06:00:21,210 - INFO - Generated predictions for model: Transformer
+2025-07-25 06:00:21,215 - INFO - Generated predictions for model: XGBoost
+2025-07-25 06:00:21,225 - INFO - All predictions saved to single long-format file: /home/runner/work/anti-malarial-demand-forecast/anti-malarial-demand-forecast/results/predictions_May_2025_June_2025_July_2025.csv
+2025-07-25 06:00:21,225 - INFO - Pipeline finished successfully!
