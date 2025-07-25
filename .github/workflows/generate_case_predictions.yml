@@ -2,14 +2,14 @@ name: Run Malaria Predictions (Every 10 Mins)
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # Runs on the default branch or specified branch
-  workflow_dispatch:  # Allows manual triggering on any branch
+    - cron: '*/10 * * * *'  # Runs every 10 minutes
+  workflow_dispatch:  # Allows manual triggering
   push:
     branches:
-      - etl  # Run on pushes to the etl branch
+      - main  # Run on pushes to main branch
   pull_request:
     branches:
-      - etl
+      - main
 
 jobs:
   run_predictions:
@@ -18,10 +18,10 @@ jobs:
       contents: write  # For checkout, committing, and merging
       actions: write   # For uploading artifacts
     steps:
-    - name: Checkout Repository (etl branch)
+    - name: Checkout Repository
       uses: actions/checkout@v4
       with:
-        ref: etl  # Ensure we checkout the etl branch
+        ref: main  # Checkout the main branch
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -31,34 +31,40 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install pandas numpy tensorflow==2.19.0 xgboost
         pip install -r requirements.txt
 
     - name: Run Prediction Script
       run: python scripts/generate_district_predictions.py
 
-    - name: Commit and Push Results to etl Branch
+    - name: Commit and Push Results to Main Branch
       run: |
         git config --global user.name "GitHub Action"
         git config --global user.email "action@github.com"
         git add results/*.csv
         git add results/prediction.log
-        git commit -m "Add malaria prediction results for run ${{ github.run_id }} on etl branch" || echo "No changes to commit"
-        git push origin etl
+        git commit -m "Add malaria prediction results for run ${{ github.run_id }} on main branch" || echo "No changes to commit"
+        git push origin main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: success()
 
-    - name: Merge etl into malaria-cases-dashboard
+    - name: Merge Results to Dashboard Branch
       run: |
         git fetch origin
         git checkout malaria-cases-dashboard
-        git merge etl --no-ff -m "Merge prediction results from etl to malaria-cases-dashboard for run ${{ github.run_id }}"
+        git pull origin malaria-cases-dashboard
+        git checkout main -- results/
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+        git add results/
+        git commit -m "Update prediction results from main for run ${{ github.run_id }}"
         git push origin malaria-cases-dashboard
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: success()
 
-    - name: Upload Prediction Results
+    - name: Upload Prediction Results as Artifact
       uses: actions/upload-artifact@v4
       with:
         name: malaria-predictions-output-${{ github.run_id }}
