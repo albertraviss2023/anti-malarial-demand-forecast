@@ -1,4 +1,4 @@
-name: Run Monthly Predictions
+name: Run National Monthly DDD Predictions
 
 on:
   schedule:
@@ -6,10 +6,10 @@ on:
   workflow_dispatch:  # Allow manual triggering
   push:
     branches:
-      - etl  # Run on pushes to etl branch
+      - main  # Run on pushes to main branch
   pull_request:
     branches:
-      - etl
+      - main
 
 jobs:
   run-prediction:
@@ -18,10 +18,10 @@ jobs:
       contents: write  # For checkout, committing, and merging
       actions: write   # For uploading artifacts
     steps:
-      - name: Checkout repository (etl branch)
+      - name: Checkout repository (main branch)
         uses: actions/checkout@v4
         with:
-          ref: etl  # Ensure we checkout the etl branch
+          ref: main  # Ensure we checkout the main branch
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -71,24 +71,24 @@ jobs:
           mkdir -p results/archive
           mv "results/predictions_$(date +'%Y_%m').csv" "results/archive/"
 
-      - name: Commit and push changes to etl branch
+      - name: Commit and push changes to main branch
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git pull --ff-only
           git add results/predictions.csv
           git add results/archive/
-          git commit -m "Update predictions for $(date +'%Y-%m') on etl branch" || echo "No changes to commit"
-          git push origin etl
+          git commit -m "Update predictions for $(date +'%Y-%m') on main branch" || echo "No changes to commit"
+          git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: success()
 
-      - name: Merge etl into anti-malarial-ddd-prediction-dashboard
+      - name: Merge main into anti-malarial-ddd-prediction-dashboard
         run: |
           git fetch origin
           git checkout anti-malarial-ddd-prediction-dashboard
-          git merge -X theirs etl --no-ff -m "Merge prediction results from etl to anti-malarial-ddd-prediction-dashboard for $(date +'%Y-%m')"
+          git merge -X theirs main --no-ff -m "Merge prediction results from main to anti-malarial-ddd-prediction-dashboard for $(date +'%Y-%m')"
           git push origin anti-malarial-ddd-prediction-dashboard
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -100,4 +100,3 @@ jobs:
           name: monthly-predictions-output-${{ github.run_id }}
           path: results/*.csv
           retention-days: 7
-          
