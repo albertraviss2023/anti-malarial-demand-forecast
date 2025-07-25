@@ -1,12 +1,12 @@
-name: Run National Monthly DDD Predictions
+name: Run Monthly Predictions
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # Run at midnight on the 1st of each month
+    - cron: '0 0 1 * *'  # Run at midnight on the 1st of each month
   workflow_dispatch:  # Allow manual triggering
   push:
     branches:
-      - main  # Run on pushes to main branch
+      - main
   pull_request:
     branches:
       - main
@@ -15,13 +15,13 @@ jobs:
   run-prediction:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # For checkout, committing, and merging
-      actions: write   # For uploading artifacts
+      contents: write
+      actions: write
     steps:
       - name: Checkout repository (main branch)
         uses: actions/checkout@v4
         with:
-          ref: main  # Ensure we checkout the main branch
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -30,36 +30,43 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install papermill pandas tensorflow numpy jupyter
+          pip install papermill pandas tensorflow==2.15.0 numpy jupyter scikit-learn matplotlib
           python -m ipykernel install --user --name python3 --display-name "Python 3"
+
+      - name: Verify environment
+        run: |
+          python --version
+          pip list
+          ls -l docker/notebooks/
+          echo "Current date: $(date +'%Y_%m')"
 
       - name: Run prediction notebook
         run: |
           export TF_CPP_MIN_LOG_LEVEL=2
           mkdir -p results
-          papermill docker/notebooks/generate_predictions.ipynb docker/notebooks/output_predictions.ipynb -p output_dir results -p month_str $(date +"%Y_%m")
-          
-          # Verify output was created
+          papermill docker/notebooks/generate_predictions.ipynb docker/notebooks/output_predictions.ipynb -p output_dir results -p month_str $(date +"%Y_%m") 2>&1 | tee papermill.log || {
+            echo "::error::Papermill execution failed. Check logs and output_predictions.ipynb."
+            cat papermill.log
+            cat docker/notebooks/output_predictions.ipynb
+            exit 1
+          }
           MONTH_STR=$(date +"%Y_%m")
           if [ ! -f "results/predictions_${MONTH_STR}.csv" ]; then
             echo "::error::Prediction file not generated!"
+            ls -l results/
+            cat papermill.log
             exit 1
           fi
 
       - name: Combine predictions
         run: |
-          # Get current month's file
           CURRENT_FILE="results/predictions_$(date +'%Y_%m').csv"
-          
-          # Check if master file exists
           if [ -f "results/predictions.csv" ]; then
             echo "Appending new predictions to master file"
-            # Verify headers match
             if ! diff <(head -1 "$CURRENT_FILE") <(head -1 "results/predictions.csv"); then
               echo "::error::CSV headers don't match!"
               exit 1
             fi
-            # Append data (skip header)
             tail -n +2 "$CURRENT_FILE" >> "results/predictions.csv"
           else
             echo "Creating new master predictions file"
@@ -94,9 +101,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: success()
 
-      - name: Upload prediction results
+      - name: Upload prediction results and logs
         uses: actions/upload-artifact@v4
         with:
           name: monthly-predictions-output-${{ github.run_id }}
-          path: results/*.csv
+          path: |
+            results/*.csv
+            papermill.log
+            docker/notebooks/output_predictions.ipynb
           retention-days: 7
+        if: always()
+        
