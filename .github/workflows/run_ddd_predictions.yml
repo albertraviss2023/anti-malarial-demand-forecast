@@ -50,6 +50,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: success()
+      
+      - name: Merge Results to Dashboard Branch
+        run: |
+          git fetch origin
+          git checkout anti-malarial-ddd-prediction-dashboard
+          git pull origin anti-malarial-ddd-prediction-dashboard
+          git checkout main -- results/
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add results/
+          git commit -m "Update prediction results from main for run ${{ github.run_id }}"
+          git push origin anti-malarial-ddd-prediction-dashboard
+        env:  
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: success()
+
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
@@ -59,4 +75,3 @@ jobs:
             prediction.log
           retention-days: 7
         if: always()
-        
