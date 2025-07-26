@@ -1,4 +1,4 @@
-name: Run Monthly Predictions
+name: Run Monthly DDD Predictions
 
 on:
   schedule:
@@ -16,9 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      actions: write
     steps:
-      - name: Checkout repository (main branch)
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           ref: main
@@ -29,86 +28,45 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: |
-          pip install papermill pandas tensorflow==2.15.0 numpy jupyter scikit-learn matplotlib
-          python -m ipykernel install --user --name python3 --display-name "Python 3"
+        run: pip install numpy pandas tensorflow==2.19.0 xgboost logging pathlib  numpy datetime argparse
 
-      - name: Verify environment
-        run: |
-          python --version
-          pip list
-          ls -l docker/notebooks/
-          echo "Current date: $(date +'%Y_%m')"
-
-      - name: Run prediction notebook
+      - name: Run prediction script
         run: |
           export TF_CPP_MIN_LOG_LEVEL=2
-          mkdir -p results
-          papermill docker/notebooks/generate_predictions.ipynb docker/notebooks/output_predictions.ipynb -p output_dir results -p month_str $(date +"%Y_%m") 2>&1 | tee papermill.log || {
-            echo "::error::Papermill execution failed. Check logs and output_predictions.ipynb."
-            cat papermill.log
-            cat docker/notebooks/output_predictions.ipynb
-            exit 1
-          }
-          MONTH_STR=$(date +"%Y_%m")
-          if [ ! -f "results/predictions_${MONTH_STR}.csv" ]; then
+          python generate_predictions.py --month-str $(date +"%Y_%m") 2>&1 | tee prediction.log
+          if ! ls results/ddd_predictions_*.csv > /dev/null 2>&1; then
             echo "::error::Prediction file not generated!"
-            ls -l results/
-            cat papermill.log
+            cat prediction.log
             exit 1
           fi
 
-      - name: Combine predictions
-        run: |
-          CURRENT_FILE="results/predictions_$(date +'%Y_%m').csv"
-          if [ -f "results/predictions.csv" ]; then
-            echo "Appending new predictions to master file"
-            if ! diff <(head -1 "$CURRENT_FILE") <(head -1 "results/predictions.csv"); then
-              echo "::error::CSV headers don't match!"
-              exit 1
-            fi
-            tail -n +2 "$CURRENT_FILE" >> "results/predictions.csv"
-          else
-            echo "Creating new master predictions file"
-            cp "$CURRENT_FILE" "results/predictions.csv"
-          fi
-
-      - name: Archive monthly file
-        run: |
-          mkdir -p results/archive
-          mv "results/predictions_$(date +'%Y_%m').csv" "results/archive/"
-
-      - name: Commit and push changes to main branch
+      - name: Commit changes to main branch
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git pull --ff-only
-          git add results/predictions.csv
-          git add results/archive/
-          git commit -m "Update predictions for $(date +'%Y-%m') on main branch" || echo "No changes to commit"
+          git add results/ddd_predictions_*.csv
+          git commit -m "Add predictions for $(date +'%Y-%m')" || echo "No changes to commit"
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: success()
 
-      - name: Merge main into anti-malarial-ddd-prediction-dashboard
+      - name: Merge to anti-malarial-ddd-prediction-dashboard
         run: |
           git fetch origin
           git checkout anti-malarial-ddd-prediction-dashboard
-          git merge -X theirs main --no-ff -m "Merge prediction results from main to anti-malarial-ddd-prediction-dashboard for $(date +'%Y-%m')"
+          git merge -X theirs main -m "Merge predictions for $(date +'%Y-%m')"
           git push origin anti-malarial-ddd-prediction-dashboard
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: success()
 
-      - name: Upload prediction results and logs
+      - name: Upload results
         uses: actions/upload-artifact@v4
         with:
-          name: monthly-predictions-output-${{ github.run_id }}
+          name: predictions-${{ github.run_id }}
           path: |
-            results/*.csv
-            papermill.log
-            docker/notebooks/output_predictions.ipynb
+            results/ddd_predictions_*.csv
+            prediction.log
           retention-days: 7
         if: always()
-        
