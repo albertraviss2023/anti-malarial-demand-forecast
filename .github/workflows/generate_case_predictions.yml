@@ -2,7 +2,7 @@ name: Run Malaria Predictions (Every 10 Mins)
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # Runs every 10 minutes
+    - cron: '0 14 7 * *'  # Runs every 7th day of the month at 2:00 PM
   workflow_dispatch:  # Allows manual triggering
   push:
     branches:
