@@ -50,17 +50,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: success()
-
-      - name: Merge to anti-malarial-ddd-prediction-dashboard
-        run: |
-          git fetch origin
-          git checkout anti-malarial-ddd-prediction-dashboard
-          git merge -X theirs main -m "Merge predictions for $(date +'%Y-%m')"
-          git push origin anti-malarial-ddd-prediction-dashboard
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: success()
-
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
@@ -70,3 +59,4 @@ jobs:
             prediction.log
           retention-days: 7
         if: always()
+        
