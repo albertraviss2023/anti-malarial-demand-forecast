@@ -2,7 +2,7 @@ name: Run Monthly DDD Predictions
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # Run at midnight on the 1st of each month
+    - cron: '0 14 7 * *'  # Runs every 7th day of the month at 2:00 PM
   workflow_dispatch:  # Allow manual triggering
   push:
     branches:
