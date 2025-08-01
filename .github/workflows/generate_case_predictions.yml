@@ -40,6 +40,8 @@ jobs:
       run: |
         git config --global user.name "GitHub Action"
         git config --global user.email "action@github.com"
+        git fetch origin
+        git rebase origin/main  # <- pull with rebase to avoid merge commits
         git add results/*.csv
         git add results/prediction.log
         git commit -m "Add malaria prediction results for run ${{ github.run_id }} on main branch" || echo "No changes to commit"
