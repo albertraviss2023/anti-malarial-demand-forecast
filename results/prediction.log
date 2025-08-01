@@ -1,2 +1,22 @@
-2025-08-01 20:02:25,995 - INFO - Starting malaria prediction pipeline...
-2025-08-01 20:02:25,996 - ERROR - FATAL: Failed during initial setup. [Errno 2] No such file or directory: '/home/runner/work/anti-malarial-demand-forecast/anti-malarial-demand-forecast/data/malaria_historical.csv'
+2025-08-01 20:09:08,257 - INFO - Starting malaria prediction pipeline...
+2025-08-01 20:09:08,267 - INFO - Successfully loaded data from /home/runner/work/anti-malarial-demand-forecast/anti-malarial-demand-forecast/data/malaria_historical.csv
+2025-08-01 20:09:08,348 - INFO - Loaded Keras model 'Dense'
+2025-08-01 20:09:08,408 - INFO - Loaded Keras model 'LSTM'
+2025-08-01 20:09:08,470 - INFO - Loaded Keras model 'GRU'
+2025-08-01 20:09:08,923 - INFO - Loaded Keras model 'Transformer'
+2025-08-01 20:09:08,969 - INFO - Loaded XGBoost model 'XGBoost'
+2025-08-01 20:09:08,979 - INFO - Latest historical data available up to: 2025-06
+2025-08-01 20:09:08,980 - INFO - Using input data window from 2025-01 to 2025-06.
+2025-08-01 20:09:08,980 - INFO - Forecasting for months: July_2025, August_2025, September_2025
+2025-08-01 20:09:08,982 - INFO - Removed 'Kamuli' district from the dataset (if present).
+2025-08-01 20:09:09,085 - INFO - Calculated normalization stats for 118 districts.
+2025-08-01 20:09:09,173 - INFO - Prepared input data for 118 districts for prediction.
+2025-08-01 20:09:09,320 - INFO - Generated predictions for model: Dense
+2025-08-01 20:09:09,574 - INFO - Generated predictions for model: LSTM
+2025-08-01 20:09:09,725 - WARNING - 5 out of the last 9 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7f646499fba0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+2025-08-01 20:09:09,854 - WARNING - 6 out of the last 12 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7f646499fba0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+2025-08-01 20:09:09,868 - INFO - Generated predictions for model: GRU
+2025-08-01 20:09:10,551 - INFO - Generated predictions for model: Transformer
+2025-08-01 20:09:10,556 - INFO - Generated predictions for model: XGBoost
+2025-08-01 20:09:10,567 - INFO - All predictions saved to single long-format file: /home/runner/work/anti-malarial-demand-forecast/anti-malarial-demand-forecast/results/predictions_July_2025_August_2025_September_2025.csv
+2025-08-01 20:09:10,567 - INFO - Pipeline finished successfully!
