@@ -1,4 +1,4 @@
-name: Run Malaria Predictions (Every 10 Mins)
+name: Run Malaria Predictions Every Month
 
 on:
   schedule:
