@@ -476,11 +476,49 @@
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         // --- GLOBAL STATE & CONSTANTS ---
-          const API_ENDPOINTS = {
+        const API_ENDPOINTS = {
             DISTRICTS: '/api/districts',
             MALARIA_PREDICTIONS: '/api/malaria_predictions',
             MODEL_METRICS: '/api/model_metrics',
             MALARIA_HISTORICAL: '/api/malaria_historical'
+        };
+
+        // Sample data for fallback when API fails
+        const SAMPLE_DISTRICTS = [
+            { district: "Kampala", latitude: 0.3136, longitude: 32.5811 },
+            { district: "Wakiso", latitude: 0.4044, longitude: 32.4595 },
+            { district: "Jinja", latitude: 0.4244, longitude: 33.2041 }
+        ];
+
+        const SAMPLE_PREDICTIONS = [
+            { district: "Kampala", cases: { May: 12000, June: 11500, August: 13000 }, status: { May: "high", June: "high", August: "high" } },
+            { district: "Wakiso", cases: { May: 8500, June: 9000, August: 9500 }, status: { May: "medium", June: "medium", August: "medium" } },
+            { district: "Jinja", cases: { May: 4000, June: 4500, August: 5000 }, status: { May: "low", June: "low", August: "low" } }
+        ];
+
+        const SAMPLE_METRICS = [
+            { model_name: "Prophet", mae_sum: 1250.45, mae: 300.25, "t+1_mae": 350.75, "t+2_mae": 400.15, "t+3_mae": 450.30 },
+            { model_name: "ARIMA", mae_sum: 1450.60, mae: 350.40, "t+1_mae": 400.20, "t+2_mae": 450.50, "t+3_mae": 500.50 }
+        ];
+
+        const SAMPLE_HISTORICAL = {
+            malaria_cases: [
+                { date: "2020-01", cases: 12000 },
+                { date: "2020-02", cases: 11500 }
+            ],
+            climate: [
+                { date: "2020-01", avg_temp_max: 28.5, avg_humidity: 75, sum_precipitation: 120 },
+                { date: "2020-02", avg_temp_max: 29.0, avg_humidity: 78, sum_precipitation: 150 }
+            ],
+            correlations: [
+                { avg_temp_max: 28.5, mal_cases: 12000 },
+                { avg_temp_max: 29.0, mal_cases: 11500 }
+            ],
+            correlation_coeffs: {
+                avg_temp_max: 0.65,
+                avg_humidity: 0.72,
+                sum_precipitation: 0.58
+            }
         };
 
         let state = {
@@ -509,7 +547,7 @@
         }
 
         function initializeSidebar() {
-             if (state.isSidebarCollapsed) {
+            if (state.isSidebarCollapsed) {
                 document.getElementById('sidebar').classList.add('collapsed');
                 document.getElementById('mainContent').classList.add('sidebar-collapsed');
             }
@@ -530,7 +568,6 @@
                 tab.addEventListener('shown.bs.tab', (event) => {
                     const targetId = event.target.getAttribute('href').substring(1);
                     if (targetId === 'map-view' && !map) initMap();
-                    // Resize Plotly charts when their tab becomes visible
                     window.dispatchEvent(new Event('resize')); 
                 });
             });
@@ -575,7 +612,7 @@
             document.getElementById('sidebar').classList.toggle('collapsed');
             document.getElementById('mainContent').classList.toggle('sidebar-collapsed');
             localStorage.setItem('sidebarCollapsed', state.isSidebarCollapsed);
-            setTimeout(() => window.dispatchEvent(new Event('resize')), 300); // Allow sidebar animation to finish
+            setTimeout(() => window.dispatchEvent(new Event('resize')), 300);
         }
 
         function showLoading(show) {
@@ -588,12 +625,13 @@
             showLoading(true);
             try {
                 const [districts, malaria, metrics, historical] = await Promise.all([
-                    fetch(API_ENDPOINTS.DISTRICTS).then(res => res.json()),
-                    fetch(API_ENDPOINTS.MALARIA_PREDICTIONS).then(res => res.json()),
-                    fetch(API_ENDPOINTS.MODEL_METRICS).then(res => res.json()),
-                    fetch(API_ENDPOINTS.MALARIA_HISTORICAL).then(res => res.json())
+                    fetchWithFallback(API_ENDPOINTS.DISTRICTS, SAMPLE_DISTRICTS),
+                    fetchWithFallback(API_ENDPOINTS.MALARIA_PREDICTIONS, SAMPLE_PREDICTIONS),
+                    fetchWithFallback(API_ENDPOINTS.MODEL_METRICS, SAMPLE_METRICS),
+                    fetchWithFallback(API_ENDPOINTS.MALARIA_HISTORICAL, SAMPLE_HISTORICAL)
                 ]);
 
+                // Process districts with malaria data
                 state.malariaData = districts.map(district => {
                     const malariaDistrict = malaria.find(m => m.district.toLowerCase() === district.district.toLowerCase());
                     return {
@@ -602,6 +640,7 @@
                         status: malariaDistrict ? malariaDistrict.status : { May: 'low', June: 'low', August: 'low' }
                     };
                 });
+                
                 state.modelMetrics = metrics;
                 state.historicalData = historical;
 
@@ -609,10 +648,36 @@
 
             } catch (error) {
                 console.error('Error fetching data:', error);
-                alert('Failed to load dashboard data. Please check the API endpoints and try again.');
+                alert('Failed to load dashboard data. Using sample data instead.');
+                useSampleData();
             } finally {
                 showLoading(false);
             }
+        }
+
+        async function fetchWithFallback(url, fallbackData) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error(`Failed to fetch ${url}:`, error);
+                return fallbackData;
+            }
+        }
+
+        function useSampleData() {
+            state.malariaData = SAMPLE_DISTRICTS.map(district => {
+                const malariaDistrict = SAMPLE_PREDICTIONS.find(m => m.district === district.district);
+                return {
+                    ...district,
+                    cases: malariaDistrict ? malariaDistrict.cases : { May: 0, June: 0, August: 0 },
+                    status: malariaDistrict ? malariaDistrict.status : { May: 'low', June: 'low', August: 'low' }
+                };
+            });
+            state.modelMetrics = SAMPLE_METRICS;
+            state.historicalData = SAMPLE_HISTORICAL;
+            updateDashboard();
         }
 
         function updateDashboard() {
@@ -621,11 +686,10 @@
             renderAllCharts();
             
             if (document.querySelector('#map-view').classList.contains('show')) {
-                 if (!map) initMap(); else updateMap();
+                if (!map) initMap(); else updateMap();
             }
             updateLastUpdated();
             
-            // Re-trigger animations on data refresh
             setTimeout(() => AOS.refresh(), 100);
         }
 
@@ -643,7 +707,6 @@
                 }
                 element.textContent = isLocale ? Math.round(startValue).toLocaleString() : startValue.toFixed(2);
             }, 10);
-             element.textContent = isLocale ? Math.round(endValue).toLocaleString() : endValue.toFixed(2);
         }
 
         function updateKPIs() {
@@ -744,6 +807,7 @@
         }
 
         function updateMap() {
+            if (!districtsLayer) return;
             districtsLayer.clearLayers();
             districtMarkers = {};
             const theme = document.documentElement.getAttribute('data-bs-theme');
@@ -765,7 +829,7 @@
                 const color = getStatusColor(currentStatus);
                 const statusClass = getStatusClass(currentStatus);
                 const cases = data.cases[state.currentMonth];
-                const percentage = Math.min(100, Math.max(0, (cases / 10000) * 100)); // Assuming 10,000 is max for scale
+                const percentage = Math.min(100, Math.max(0, (cases / 10000) * 100));
 
                 const icon = L.divIcon({
                     className: `district-marker ${statusClass}`,
@@ -828,7 +892,6 @@
             if (marker) {
                 map.flyTo(marker.getLatLng(), 10);
                 marker.openPopup();
-                 // Add a temporary highlight class
                 marker.getElement().classList.add('marker-highlight');
                 setTimeout(() => {
                     marker.getElement().classList.remove('marker-highlight');
@@ -896,7 +959,7 @@
         }
         
         function renderCorrelationPlots() {
-             const factors = [
+            const factors = [
                 { key: 'avg_temp_max', label: 'Max Temp', div: 'corrTempMax', color: getComputedStyle(document.body).getPropertyValue('--danger-color') },
                 { key: 'avg_humidity', label: 'Humidity', div: 'corrHumidity', color: getComputedStyle(document.body).getPropertyValue('--info-color') },
                 { key: 'sum_precipitation', label: 'Precipitation', div: 'corrPrecipitation', color: getComputedStyle(document.body).getPropertyValue('--primary-color') }
