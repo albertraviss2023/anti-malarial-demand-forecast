@@ -1,6 +1,55 @@
-2025-07-23 01:00:26,110 - INFO - Startup validation completed successfully
-2025-07-23 01:00:35,040 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
-2025-07-23 01:03:17,149 - INFO - Startup validation completed successfully
-2025-07-23 01:12:45,982 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
-2025-07-23 01:17:48,770 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
-2025-07-23 01:18:03,367 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 07:08:31,057 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 07:08:31,059 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 07:08:33,730 - ERROR - Failed to connect to database: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 07:08:33,730 - ERROR - Startup failed: 500: Database connection failed
+2025-08-03 07:08:59,785 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 07:08:59,788 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 07:08:59,830 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 07:08:59,837 - INFO - Startup validation completed successfully
+2025-08-03 07:09:10,785 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 07:09:10,797 - INFO - Loaded test metrics: [{'model_name': 'Dense', 'mae': 0.099775786201}, {'model_name': 'LSTM', 'mae': 0.219373166561}, {'model_name': 'GRU', 'mae': 0.087615636488}, {'model_name': 'transformer', 'mae': 0.253565068046}]
+2025-08-03 07:09:10,825 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 07:09:11,065 - INFO - Retrieved 24 prediction rows from PostgreSQL: {'model': {0: 'Dense', 1: 'Dense', 2: 'Dense', 3: 'Dense', 4: 'Dense'}, 'date': {0: datetime.date(2025, 4, 1), 1: datetime.date(2025, 5, 1), 2: datetime.date(2025, 6, 1), 3: datetime.date(2025, 7, 1), 4: datetime.date(2025, 8, 1)}, 'predicted_demand': {0: 1.6158, 1: 1.6017, 2: 1.3041, 3: 1.1226, 4: 1.489}, 'generated_on': {0: datetime.date(2025, 4, 7), 1: datetime.date(2025, 5, 7), 2: datetime.date(2025, 6, 7), 3: datetime.date(2025, 7, 7), 4: datetime.date(2025, 7, 7)}}
+2025-08-03 07:09:11,080 - INFO - Last 6 months historical data: [{'date': '2024-10-01', 'ddd_demand': 1.6585781067304}, {'date': '2024-11-01', 'ddd_demand': 1.7218765043211}, {'date': '2024-12-01', 'ddd_demand': 1.121592479794}, {'date': '2025-01-01', 'ddd_demand': 0.907231325374}, {'date': '2025-02-01', 'ddd_demand': 0.9710727091548}, {'date': '2025-03-01', 'ddd_demand': 1.7332526992442}]
+2025-08-03 07:09:11,084 - INFO - Structured predictions: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.6017, 'June 2025': 1.3041, 'July 2025': 1.1226, 'August 2025': 1.489, 'September 2025': 1.6987}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6241, 'June 2025': 1.2873, 'July 2025': 1.1753, 'August 2025': 1.3822, 'September 2025': 1.7143}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4804, 'June 2025': 1.4493, 'July 2025': 1.4323, 'August 2025': 1.3878, 'September 2025': 1.3688}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.4752, 'June 2025': 1.4524, 'July 2025': 1.4592, 'August 2025': 1.52, 'September 2025': 1.4425}}
+2025-08-03 07:09:11,085 - INFO - Best model: GRU
+2025-08-03 07:10:06,819 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 07:10:06,835 - INFO - Loaded test metrics: [{'model_name': 'Dense', 'mae': 0.099775786201}, {'model_name': 'LSTM', 'mae': 0.219373166561}, {'model_name': 'GRU', 'mae': 0.087615636488}, {'model_name': 'transformer', 'mae': 0.253565068046}]
+2025-08-03 07:10:06,904 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 07:10:06,911 - INFO - Retrieved 24 prediction rows from PostgreSQL: {'model': {0: 'Dense', 1: 'Dense', 2: 'Dense', 3: 'Dense', 4: 'Dense'}, 'date': {0: datetime.date(2025, 4, 1), 1: datetime.date(2025, 5, 1), 2: datetime.date(2025, 6, 1), 3: datetime.date(2025, 7, 1), 4: datetime.date(2025, 8, 1)}, 'predicted_demand': {0: 1.6158, 1: 1.6017, 2: 1.3041, 3: 1.1226, 4: 1.489}, 'generated_on': {0: datetime.date(2025, 4, 7), 1: datetime.date(2025, 5, 7), 2: datetime.date(2025, 6, 7), 3: datetime.date(2025, 7, 7), 4: datetime.date(2025, 7, 7)}}
+2025-08-03 07:10:06,926 - INFO - Last 6 months historical data: [{'date': '2024-10-01', 'ddd_demand': 1.6585781067304}, {'date': '2024-11-01', 'ddd_demand': 1.7218765043211}, {'date': '2024-12-01', 'ddd_demand': 1.121592479794}, {'date': '2025-01-01', 'ddd_demand': 0.907231325374}, {'date': '2025-02-01', 'ddd_demand': 0.9710727091548}, {'date': '2025-03-01', 'ddd_demand': 1.7332526992442}]
+2025-08-03 07:10:06,933 - INFO - Structured predictions: {'Dense': {'April 2025': 1.6158, 'May 2025': 1.6017, 'June 2025': 1.3041, 'July 2025': 1.1226, 'August 2025': 1.489, 'September 2025': 1.6987}, 'GRU': {'April 2025': 1.8661, 'May 2025': 1.6241, 'June 2025': 1.2873, 'July 2025': 1.1753, 'August 2025': 1.3822, 'September 2025': 1.7143}, 'LSTM': {'April 2025': 1.5321, 'May 2025': 1.4804, 'June 2025': 1.4493, 'July 2025': 1.4323, 'August 2025': 1.3878, 'September 2025': 1.3688}, 'transformer': {'April 2025': 1.4832, 'May 2025': 1.4752, 'June 2025': 1.4524, 'July 2025': 1.4592, 'August 2025': 1.52, 'September 2025': 1.4425}}
+2025-08-03 07:10:06,935 - INFO - Best model: GRU
+2025-08-03 07:10:47,782 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 07:10:47,785 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 07:10:47,817 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 07:10:47,823 - INFO - Startup validation completed successfully
+2025-08-03 07:16:09,213 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 07:16:09,231 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 07:16:09,296 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 07:16:09,301 - INFO - Startup validation completed successfully
+2025-08-03 07:16:15,938 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 07:16:15,959 - INFO - Loaded test metrics for 4 models
+2025-08-03 07:16:16,022 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 07:16:16,444 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 07:16:48,593 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 07:16:48,597 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 07:16:48,637 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 07:16:48,644 - INFO - Startup validation completed successfully
+2025-08-03 07:19:19,206 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 07:19:19,262 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 07:19:19,568 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 07:19:19,601 - INFO - Loaded test metrics for 4 models
+2025-08-03 07:24:17,363 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 07:24:17,366 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 07:24:17,403 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 07:24:17,409 - INFO - Startup validation completed successfully
+2025-08-03 07:25:29,538 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 07:25:29,549 - INFO - Loaded test metrics for 4 models
+2025-08-03 07:25:29,579 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 07:25:29,809 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 07:26:26,573 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 07:26:26,576 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 07:26:26,612 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 07:26:26,617 - INFO - Startup validation completed successfully

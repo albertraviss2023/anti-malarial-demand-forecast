@@ -105,7 +105,7 @@
         .card-body { padding: 1.5rem; }
         .card-title { font-weight: 600; color: var(--heading-color); margin-bottom: 1rem; }
         .chart-container { height: 350px; width: 100%;}
-        
+
         /* --- Metric Cards --- */
         .metric-card {
             background-color: var(--card-bg); padding: 1.5rem; text-align: center;
@@ -129,6 +129,7 @@
         /* --- Other --- */
         .table { border-color: var(--border-color); }
         .data-table { max-height: 500px; overflow-y: auto; }
+        .comparison-table { overflow-x: auto; }
         .loading-spinner {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background-color: rgba(0,0,0,0.5); display: none; justify-content: center;
@@ -292,11 +293,11 @@
                     </div>
                     <div class="dashboard-card"><div class="card-body">
                         <h3 class="card-title">Model Metrics</h3>
-                        <div class="table-responsive data-table">
+                        <div class="table-responsive comparison-table data-table">
                             <table class="table table-striped">
-                                <thead><tr>
+                                <thead id="comparisonTableHead"><tr>
                                     <th>Model</th><th>MAE</th>
-                                    <th id="predictionDate1">-</th><th id="predictionDate2">-</th><th id="predictionDate3">-</th>
+                                    <!-- Dynamic prediction date headers will be inserted here -->
                                 </tr></thead>
                                 <tbody id="comparisonTableBody"></tbody>
                             </table>
@@ -344,6 +345,19 @@
         function setupEventListeners() {
             document.getElementById('themeToggle').addEventListener('click', toggleTheme);
             document.getElementById('refreshData').addEventListener('click', loadDashboardData);
+            
+            // Tab change listeners
+            document.querySelectorAll('.nav-link').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('href').substring(1);
+                    const tabContent = document.getElementById(tabId);
+                    
+                    if (tabContent && dashboardData) {
+                        if (tabId === 'predictions') updatePredictionsTab();
+                        if (tabId === 'comparison') updateComparisonTab();
+                    }
+                });
+            });
         }
 
         function toggleTheme() {
@@ -359,9 +373,7 @@
             try {
                 const response = await fetch(url, options);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return response.headers.get('content-type')?.includes('application/json') 
-                    ? await response.json() 
-                    : await response.text();
+                return await response.json();
             } catch (error) {
                 if (retries > 0) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -382,9 +394,11 @@
 
                 dashboardData = {
                     inputData: processInputData(inputData),
-                    testMetrics: testMetrics.test_metrics || testMetrics,
+                    testMetrics: testMetrics,
                     predictions: predictions
                 };
+
+                console.log('Dashboard Data Loaded:', dashboardData);
                 
                 updateDashboard();
                 updateLastUpdated();
@@ -397,68 +411,39 @@
         }
 
         function processInputData(inputData) {
-            // Handle both CSV and JSON input
-            let data;
-            if (typeof inputData === 'string') {
-                const lines = inputData.trim().split('\n');
-                const headers = lines[0].split(',').map(h => h.trim());
-                data = lines.slice(1).map(line => {
-                    const values = line.split(',');
-                    const row = {};
-                    headers.forEach((header, i) => {
-                        const value = values[i] ? values[i].trim() : '';
-                        row[header] = isNaN(value) || value === '' ? value : parseFloat(value);
-                    });
-                    if (row.year && row.month) {
-                        row.date = DateTime.fromObject({ 
-                            year: row.year, 
-                            month: row.month, 
-                            day: 1 
-                        }).toISODate();
-                    }
-                    return row;
-                });
-            } else if (Array.isArray(inputData)) {
-                data = inputData.map(item => {
-                    if (item.date) {
-                        item.date = DateTime.fromISO(item.date).toISODate();
-                    }
-                    return item;
-                });
-            } else {
-                throw new Error('Unsupported input data format');
+            if (!Array.isArray(inputData)) {
+                console.error('Input data is not an array:', inputData);
+                return { data: [], stats: {} };
             }
 
-            return { 
-                data, 
-                stats: calculateStatistics(data) 
-            };
-        }
-
-        function calculateStatistics(data) {
-            if (!data || data.length === 0) return {};
+            // Calculate statistics
+            const latest = inputData[inputData.length - 1] || {};
+            const previous = inputData.length > 1 ? inputData[inputData.length - 2] : {};
             
-            const latest = data[data.length - 1] || {};
-            const previous = data.length > 1 ? data[data.length - 2] : {};
-            
-            const sum = (key) => data.reduce((total, item) => total + (item[key] || 0), 0);
-            const avg = (key) => data.length > 0 ? sum(key) / data.length : 0;
+            const sum = (key) => inputData.reduce((total, item) => total + (item[key] || 0), 0);
+            const avg = (key) => inputData.length > 0 ? sum(key) / inputData.length : 0;
             
             return {
-                current_demand: latest.ddd_demand,
-                demand_change: latest.ddd_demand - (previous.ddd_demand || latest.ddd_demand),
-                avg_temp: avg('avg_temp_max'),
-                temp_change: latest.avg_temp_max - (previous.avg_temp_max || latest.avg_temp_max),
-                humidity_avg: avg('avg_humidity'),
-                humidity_change: latest.avg_humidity - (previous.avg_humidity || latest.avg_humidity),
-                precip_total: sum('total_precipitation'),
-                precip_change: latest.total_precipitation - (previous.total_precipitation || latest.total_precipitation),
-                sunshine_total: sum('total_sunshine_hours')
+                data: inputData,
+                stats: {
+                    current_demand: latest.ddd_demand,
+                    demand_change: latest.ddd_demand - (previous.ddd_demand || latest.ddd_demand),
+                    avg_temp: avg('avg_temp_max'),
+                    temp_change: latest.avg_temp_max - (previous.avg_temp_max || latest.avg_temp_max),
+                    humidity_avg: avg('avg_humidity'),
+                    humidity_change: latest.avg_humidity - (previous.avg_humidity || latest.avg_humidity),
+                    precip_total: sum('total_precipitation'),
+                    precip_change: latest.total_precipitation - (previous.total_precipitation || latest.total_precipitation),
+                    sunshine_total: sum('total_sunshine_hours')
+                }
             };
         }
 
         function updateDashboard() {
-            if (!dashboardData || !dashboardData.inputData) return;
+            if (!dashboardData || !dashboardData.inputData) {
+                console.error('No input data available for dashboard update');
+                return;
+            }
             
             updateMetrics();
             updateOverviewTab();
@@ -470,10 +455,10 @@
         function updateMetrics() {
             const { stats } = dashboardData.inputData;
             
-            document.getElementById('currentDemand').textContent = formatNumber(stats.current_demand, 0);
-            document.getElementById('avgTemp').textContent = formatNumber(stats.avg_temp, 1) + '°C';
-            document.getElementById('precipTotal').textContent = formatNumber(stats.precip_total, 0) + ' mm';
-            document.getElementById('humidityAvg').textContent = formatNumber(stats.humidity_avg, 1) + '%';
+            document.getElementById('currentDemand').textContent = formatNumber(stats.current_demand, 2);
+            document.getElementById('avgTemp').textContent = formatNumber(stats.avg_temp, 2) + '°C';
+            document.getElementById('precipTotal').textContent = formatNumber(stats.precip_total, 2) + ' mm';
+            document.getElementById('humidityAvg').textContent = formatNumber(stats.humidity_avg, 2) + '%';
             
             updateTrend('demandTrend', stats.demand_change);
             updateTrend('tempTrend', stats.temp_change);
@@ -504,15 +489,20 @@
         function updateOverviewTab() {
             const { inputData, predictions } = dashboardData;
             
+            if (!predictions || !predictions.last_6_months || !predictions.best_model || !predictions.predictions) {
+                console.error('Incomplete predictions data for Overview tab:', predictions);
+                return;
+            }
+            
             // Historical data
-            const historicalData = inputData.data.map(d => ({
+            const historicalData = predictions.last_6_months.map(d => ({
                 x: DateTime.fromISO(d.date).toJSDate(),
                 y: d.ddd_demand
             }));
             
             // Forecast data
-            const forecastEntries = Object.entries(predictions.predictions[predictions.best_model]);
-            const forecastData = forecastEntries.map(([dateStr, value]) => ({
+            const bestModelPreds = predictions.predictions[predictions.best_model] || {};
+            const forecastData = Object.entries(bestModelPreds).map(([dateStr, value]) => ({
                 x: DateTime.fromFormat(dateStr, 'MMMM yyyy').toJSDate(),
                 y: value
             }));
@@ -556,36 +546,58 @@
         }
 
         function updateInputDataTab() {
-            const tableBody = document.getElementById('inputDataBody');
-            tableBody.innerHTML = dashboardData.inputData.data.map(row => `
+            const { inputData } = dashboardData;
+            const tbody = document.getElementById('inputDataBody');
+            
+            if (!inputData || !inputData.data || inputData.data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7">No input data available</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = inputData.data.map(item => `
                 <tr>
-                    <td>${DateTime.fromISO(row.date).toFormat('MMM yyyy')}</td>
-                    <td>${formatNumber(row.avg_temp_max, 1)}°C</td>
-                    <td>${formatNumber(row.avg_temp_min, 1)}°C</td>
-                    <td>${formatNumber(row.avg_humidity, 1)}%</td>
-                    <td>${formatNumber(row.total_precipitation, 0)}mm</td>
-                    <td>${formatNumber(row.total_sunshine_hours, 0)}hrs</td>
-                    <td><strong>${formatNumber(row.ddd_demand, 0)}</strong></td>
+                    <td>${DateTime.fromISO(item.date || `${item.year}-${item.month}-01`).toFormat('MMM yyyy')}</td>
+                    <td>${formatNumber(item.avg_temp_max, 2)}°C</td>
+                    <td>${formatNumber(item.avg_temp_min, 2)}°C</td>
+                    <td>${formatNumber(item.avg_humidity, 2)}%</td>
+                    <td>${formatNumber(item.total_precipitation, 2)}mm</td>
+                    <td>${formatNumber(item.total_sunshine_hours, 2)}h</td>
+                    <td>${formatNumber(item.ddd_demand, 2)}</td>
                 </tr>
-            `).reverse().join('');
+            `).join('');
         }
 
         function updatePredictionsTab() {
-            const { best_model, predictions } = dashboardData.predictions;
-            const bestModelPreds = predictions[best_model];
+            const { predictions } = dashboardData;
             
-            document.getElementById('bestModelName').textContent = best_model;
+            if (!predictions || !predictions.predictions || Object.keys(predictions.predictions).length === 0) {
+                console.error('No prediction data available');
+                document.getElementById('bestModelName').textContent = 'N/A';
+                document.getElementById('forecastValuesContainer').innerHTML = '<p>No forecast data available</p>';
+                return;
+            }
+
+            const bestModel = predictions.best_model || Object.keys(predictions.predictions)[0];
+            const bestModelPreds = predictions.predictions[bestModel] || {};
+            
+            document.getElementById('bestModelName').textContent = bestModel;
             
             // Sort prediction dates chronologically
             const predictionDates = Object.keys(bestModelPreds)
                 .map(d => DateTime.fromFormat(d, 'MMMM yyyy'))
+                .filter(d => d.isValid)
                 .sort((a, b) => a - b);
+            
+            if (predictionDates.length === 0) {
+                document.getElementById('forecastValuesContainer').innerHTML = '<p>No forecast dates available</p>';
+                return;
+            }
             
             // Update forecast values
             document.getElementById('forecastValuesContainer').innerHTML = predictionDates.map(date => `
                 <div class="mb-3">
                     <h5>${date.toFormat('MMMM yyyy')}</h5>
-                    <div class="h4 text-primary">${formatNumber(bestModelPreds[date.toFormat('MMMM yyyy')], 0)}</div>
+                    <div class="h4 text-primary">${formatNumber(bestModelPreds[date.toFormat('MMMM yyyy')], 2)}</div>
                 </div>
             `).join('');
             
@@ -593,10 +605,10 @@
             createBarChart('forecastChart', {
                 labels: predictionDates.map(d => d.toFormat('MMM yyyy')),
                 datasets: [{
-                    label: best_model,
+                    label: bestModel,
                     data: predictionDates.map(d => bestModelPreds[d.toFormat('MMMM yyyy')]),
                     backgroundColor: predictionDates.map((_, i) => 
-                        `hsl(${i * 120}, 70%, 50%)`)
+                        `hsl(${i * 120 % 360}, 70%, 50%)`)
                 }]
             });
         }
@@ -604,16 +616,37 @@
         function updateComparisonTab() {
             const { testMetrics, predictions } = dashboardData;
             
-            // Get sorted prediction dates from the first model
+            if (!testMetrics || testMetrics.length === 0 || !predictions || !predictions.predictions) {
+                console.error('No comparison data available');
+                document.getElementById('comparisonTableBody').innerHTML = '<tr><td colspan="3">No comparison data available</td></tr>';
+                return;
+            }
+            
+            // Get sorted prediction dates from the first available model
             const firstModel = Object.keys(predictions.predictions)[0];
+            if (!firstModel) {
+                document.getElementById('comparisonTableBody').innerHTML = '<tr><td colspan="3">No model data available</td></tr>';
+                return;
+            }
+            
             const predictionDates = Object.keys(predictions.predictions[firstModel])
                 .map(d => DateTime.fromFormat(d, 'MMMM yyyy'))
+                .filter(d => d.isValid)
                 .sort((a, b) => a - b);
             
-            // Update date headers
-            predictionDates.slice(0, 3).forEach((date, i) => {
-                document.getElementById(`predictionDate${i+1}`).textContent = date.toFormat('MMM yyyy');
-            });
+            if (predictionDates.length === 0) {
+                document.getElementById('comparisonTableBody').innerHTML = '<tr><td colspan="3">No prediction dates available</td></tr>';
+                return;
+            }
+            
+            // Update date headers (limit to 6 for readability)
+            const tableHead = document.getElementById('comparisonTableHead').querySelector('tr');
+            tableHead.innerHTML = `
+                <th>Model</th><th>MAE</th>
+                ${predictionDates.slice(0, 6).map(date => 
+                    `<th>${date.toFormat('MMM yyyy')}</th>`
+                ).join('')}
+            `;
             
             // MAE Chart
             createBarChart('maeChart', {
@@ -622,7 +655,7 @@
                     label: 'Mean Absolute Error',
                     data: testMetrics.map(m => m.mae),
                     backgroundColor: testMetrics.map((_, i) => 
-                        `hsl(${i * 120}, 70%, 50%)`)
+                        `hsl(${i * 120 % 360}, 70%, 50%)`)
                 }]
             });
             
@@ -631,20 +664,20 @@
                 labels: predictionDates.map(d => d.toFormat('MMM yyyy')),
                 datasets: Object.entries(predictions.predictions).map(([model, preds], i) => ({
                     label: model,
-                    data: predictionDates.map(date => preds[date.toFormat('MMMM yyyy')]),
-                    backgroundColor: `hsl(${i * 120}, 70%, 60%)`
+                    data: predictionDates.map(date => preds[date.toFormat('MMMM yyyy')] || null),
+                    backgroundColor: `hsl(${i * 120 % 360}, 70%, 60%)`
                 }))
             });
             
             // Comparison Table
             document.getElementById('comparisonTableBody').innerHTML = testMetrics.map(metric => {
-                const modelPreds = predictions.predictions[metric.model_name];
+                const modelPreds = predictions.predictions[metric.model_name] || {};
                 return `
                     <tr>
                         <td>${metric.model_name}</td>
                         <td>${formatNumber(metric.mae, 2)}</td>
-                        ${predictionDates.slice(0,3).map(d => 
-                            `<td>${formatNumber(modelPreds[d.toFormat('MMMM yyyy')], 0)}</td>`
+                        ${predictionDates.slice(0, 6).map(d => 
+                            `<td>${formatNumber(modelPreds[d.toFormat('MMMM yyyy')] || null, 2)}</td>`
                         ).join('')}
                     </tr>`;
             }).join('');
@@ -667,9 +700,7 @@
                     legend: { 
                         labels: { 
                             color: textColor,
-                            font: {
-                                family: 'Inter'
-                            }
+                            font: { family: 'Inter' }
                         }
                     },
                     tooltip: {
@@ -678,13 +709,8 @@
                         bodyColor: textColor,
                         borderColor: gridColor,
                         borderWidth: 1,
-                        titleFont: {
-                            family: 'Inter',
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            family: 'Inter'
-                        },
+                        titleFont: { family: 'Inter', weight: 'bold' },
+                        bodyFont: { family: 'Inter' },
                         callbacks: {
                             label: context => {
                                 let label = context.dataset.label || '';
@@ -702,7 +728,10 @@
                         grid: { color: gridColor },
                         ticks: { color: textColor },
                         type: data.datasets?.[0]?.data?.[0]?.x instanceof Date ? 'time' : 'category',
-                        time: { unit: 'month' }
+                        time: { 
+                            unit: 'month',
+                            displayFormats: { month: 'MMM yyyy' }
+                        }
                     },
                     y: {
                         grid: { color: gridColor },
@@ -712,7 +741,6 @@
                 }
             };
             
-            // Special options for radar chart
             if (type === 'radar') {
                 defaultOptions.scales = {
                     r: {
@@ -777,7 +805,6 @@
             
             document.body.appendChild(alertDiv);
             
-            // Auto-dismiss after 5 seconds
             setTimeout(() => {
                 alertDiv.classList.remove('show');
                 setTimeout(() => alertDiv.remove(), 150);
@@ -785,7 +812,7 @@
         }
 
         function updateLastUpdated() {
-            const now = DateTime.now().setZone('Africa/Kampala');
+            const now = DateTime.now();
             document.getElementById('lastUpdated').querySelector('span').textContent = 
                 `Updated: ${now.toFormat('MMM dd, HH:mm')}`;
         }
