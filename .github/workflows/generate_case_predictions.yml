@@ -57,17 +57,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: success()
 
-      - name: Merge Results to Dashboard Branch
+      - name: Merge Results to etl Branch
         run: |
           git fetch origin
-          git checkout malaria-cases-dashboard
-          git pull origin malaria-cases-dashboard
+          git checkout etl
+          git pull origin etl
           git checkout main -- results/
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           git add results/
           git commit -m "Update prediction results from main for run ${{ github.run_id }}"
-          git push origin malaria-cases-dashboard
+          git push origin etl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: success()
