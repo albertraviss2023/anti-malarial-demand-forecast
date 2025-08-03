@@ -53,3 +53,8 @@
 2025-08-03 07:26:26,576 - INFO - Successfully validated file: test_metrics.csv
 2025-08-03 07:26:26,612 - INFO - Successfully connected to PostgreSQL database
 2025-08-03 07:26:26,617 - INFO - Startup validation completed successfully
+2025-08-03 15:10:41,528 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 15:10:41,539 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 15:10:41,570 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 15:10:41,575 - ERROR - Required table not found: ddd_predictions
+2025-08-03 15:10:41,576 - ERROR - Startup failed: Required table not found: ddd_predictions
