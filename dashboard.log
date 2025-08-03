@@ -1,0 +1,16 @@
+2025-08-03 08:38:52,732 - INFO - Successfully validated file: districts.csv
+2025-08-03 08:38:52,734 - INFO - Successfully validated file: test_maes.csv
+2025-08-03 08:38:52,746 - INFO - Successfully validated file: malaria_historical.csv
+2025-08-03 08:38:52,797 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 08:38:52,802 - INFO - Startup validation completed successfully
+2025-08-03 08:38:59,770 - INFO - Successfully validated file: districts.csv
+2025-08-03 08:38:59,773 - INFO - Successfully validated file: test_maes.csv
+2025-08-03 08:38:59,789 - INFO - Successfully validated file: malaria_historical.csv
+2025-08-03 08:39:00,654 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 08:39:00,663 - INFO - Startup validation completed successfully
+2025-08-03 08:39:05,740 - INFO - Loaded 119 districts from districts.csv
+2025-08-03 08:39:05,756 - INFO - Loaded model metrics for 5 models
+2025-08-03 08:39:05,781 - INFO - Best model identified: transformer
+2025-08-03 08:39:05,824 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 08:39:06,141 - INFO - Returning predictions for 118 districts
+2025-08-03 08:39:06,274 - INFO - Successfully loaded historical data
