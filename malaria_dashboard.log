@@ -139,3 +139,5 @@
 2025-08-03 18:10:58,766 - INFO - Retrieved recent months: ['September_2025', 'August_2025', 'July_2025']
 2025-08-03 18:10:58,772 - INFO - Using best model: transformer for months: ['September_2025', 'August_2025', 'July_2025']
 2025-08-03 18:10:58,828 - INFO - Returned predictions for 118 districts
+2025-08-03 18:21:09,375 - INFO - Retrieved recent months: ['September_2025', 'August_2025', 'July_2025']
+2025-08-03 18:21:09,379 - INFO - Using best model: transformer for months: ['September_2025', 'August_2025', 'July_2025']

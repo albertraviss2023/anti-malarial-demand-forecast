@@ -245,7 +245,7 @@ async def get_malaria_historical():
 # --------------------------
 if __name__ == "__main__":
     # Load data when script runs directly
-    load_predictions_to_db()
+    pass
 else:
     # When running as FastAPI app, ensure tables exist
     try:
