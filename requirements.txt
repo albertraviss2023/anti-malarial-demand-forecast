@@ -1,2 +1,0 @@
-papermill
-tensorflow==2.19.0

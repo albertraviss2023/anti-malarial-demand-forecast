@@ -1,0 +1,32 @@
+services:
+  dashboard-ddd:
+    build:
+      context: ./dashboards/dashboard-ddd
+    ports:
+      - "8001:8001"
+    networks:
+      - pipeline_net
+    environment:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_NAME: prod_db
+      DB_USER: airflow
+      DB_PASSWORD: airflow
+
+  dashboard-malaria:
+    build:
+      context: ./dashboards/dashboard-malaria
+    ports:
+      - "8002:8002"
+    networks:
+      - pipeline_net
+    environment:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_NAME: prod_db
+      DB_USER: airflow
+      DB_PASSWORD: airflow
+
+networks:
+  pipeline_net:
+    external: true
