@@ -23,7 +23,7 @@ DB_CONFIG = {
     'dbname': os.getenv("POSTGRES_DB", "prod_db"),
     'user': os.getenv("POSTGRES_USER", "airflow"),
     'password': os.getenv("POSTGRES_PASSWORD", "airflow"),
-    'host': os.getenv("POSTGRES_HOST", "postgres"),
+    'host': os.getenv("POSTGRES_HOST", "localhost"),
     'port': os.getenv("POSTGRES_PORT", "5432")
 }
 
@@ -57,6 +57,24 @@ def standardize_model_name(model_name):
     if model_name in ['transformer', 'transformers']:
         return 'transformer'
     return model_name
+
+def get_recent_prediction_months():
+    """Get the 3 most recent prediction months from the database"""
+    try:
+        conn = psycopg2.connect(**DB_CONFIG)
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT DISTINCT month FROM malaria_predictions
+            ORDER BY month DESC LIMIT 3
+        """)
+        months = [row[0] for row in cur.fetchall()]
+        return months if len(months) >= 3 else ['May', 'June', 'August']  # Fallback
+    except Exception as e:
+        logger.error(f"Error getting recent months: {str(e)}")
+        return ['May', 'June', 'August']  # Default if error
+    finally:
+        if 'conn' in locals():
+            conn.close()
 
 def load_predictions_to_db():
     """Load prediction CSVs into PostgreSQL with standardized model names"""
@@ -130,11 +148,16 @@ async def get_model_metrics():
 @app.get("/api/malaria_predictions")
 async def get_malaria_predictions():
     try:
+        # Get the 3 most recent prediction months
+        months = get_recent_prediction_months()
+        if len(months) < 3:
+            raise ValueError("Need at least 3 months of prediction data")
+        
         # Get best model from metrics
         maes_df = pd.read_csv(os.path.join(DATA_DIR, "test_maes.csv"))
         maes_df['model_name'] = maes_df['model_name'].str.lower().str.strip()
         best_model = maes_df.loc[maes_df['mae_sum'].idxmin()]['model_name']
-        logger.info(f"Using best model: {best_model}")
+        logger.info(f"Using best model: {best_model} for months: {months}")
 
         # Get predictions from database
         conn = psycopg2.connect(**DB_CONFIG)
@@ -148,10 +171,11 @@ async def get_malaria_predictions():
                        ) as rn
                 FROM malaria_predictions
                 WHERE LOWER(TRIM(model)) = %s
+                AND month IN %s
             ) t
             WHERE rn = 1
         """
-        df = pd.read_sql(query, conn, params=(best_model,))
+        df = pd.read_sql(query, conn, params=(best_model, tuple(months)))
         
         if df.empty:
             raise ValueError(f"No predictions found for model {best_model}")
@@ -164,20 +188,20 @@ async def get_malaria_predictions():
         for district, row in pivoted.iterrows():
             results.append({
                 "district": district,
-                "cases": {
-                    "May": float(row.get("May", 0)),
-                    "June": float(row.get("June", 0)),
-                    "August": float(row.get("August", 0))
-                },
+                "cases": {month: float(row.get(month, 0)) for month in months},
                 "status": {
-                    "May": "high" if row.get("May", 0) > threshold else "medium" if row.get("May", 0) > threshold * 0.7 else "low",
-                    "June": "high" if row.get("June", 0) > threshold else "medium" if row.get("June", 0) > threshold * 0.7 else "low",
-                    "August": "high" if row.get("August", 0) > threshold else "medium" if row.get("August", 0) > threshold * 0.7 else "low"
+                    month: "high" if row.get(month, 0) > threshold 
+                          else "medium" if row.get(month, 0) > threshold * 0.7 
+                          else "low"
+                    for month in months
                 }
             })
 
         logger.info(f"Returned predictions for {len(results)} districts")
-        return results
+        return {
+            "predictions": results,
+            "months": months  # Include months in response for frontend
+        }
         
     except Exception as e:
         logger.error(f"Prediction error: {str(e)}")
@@ -185,6 +209,53 @@ async def get_malaria_predictions():
     finally:
         if 'conn' in locals():
             conn.close()
+
+@app.get("/api/malaria_historical")
+async def get_malaria_historical():
+    try:
+        df = pd.read_csv(os.path.join(DATA_DIR, "malaria_historical.csv"))
+        
+        # Create date column
+        df['date'] = pd.to_datetime(df[['year', 'month']].assign(day=1)).dt.strftime('%Y-%m')
+        
+        # Aggregate malaria cases
+        malaria_agg = df.groupby(['year', 'month', 'date'])['mal_cases'].sum().reset_index()
+        malaria_data = malaria_agg[['date', 'mal_cases']].rename(columns={'mal_cases': 'cases'}).to_dict(orient="records")
+        
+        # Aggregate climate data
+        climate_agg = df.groupby(['year', 'month', 'date']).agg({
+            'avg_temp_max': 'mean',
+            'avg_temp_min': 'mean',
+            'avg_humidity': 'mean',
+            'sum_precipitation': 'sum'
+        }).reset_index()
+        climate_data = climate_agg.to_dict(orient="records")
+        
+        # Calculate correlations
+        corr_data = df.groupby(['year', 'month']).agg({
+            'mal_cases': 'sum',
+            'avg_temp_max': 'mean',
+            'avg_temp_min': 'mean',
+            'avg_humidity': 'mean',
+            'sum_precipitation': 'sum'
+        }).reset_index()
+        
+        correlation_coeffs = {
+            'avg_temp_max': corr_data['mal_cases'].corr(corr_data['avg_temp_max']),
+            'avg_temp_min': corr_data['mal_cases'].corr(corr_data['avg_temp_min']),
+            'avg_humidity': corr_data['mal_cases'].corr(corr_data['avg_humidity']),
+            'sum_precipitation': corr_data['mal_cases'].corr(corr_data['sum_precipitation'])
+        }
+        
+        return {
+            "malaria_cases": malaria_data,
+            "climate": climate_data,
+            "correlations": corr_data.to_dict(orient="records"),
+            "correlation_coeffs": correlation_coeffs
+        }
+    except Exception as e:
+        logger.error(f"Failed to load historical data: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 # --------------------------
 # Main Execution

@@ -16,3 +16,28 @@
 2025-08-03 08:46:05,296 - INFO - Using best model: transformer
 2025-08-03 08:46:07,977 - ERROR - Prediction error: could not translate host name "postgres" to address: No such host is known. 
 
+2025-08-03 15:12:19,362 - ERROR - Database initialization failed: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 15:12:45,750 - ERROR - Database initialization failed: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 15:12:55,549 - ERROR - Database initialization failed: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 15:12:55,550 - ERROR - Database initialization failed: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 15:13:06,756 - INFO - Using best model: transformer
+2025-08-03 15:13:09,423 - ERROR - Prediction error: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 15:14:22,562 - ERROR - Database initialization failed: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 15:14:22,618 - ERROR - Database initialization failed: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 15:14:27,946 - ERROR - Database initialization failed: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 15:14:28,007 - ERROR - Database initialization failed: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 15:14:53,054 - INFO - Using best model: transformer for months: ['May', 'June', 'August']
+2025-08-03 15:14:54,565 - ERROR - Prediction error: No predictions found for model transformer
+2025-08-03 15:16:12,058 - INFO - Using best model: transformer for months: ['May', 'June', 'August']
+2025-08-03 15:16:12,088 - ERROR - Prediction error: No predictions found for model transformer
+2025-08-03 15:16:28,949 - INFO - Using best model: transformer for months: ['May', 'June', 'August']
+2025-08-03 15:16:28,982 - ERROR - Prediction error: No predictions found for model transformer
