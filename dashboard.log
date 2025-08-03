@@ -1,0 +1,210 @@
+2025-08-03 20:09:08,165 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 20:09:08,169 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 20:09:08,202 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:09:08,206 - INFO - Startup validation completed successfully
+2025-08-03 20:09:23,777 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:09:23,785 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:09:23,811 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:09:24,024 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:23:30,983 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:23:30,992 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:23:31,056 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:23:31,075 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:24:01,829 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 20:24:01,838 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 20:24:01,899 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:24:01,907 - INFO - Startup validation completed successfully
+2025-08-03 20:24:04,798 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:24:04,805 - ERROR - Failed to load input data: Object of type Timestamp is not JSON serializable
+2025-08-03 20:24:04,816 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:24:04,843 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:24:05,092 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:24:05,109 - ERROR - Failed to load predictions: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
+2025-08-03 20:24:05,825 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:24:05,827 - ERROR - Failed to load input data: Object of type Timestamp is not JSON serializable
+2025-08-03 20:24:05,831 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:24:06,148 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:24:06,155 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:24:06,172 - ERROR - Failed to load predictions: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
+2025-08-03 20:24:06,845 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:24:06,847 - ERROR - Failed to load input data: Object of type Timestamp is not JSON serializable
+2025-08-03 20:24:06,851 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:24:07,202 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:24:07,207 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:24:07,223 - ERROR - Failed to load predictions: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
+2025-08-03 20:24:07,871 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:24:07,874 - ERROR - Failed to load input data: Object of type Timestamp is not JSON serializable
+2025-08-03 20:24:07,880 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:24:08,260 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:24:08,264 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:24:08,280 - ERROR - Failed to load predictions: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
+2025-08-03 20:24:30,382 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 20:24:30,385 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 20:24:30,420 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:24:30,424 - INFO - Startup validation completed successfully
+2025-08-03 20:24:34,090 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:24:34,096 - ERROR - Failed to load input data: Object of type Timestamp is not JSON serializable
+2025-08-03 20:24:34,103 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:24:34,139 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:24:34,383 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:24:34,403 - ERROR - Failed to load predictions: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
+2025-08-03 20:24:35,117 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:24:35,119 - ERROR - Failed to load input data: Object of type Timestamp is not JSON serializable
+2025-08-03 20:24:35,124 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:24:35,437 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:24:35,443 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:24:35,457 - ERROR - Failed to load predictions: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
+2025-08-03 20:24:36,146 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:24:36,148 - ERROR - Failed to load input data: Object of type Timestamp is not JSON serializable
+2025-08-03 20:24:36,153 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:24:36,487 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:24:36,494 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:24:36,511 - ERROR - Failed to load predictions: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
+2025-08-03 20:24:37,169 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:24:37,172 - ERROR - Failed to load input data: Object of type Timestamp is not JSON serializable
+2025-08-03 20:24:37,177 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:24:37,540 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:24:37,547 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:24:37,563 - ERROR - Failed to load predictions: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
+2025-08-03 20:25:21,453 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 20:25:21,455 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 20:25:21,484 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:25:21,489 - INFO - Startup validation completed successfully
+2025-08-03 20:25:22,133 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:25:22,144 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:25:22,186 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:25:22,413 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:25:47,128 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:25:47,147 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:25:47,191 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:25:47,197 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:29:29,932 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 20:29:29,934 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 20:29:29,969 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:29:29,974 - INFO - Startup validation completed successfully
+2025-08-03 20:29:31,745 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 20:29:31,750 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 20:29:31,785 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:29:31,789 - INFO - Startup validation completed successfully
+2025-08-03 20:29:50,386 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:29:50,395 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:29:50,418 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:29:50,642 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:29:50,649 - ERROR - Failed to load predictions: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:29:51,406 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:29:51,683 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:29:51,688 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:29:51,693 - ERROR - Failed to load predictions: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:29:52,418 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:29:52,728 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:29:52,732 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:29:52,737 - ERROR - Failed to load predictions: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:29:53,428 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:29:53,771 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:29:53,778 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:29:53,783 - ERROR - Failed to load predictions: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:30:08,645 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 20:30:08,648 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 20:30:08,677 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:30:08,682 - INFO - Startup validation completed successfully
+2025-08-03 20:30:09,336 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:30:09,359 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:30:09,420 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:30:09,978 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:30:09,984 - ERROR - Failed to load predictions: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:30:10,375 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:30:11,018 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:30:11,023 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:30:11,029 - ERROR - Failed to load predictions: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:30:11,387 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:30:12,063 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:30:12,068 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:30:12,073 - ERROR - Failed to load predictions: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:30:12,396 - ERROR - Failed to load test metrics: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:30:13,107 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:30:13,113 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:30:13,117 - ERROR - Failed to load predictions: arg must be a list, tuple, 1-d array, or Series
+2025-08-03 20:30:21,411 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 20:30:21,414 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 20:30:21,442 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:30:21,446 - INFO - Startup validation completed successfully
+2025-08-03 20:30:22,189 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:30:22,203 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:30:22,247 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:30:22,506 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:35:21,654 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 20:35:21,656 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 20:35:21,689 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:35:21,695 - INFO - Startup validation completed successfully
+2025-08-03 20:35:23,528 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:35:23,739 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:35:23,779 - INFO - Returning last 12 months of input data
+2025-08-03 20:35:23,786 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:35:48,092 - INFO - Returning last 12 months of input data
+2025-08-03 20:35:48,101 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:35:48,129 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:35:48,136 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:36:11,601 - INFO - Returning last 12 months of input data
+2025-08-03 20:36:11,616 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:36:11,650 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:36:11,656 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:36:27,234 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 20:36:27,236 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 20:36:27,270 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:36:27,276 - INFO - Startup validation completed successfully
+2025-08-03 20:36:27,929 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:36:27,942 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:36:27,975 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:36:28,212 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:37:20,936 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:37:20,949 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:37:20,984 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:37:20,993 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:50:20,346 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:50:20,378 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:50:20,386 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:50:20,407 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:50:56,042 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 20:50:56,045 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 20:50:56,077 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:50:56,082 - INFO - Startup validation completed successfully
+2025-08-03 20:50:57,379 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:50:57,391 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:50:57,429 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:50:57,664 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:52:16,680 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:52:16,686 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:52:16,730 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:52:16,735 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:52:25,505 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:52:25,516 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:52:25,571 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:52:25,577 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 20:56:30,777 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 20:56:30,783 - INFO - Loaded test metrics for 4 models
+2025-08-03 20:56:30,812 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 20:56:30,819 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 21:00:11,374 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 21:00:11,376 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 21:00:11,408 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:00:11,413 - INFO - Startup validation completed successfully
+2025-08-03 21:00:13,466 - INFO - Returning last 12 months of data (from 2024-04-01 to 2025-03-01)
+2025-08-03 21:00:13,475 - INFO - Loaded test metrics for 4 models
+2025-08-03 21:00:13,502 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:00:13,735 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 21:00:13,752 - INFO - Returning predictions for 4 models
+2025-08-03 21:09:32,064 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:09:32,069 - INFO - Startup validation completed successfully
+2025-08-03 21:09:33,481 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:10:13,577 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:10:13,581 - INFO - Startup validation completed successfully
+2025-08-03 21:11:49,222 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:12:00,315 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:12:50,907 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:12:55,761 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:13:08,285 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:13:29,763 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:13:35,818 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:13:39,163 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:14:04,993 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 21:14:30,188 - INFO - Successfully connected to PostgreSQL database

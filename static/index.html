@@ -426,15 +426,15 @@
             return {
                 data: inputData,
                 stats: {
-                    current_demand: latest.ddd_demand,
-                    demand_change: latest.ddd_demand - (previous.ddd_demand || latest.ddd_demand),
-                    avg_temp: avg('avg_temp_max'),
-                    temp_change: latest.avg_temp_max - (previous.avg_temp_max || latest.avg_temp_max),
-                    humidity_avg: avg('avg_humidity'),
-                    humidity_change: latest.avg_humidity - (previous.avg_humidity || latest.avg_humidity),
-                    precip_total: sum('total_precipitation'),
-                    precip_change: latest.total_precipitation - (previous.total_precipitation || latest.total_precipitation),
-                    sunshine_total: sum('total_sunshine_hours')
+                    current_demand: latest.ddd_demand || 0,
+                    demand_change: (latest.ddd_demand || 0) - ((previous.ddd_demand || 0) || (latest.ddd_demand || 0)),
+                    avg_temp: avg('avg_temp_max') || 0,
+                    temp_change: (latest.avg_temp_max || 0) - ((previous.avg_temp_max || 0) || (latest.avg_temp_max || 0)),
+                    humidity_avg: avg('avg_humidity') || 0,
+                    humidity_change: (latest.avg_humidity || 0) - ((previous.avg_humidity || 0) || (latest.avg_humidity || 0)),
+                    precip_total: sum('total_precipitation') || 0,
+                    precip_change: (latest.total_precipitation || 0) - ((previous.total_precipitation || 0) || (latest.total_precipitation || 0)),
+                    sunshine_total: sum('total_sunshine_hours') || 0
                 }
             };
         }
@@ -502,10 +502,17 @@
             
             // Forecast data
             const bestModelPreds = predictions.predictions[predictions.best_model] || {};
-            const forecastData = Object.entries(bestModelPreds).map(([dateStr, value]) => ({
-                x: DateTime.fromFormat(dateStr, 'MMMM yyyy').toJSDate(),
-                y: value
-            }));
+            const forecastData = Object.entries(bestModelPreds).map(([dateStr, value]) => {
+                try {
+                    return {
+                        x: DateTime.fromFormat(dateStr, 'MMMM yyyy').toJSDate(),
+                        y: value
+                    };
+                } catch (e) {
+                    console.error('Failed to parse forecast date:', dateStr);
+                    return null;
+                }
+            }).filter(item => item !== null);
             
             createLineChart('overviewChart', {
                 datasets: [{
@@ -554,17 +561,33 @@
                 return;
             }
             
-            tbody.innerHTML = inputData.data.map(item => `
-                <tr>
-                    <td>${DateTime.fromISO(item.date || `${item.year}-${item.month}-01`).toFormat('MMM yyyy')}</td>
-                    <td>${formatNumber(item.avg_temp_max, 2)}°C</td>
-                    <td>${formatNumber(item.avg_temp_min, 2)}°C</td>
-                    <td>${formatNumber(item.avg_humidity, 2)}%</td>
-                    <td>${formatNumber(item.total_precipitation, 2)}mm</td>
-                    <td>${formatNumber(item.total_sunshine_hours, 2)}h</td>
-                    <td>${formatNumber(item.ddd_demand, 2)}</td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = inputData.data.map(item => {
+                let date;
+                try {
+                    if (item.date) {
+                        date = DateTime.fromISO(item.date).toFormat('MMM yyyy');
+                    } else if (item.year && item.month) {
+                        date = DateTime.fromObject({ year: item.year, month: item.month }).toFormat('MMM yyyy');
+                    } else {
+                        date = 'Invalid Date';
+                    }
+                } catch (e) {
+                    console.error('Failed to parse date:', item.date || `${item.year}-${item.month}`);
+                    date = 'Invalid Date';
+                }
+                
+                return `
+                    <tr>
+                        <td>${date}</td>
+                        <td>${formatNumber(item.avg_temp_max, 2)}°C</td>
+                        <td>${formatNumber(item.avg_temp_min, 2)}°C</td>
+                        <td>${formatNumber(item.avg_humidity, 2)}%</td>
+                        <td>${formatNumber(item.total_precipitation, 2)}mm</td>
+                        <td>${formatNumber(item.total_sunshine_hours, 2)}h</td>
+                        <td>${formatNumber(item.ddd_demand, 2)}</td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         function updatePredictionsTab() {
@@ -584,8 +607,15 @@
             
             // Sort prediction dates chronologically
             const predictionDates = Object.keys(bestModelPreds)
-                .map(d => DateTime.fromFormat(d, 'MMMM yyyy'))
-                .filter(d => d.isValid)
+                .map(d => {
+                    try {
+                        return DateTime.fromFormat(d, 'MMMM yyyy');
+                    } catch (e) {
+                        console.error('Failed to parse prediction date:', d);
+                        return null;
+                    }
+                })
+                .filter(d => d && d.isValid)
                 .sort((a, b) => a - b);
             
             if (predictionDates.length === 0) {
@@ -594,12 +624,15 @@
             }
             
             // Update forecast values
-            document.getElementById('forecastValuesContainer').innerHTML = predictionDates.map(date => `
-                <div class="mb-3">
-                    <h5>${date.toFormat('MMMM yyyy')}</h5>
-                    <div class="h4 text-primary">${formatNumber(bestModelPreds[date.toFormat('MMMM yyyy')], 2)}</div>
-                </div>
-            `).join('');
+            document.getElementById('forecastValuesContainer').innerHTML = predictionDates.map(date => {
+                const dateStr = date.toFormat('MMMM yyyy');
+                return `
+                    <div class="mb-3">
+                        <h5>${date.toFormat('MMMM yyyy')}</h5>
+                        <div class="h4 text-primary">${formatNumber(bestModelPreds[dateStr], 2)}</div>
+                    </div>
+                `;
+            }).join('');
             
             // Create forecast chart
             createBarChart('forecastChart', {
@@ -630,8 +663,15 @@
             }
             
             const predictionDates = Object.keys(predictions.predictions[firstModel])
-                .map(d => DateTime.fromFormat(d, 'MMMM yyyy'))
-                .filter(d => d.isValid)
+                .map(d => {
+                    try {
+                        return DateTime.fromFormat(d, 'MMMM yyyy');
+                    } catch (e) {
+                        console.error('Failed to parse prediction date:', d);
+                        return null;
+                    }
+                })
+                .filter(d => d && d.isValid)
                 .sort((a, b) => a - b);
             
             if (predictionDates.length === 0) {
