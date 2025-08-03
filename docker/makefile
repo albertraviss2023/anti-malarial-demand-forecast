@@ -7,6 +7,8 @@ up:
 
 # Stop and remove services, networks, and volumes defined in docker-compose.yml
 down:
+	docker compose down --remove-orphans
+down-dev:
 	docker compose down --volumes --remove-orphans
 
 # Stop all services without removing them
@@ -82,7 +84,7 @@ ps:
 # Declare all targets as phony to avoid conflicts with files
 .PHONY: \
   up down stop start restart build bcache bake prune \
-  airflow spark postgres \
+  airflow spark postgres down-dev \
   clean-containers clean-images clean-volumes clean-networks clean-all \
   logs logs-service ps
 

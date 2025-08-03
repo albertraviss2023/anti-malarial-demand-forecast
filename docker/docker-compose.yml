@@ -81,6 +81,8 @@ services:
       - ./notebooks:/opt/notebooks:rw
       - ../models:/opt/models:rw
       - ../malaria_models:/opt/malaria_models:rw
+      - ../scripts:/opt/airflow/scripts
+      - ../results:/opt/airflow/results
     ports:
       - "8080:8080"
     command: ["airflow", "webserver"]
@@ -114,6 +116,8 @@ services:
       - ./notebooks:/opt/notebooks:rw
       - ../models:/opt/models:rw
       - ../malaria_models:/opt/malaria_models:rw
+      - ../scripts:/opt/airflow/scripts
+      - ../results:/opt/airflow/results
 
     command: ["airflow", "scheduler"]
     restart: always
@@ -135,6 +139,8 @@ services:
       - ./notebooks:/home/notebooks
       - ../models:/opt/models:rw
       - ../malaria_models:/opt/malaria_models:rw
+      - ../scripts:/opt/airflow/scripts
+      - ../results:/opt/airflow/results
     command: ["/opt/start-spark-jupyter-server.sh", "master"]
     ports:
       - 8888:8888
@@ -170,6 +176,8 @@ services:
       - ./notebooks:/home/notebooks
       - ../models:/opt/models:rw
       - ../malaria_models:/opt/malaria_models:rw
+      - ../scripts:/opt/airflow/scripts
+      - ../results:/opt/airflow/results
     command: ["/opt/start-spark-jupyter-server.sh", "worker"]
     ports:
       - 7078:7078
