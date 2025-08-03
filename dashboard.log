@@ -58,3 +58,44 @@
 2025-08-03 15:10:41,570 - INFO - Successfully connected to PostgreSQL database
 2025-08-03 15:10:41,575 - ERROR - Required table not found: ddd_predictions
 2025-08-03 15:10:41,576 - ERROR - Startup failed: Required table not found: ddd_predictions
+2025-08-03 18:23:41,859 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 18:23:41,863 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 18:23:41,893 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 18:23:41,915 - INFO - Startup validation completed successfully
+2025-08-03 18:25:12,777 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 18:25:12,780 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 18:25:12,819 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 18:25:12,823 - INFO - Startup validation completed successfully
+2025-08-03 18:25:56,068 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 18:25:56,070 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 18:25:56,102 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 18:25:56,106 - INFO - Startup validation completed successfully
+2025-08-03 18:25:58,742 - INFO - Redirecting to dashboard
+2025-08-03 18:25:58,967 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 18:25:58,980 - INFO - Loaded test metrics for 4 models
+2025-08-03 18:25:59,019 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 18:25:59,273 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 18:26:26,276 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 18:26:26,284 - INFO - Loaded test metrics for 4 models
+2025-08-03 18:26:26,342 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 18:26:26,349 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 18:27:16,215 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 18:27:16,224 - INFO - Loaded test metrics for 4 models
+2025-08-03 18:27:16,265 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 18:27:16,271 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 18:27:40,776 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 18:27:40,787 - INFO - Loaded test metrics for 4 models
+2025-08-03 18:27:40,898 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 18:27:40,917 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 18:28:24,351 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 18:28:24,391 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 18:28:24,399 - INFO - Retrieved 24 prediction rows from PostgreSQL
+2025-08-03 18:28:24,423 - INFO - Loaded test metrics for 4 models
+2025-08-03 18:29:21,788 - INFO - Successfully validated file: raw_climate_ddd_merged_data.csv
+2025-08-03 18:29:21,790 - INFO - Successfully validated file: test_metrics.csv
+2025-08-03 18:29:21,821 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 18:29:21,826 - INFO - Startup validation completed successfully
+2025-08-03 18:29:23,928 - INFO - Returning last 12 months of data (from 2024-04-01 00:00:00 to 2025-03-01 00:00:00)
+2025-08-03 18:29:23,946 - INFO - Loaded test metrics for 4 models
+2025-08-03 18:29:24,008 - INFO - Successfully connected to PostgreSQL database
+2025-08-03 18:29:24,373 - INFO - Retrieved 24 prediction rows from PostgreSQL

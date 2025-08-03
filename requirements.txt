@@ -3,3 +3,4 @@ fastapi
 datetime
 pandas
 logging
+typing
