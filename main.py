@@ -1,297 +1,215 @@
 import os
+import glob
+import re
 import logging
-import pandas as pd
 import psycopg2
+import pandas as pd
+from datetime import datetime, timedelta
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('dashboard.log'),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
-
-# Initialize FastAPI app
-app = FastAPI(
-    title="Uganda Malaria Dashboard API",
-    description="API for the Uganda Malaria Surveillance Dashboard",
-    version="1.0.0"
-)
-
-# CORS configuration
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Configuration
+# --------------------------
+# Configuration and Setup
+# --------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
+RESULTS_DIR = "/opt/airflow/results"
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
-
-# Expected CSV files
-REQUIRED_FILES = [
-    'districts.csv',
-    'test_maes.csv',
-    'malaria_historical.csv'
-]
 
 # Database configuration
 DB_CONFIG = {
     'dbname': os.getenv("POSTGRES_DB", "prod_db"),
     'user': os.getenv("POSTGRES_USER", "airflow"),
     'password': os.getenv("POSTGRES_PASSWORD", "airflow"),
-    'host': os.getenv("POSTGRES_HOST", "localhost"),
+    'host': os.getenv("POSTGRES_HOST", "postgres"),
     'port': os.getenv("POSTGRES_PORT", "5432")
 }
 
-def get_db_connection():
-    """Create a database connection"""
+# Initialize logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('malaria_dashboard.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# Initialize FastAPI app
+app = FastAPI(title="Uganda Malaria Dashboard API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+# --------------------------
+# Data Loading Functions
+# --------------------------
+def standardize_model_name(model_name):
+    """Standardize model names to lowercase and handle known variations"""
+    model_name = str(model_name).strip().lower()
+    if model_name in ['transformer', 'transformers']:
+        return 'transformer'
+    return model_name
+
+def load_predictions_to_db():
+    """Load prediction CSVs into PostgreSQL with standardized model names"""
     try:
         conn = psycopg2.connect(**DB_CONFIG)
-        logger.info("Successfully connected to PostgreSQL database")
-        return conn
-    except Exception as e:
-        logger.error(f"Failed to connect to database: {str(e)}")
-        raise HTTPException(status_code=500, detail="Database connection failed")
-
-@app.on_event("startup")
-async def startup_event():
-    """Validate required files and database table"""
-    try:
-        # Create directories if they don't exist
-        os.makedirs(DATA_DIR, exist_ok=True)
-        os.makedirs(STATIC_DIR, exist_ok=True)
+        cur = conn.cursor()
         
-        # Validate required CSV files
-        for filename in REQUIRED_FILES:
-            filepath = os.path.join(DATA_DIR, filename)
-            if not os.path.exists(filepath):
-                logger.error(f"Required file not found: {filepath}")
-                raise FileNotFoundError(f"Required file not found: {filepath}")
+        # Create table if not exists
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS malaria_predictions (
+                district TEXT NOT NULL,
+                model TEXT NOT NULL,
+                month TEXT NOT NULL,
+                predicted_mal_cases FLOAT NOT NULL,
+                generated_on DATE NOT NULL,
+                PRIMARY KEY (district, model, month, generated_on)
+            );
+        """)
+        
+        # Process all prediction files
+        for file in glob.glob(os.path.join(RESULTS_DIR, "predictions_*.csv")):
+            df = pd.read_csv(file)
+            df['model'] = df['model'].apply(standardize_model_name)
+            df['generated_on'] = datetime.today().date()
             
-            # Test reading each file
-            try:
-                pd.read_csv(filepath)
-                logger.info(f"Successfully validated file: {filename}")
-            except Exception as e:
-                logger.error(f"Failed to read {filename}: {str(e)}")
-                raise ValueError(f"Failed to read {filename}: {str(e)}")
+            for _, row in df.iterrows():
+                cur.execute("""
+                    INSERT INTO malaria_predictions 
+                    (district, model, month, predicted_mal_cases, generated_on)
+                    VALUES (%s, %s, %s, %s, %s)
+                    ON CONFLICT (district, model, month, generated_on) DO NOTHING;
+                """, (row['district'], row['model'], row['month'], 
+                     row['predicted_mal_cases'], row['generated_on']))
         
-        # Validate database connection and malaria_predictions table
-        try:
-            conn = get_db_connection()
-            cursor = conn.cursor()
-            cursor.execute("""
-                SELECT table_name 
-                FROM information_schema.tables 
-                WHERE table_schema = 'public' AND table_name = 'malaria_predictions'
-            """)
-            if not cursor.fetchone():
-                logger.error("Required table not found: malaria_predictions")
-                raise ValueError("Required table not found: malaria_predictions")
-            
-            cursor.close()
-            conn.close()
-        except Exception as e:
-            logger.error(f"Database validation failed: {str(e)}")
-            raise
+        conn.commit()
+        logger.info("Successfully loaded predictions into database")
         
-        logger.info("Startup validation completed successfully")
     except Exception as e:
-        logger.error(f"Startup failed: {str(e)}")
+        logger.error(f"Failed to load predictions: {str(e)}")
         raise
+    finally:
+        if 'conn' in locals():
+            conn.close()
 
+# --------------------------
+# API Endpoints
+# --------------------------
 @app.get("/")
 async def serve_dashboard():
-    """Serve the dashboard"""
-    index_path = os.path.join(STATIC_DIR, "index.html")
-    if not os.path.exists(index_path):
-        raise HTTPException(status_code=404, detail="Dashboard not found")
-    return FileResponse(index_path)
+    return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
 @app.get("/api/districts")
 async def get_districts():
-    """Get district data from CSV"""
     try:
-        filepath = os.path.join(DATA_DIR, "districts.csv")
-        df = pd.read_csv(filepath)
-        
-        # Ensure required columns exist
-        required_cols = ['district', 'latitude', 'longitude']
-        if not all(col in df.columns for col in required_cols):
-            raise ValueError(f"Districts CSV missing required columns: {required_cols}")
-            
-        logger.info(f"Loaded {len(df)} districts from districts.csv")
+        df = pd.read_csv(os.path.join(DATA_DIR, "districts.csv"))
         return df.to_dict(orient="records")
     except Exception as e:
         logger.error(f"Failed to load districts: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to load districts: {str(e)}")
-
-@app.get("/api/malaria_predictions")
-async def get_malaria_predictions():
-    """Get model predictions from PostgreSQL for the best model"""
-    try:
-        # Load test metrics from CSV to determine best model
-        maes_file = os.path.join(DATA_DIR, "test_maes.csv")
-        maes_df = pd.read_csv(maes_file)
-        
-        # Validate test metrics columns
-        required_cols = ['model_name', 'mae_sum']
-        if not all(col in maes_df.columns for col in required_cols):
-            raise ValueError("Test metrics missing required columns")
-        
-        # Get best model (lowest MAE)
-        if maes_df.empty:
-            raise ValueError("No model metrics available")
-            
-        best_model = maes_df.loc[maes_df['mae_sum'].idxmin()]['model_name']
-        logger.info(f"Best model identified: {best_model}")
-        
-        # Load predictions from PostgreSQL
-        conn = None
-        try:
-            conn = get_db_connection()
-            query = """
-                SELECT district, model, month, predicted_mal_cases
-                FROM (
-                    SELECT district, model, month, predicted_mal_cases,
-                           ROW_NUMBER() OVER (PARTITION BY district, model, month ORDER BY generated_on DESC) as rn
-                    FROM malaria_predictions
-                    WHERE model = %s
-                ) t
-                WHERE rn = 1
-                ORDER BY district, month
-            """
-            df = pd.read_sql(query, conn, params=(best_model,))
-            
-            if df.empty:
-                logger.warning(f"No predictions found for model {best_model}")
-                return []
-                
-            # Pivot the data to have months as columns
-            pivoted = df.pivot(index="district", columns="month", values="predicted_mal_cases").reset_index()
-            
-            # Ensure we have all expected months
-            expected_months = ["May", "June", "August"]
-            for month in expected_months:
-                if month not in pivoted.columns:
-                    pivoted[month] = 0.0
-            
-            # Convert to the required format
-            threshold = 10000  # Adjust this threshold as needed
-            results = []
-            for _, row in pivoted.iterrows():
-                district_data = {
-                    "district": row["district"],
-                    "cases": {
-                        "May": float(row.get("May", 0)),
-                        "June": float(row.get("June", 0)),
-                        "August": float(row.get("August", 0))
-                    },
-                    "status": {
-                        "May": "high" if row.get("May", 0) > threshold else "medium" if row.get("May", 0) > threshold * 0.7 else "low",
-                        "June": "high" if row.get("June", 0) > threshold else "medium" if row.get("June", 0) > threshold * 0.7 else "low",
-                        "August": "high" if row.get("August", 0) > threshold else "medium" if row.get("August", 0) > threshold * 0.7 else "low"
-                    }
-                }
-                results.append(district_data)
-            
-            logger.info(f"Returning predictions for {len(results)} districts")
-            return results
-            
-        finally:
-            if conn:
-                conn.close()
-                
-    except Exception as e:
-        logger.error(f"Failed to load malaria predictions: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to load predictions: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/model_metrics")
 async def get_model_metrics():
-    """Get model test metrics from CSV"""
     try:
-        filepath = os.path.join(DATA_DIR, "test_maes.csv")
-        df = pd.read_csv(filepath)
-        
-        required_cols = ['model_name', 'mae_sum', 'mae', 't+1_mae', 't+2_mae', 't+3_mae']
-        if not all(col in df.columns for col in required_cols):
-            raise ValueError("Test metrics missing required columns")
-            
-        logger.info(f"Loaded model metrics for {len(df)} models")
+        df = pd.read_csv(os.path.join(DATA_DIR, "test_maes.csv"))
+        df['model_name'] = df['model_name'].str.lower().str.strip()
         return df.to_dict(orient="records")
     except Exception as e:
         logger.error(f"Failed to load model metrics: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to load model metrics: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/malaria_historical")
-async def get_malaria_historical():
-    """Get historical malaria and climate data from CSV"""
+@app.get("/api/malaria_predictions")
+async def get_malaria_predictions():
     try:
-        filepath = os.path.join(DATA_DIR, "malaria_historical.csv")
-        df = pd.read_csv(filepath)
-        
-        # Validate required columns
-        required_cols = ['year', 'month', 'mal_cases', 'avg_temp_max', 
-                        'avg_temp_min', 'avg_humidity', 'sum_precipitation']
-        if not all(col in df.columns for col in required_cols):
-            raise ValueError("Historical data missing required columns")
-        
-        # Create date string
-        df['date'] = pd.to_datetime(df[['year', 'month']].assign(day=1)).dt.strftime('%Y-%m')
-        
-        # Aggregate malaria cases by month
-        malaria_agg = df.groupby(['year', 'month', 'date'])['mal_cases'].sum().reset_index()
-        malaria_data = malaria_agg[['date', 'mal_cases']].rename(columns={'mal_cases': 'cases'}).to_dict(orient="records")
-        
-        # Aggregate climate data by month
-        climate_agg = df.groupby(['year', 'month', 'date']).agg({
-            'avg_temp_max': 'mean',
-            'avg_temp_min': 'mean',
-            'avg_humidity': 'mean',
-            'sum_precipitation': 'sum'
-        }).reset_index()
-        climate_data = climate_agg.to_dict(orient="records")
-        
-        # Calculate correlations between climate factors and malaria cases
-        corr_data = df.groupby(['year', 'month']).agg({
-            'mal_cases': 'sum',
-            'avg_temp_max': 'mean',
-            'avg_temp_min': 'mean',
-            'avg_humidity': 'mean',
-            'sum_precipitation': 'sum'
-        }).reset_index()
-        
-        correlation_coeffs = {
-            'avg_temp_max': corr_data['mal_cases'].corr(corr_data['avg_temp_max']),
-            'avg_temp_min': corr_data['mal_cases'].corr(corr_data['avg_temp_min']),
-            'avg_humidity': corr_data['mal_cases'].corr(corr_data['avg_humidity']),
-            'sum_precipitation': corr_data['mal_cases'].corr(corr_data['sum_precipitation'])
-        }
-        
-        correlation_data = corr_data.to_dict(orient="records")
-        
-        logger.info("Successfully loaded historical data")
-        return {
-            "malaria_cases": malaria_data,
-            "climate": climate_data,
-            "correlations": correlation_data,
-            "correlation_coeffs": correlation_coeffs
-        }
-    except Exception as e:
-        logger.error(f"Failed to load historical data: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to load historical data: {str(e)}")
+        # Get best model from metrics
+        maes_df = pd.read_csv(os.path.join(DATA_DIR, "test_maes.csv"))
+        maes_df['model_name'] = maes_df['model_name'].str.lower().str.strip()
+        best_model = maes_df.loc[maes_df['mae_sum'].idxmin()]['model_name']
+        logger.info(f"Using best model: {best_model}")
 
-# Serve static files
-app.mount("/static", StaticFiles(directory=STATIC_DIR, html=True), name="static")
+        # Get predictions from database
+        conn = psycopg2.connect(**DB_CONFIG)
+        query = """
+            SELECT district, month, predicted_mal_cases
+            FROM (
+                SELECT district, month, predicted_mal_cases,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY district, month 
+                           ORDER BY generated_on DESC
+                       ) as rn
+                FROM malaria_predictions
+                WHERE LOWER(TRIM(model)) = %s
+            ) t
+            WHERE rn = 1
+        """
+        df = pd.read_sql(query, conn, params=(best_model,))
+        
+        if df.empty:
+            raise ValueError(f"No predictions found for model {best_model}")
+
+        # Format response
+        pivoted = df.pivot(index="district", columns="month", values="predicted_mal_cases")
+        threshold = 10000
+        results = []
+        
+        for district, row in pivoted.iterrows():
+            results.append({
+                "district": district,
+                "cases": {
+                    "May": float(row.get("May", 0)),
+                    "June": float(row.get("June", 0)),
+                    "August": float(row.get("August", 0))
+                },
+                "status": {
+                    "May": "high" if row.get("May", 0) > threshold else "medium" if row.get("May", 0) > threshold * 0.7 else "low",
+                    "June": "high" if row.get("June", 0) > threshold else "medium" if row.get("June", 0) > threshold * 0.7 else "low",
+                    "August": "high" if row.get("August", 0) > threshold else "medium" if row.get("August", 0) > threshold * 0.7 else "low"
+                }
+            })
+
+        logger.info(f"Returned predictions for {len(results)} districts")
+        return results
+        
+    except Exception as e:
+        logger.error(f"Prediction error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if 'conn' in locals():
+            conn.close()
+
+# --------------------------
+# Main Execution
+# --------------------------
+if __name__ == "__main__":
+    # Load data when script runs directly
+    load_predictions_to_db()
+else:
+    # When running as FastAPI app, ensure tables exist
+    try:
+        conn = psycopg2.connect(**DB_CONFIG)
+        cur = conn.cursor()
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS malaria_predictions (
+                district TEXT NOT NULL,
+                model TEXT NOT NULL,
+                month TEXT NOT NULL,
+                predicted_mal_cases FLOAT NOT NULL,
+                generated_on DATE NOT NULL,
+                PRIMARY KEY (district, model, month, generated_on)
+            );
+        """)
+        conn.commit()
+    except Exception as e:
+        logger.error(f"Database initialization failed: {str(e)}")
+    finally:
+        if 'conn' in locals():
+            conn.close()

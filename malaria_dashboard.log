@@ -1,0 +1,18 @@
+2025-08-03 08:43:40,318 - ERROR - Database initialization failed: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 08:43:44,436 - ERROR - Database initialization failed: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 08:43:45,309 - INFO - Using best model: transformer
+2025-08-03 08:43:47,563 - ERROR - Prediction error: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 08:44:28,465 - INFO - Using best model: transformer
+2025-08-03 08:44:31,131 - ERROR - Prediction error: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 08:44:40,481 - ERROR - Database initialization failed: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 08:45:27,885 - INFO - Using best model: transformer
+2025-08-03 08:45:30,550 - ERROR - Prediction error: could not translate host name "postgres" to address: No such host is known. 
+
+2025-08-03 08:46:05,296 - INFO - Using best model: transformer
+2025-08-03 08:46:07,977 - ERROR - Prediction error: could not translate host name "postgres" to address: No such host is known. 
+
