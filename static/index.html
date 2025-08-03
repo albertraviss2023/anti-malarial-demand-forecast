@@ -284,6 +284,33 @@
         
         .loading-spinner .spinner-border { width: 3rem; height: 3rem; color: var(--primary-color); }
 
+        .highlight-district {
+            animation: highlight-fade 2s ease-out;
+        }
+
+        @keyframes highlight-fade {
+            0% { background-color: rgba(var(--primary-rgb), 0.5); }
+            100% { background-color: transparent; }
+        }
+
+        .consistent-high-risk-link {
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .consistent-high-risk-link:hover {
+            color: var(--primary-dark);
+        }
+
+        .modal-high-risk-table .table {
+            margin-bottom: 0;
+        }
+
+        .modal-high-risk-table .table th {
+            white-space: nowrap;
+        }
+
         @media (max-width: 992px) {
             .sidebar { width: 80px; }
             .sidebar-title, .sidebar-nav span, .sidebar-footer .btn span { display: none; }
@@ -321,6 +348,37 @@
             </header>
             
             <div class="loading-spinner" id="loadingSpinner"><div class="spinner-border"></div></div>
+
+            <!-- Modal for High Risk Districts -->
+            <div class="modal fade" id="highRiskDistrictsModal" tabindex="-1" aria-labelledby="highRiskDistrictsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="highRiskDistrictsModalLabel">Consistently High-Risk Districts</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="table-responsive modal-high-risk-table">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>District</th>
+                                            <th>Total Cases</th>
+                                            <th id="modalMonth1Header">Month 1</th>
+                                            <th id="modalMonth2Header">Month 2</th>
+                                            <th id="modalMonth3Header">Month 3</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="highRiskDistrictsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="overview" role="tabpanel">
@@ -482,10 +540,12 @@
             historicalData: null,
             predictionMonths: [],
             currentMonth: '',
-            isSidebarCollapsed: localStorage.getItem('sidebarCollapsed') === 'true'
+            isSidebarCollapsed: localStorage.getItem('sidebarCollapsed') === 'true',
+            consistentHighRiskDistricts: []
         };
 
         let map, districtsLayer, tileLayers, districtMarkers = {};
+        let highRiskDistrictsModal = new bootstrap.Modal(document.getElementById('highRiskDistrictsModal'));
         
         // --- INITIALIZATION ---
         function initializeDashboard() {
@@ -534,6 +594,44 @@
                     highlightMapMarker(row.dataset.districtId);
                 }
             });
+
+            // Click handler for consistent high-risk districts link
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('consistent-high-risk-link')) {
+                    e.preventDefault();
+                    showConsistentHighRiskDistricts();
+                }
+            });
+        }
+
+        function showConsistentHighRiskDistricts() {
+            // Populate the modal table
+            const tbody = document.getElementById('highRiskDistrictsTableBody');
+            tbody.innerHTML = '';
+            
+            state.consistentHighRiskDistricts.forEach(districtName => {
+                const district = state.malariaData.find(d => d.district === districtName);
+                if (district) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${district.district}</td>
+                        <td>${Object.values(district.cases).reduce((a, b) => a + b, 0).toLocaleString()}</td>
+                        ${state.predictionMonths.map(month => `
+                            <td class="text-end">${district.cases[month].toLocaleString()}</td>
+                        `).join('')}
+                    `;
+                    tbody.appendChild(row);
+                }
+            });
+            
+            // Update modal headers with actual month names
+            state.predictionMonths.forEach((month, i) => {
+                const header = document.getElementById(`modalMonth${i+1}Header`);
+                if (header) header.textContent = month;
+            });
+            
+            // Show the modal
+            highRiskDistrictsModal.show();
         }
         
         // --- UI & THEME ---
@@ -609,6 +707,14 @@
                 state.modelMetrics = metrics;
                 state.historicalData = historical;
 
+                // Find consistently high-risk districts
+                if (state.predictionMonths.length > 0) {
+                    const allMonthsHigh = state.predictionMonths.map(m => `d.status['${m}'] === 'high'`).join(' && ');
+                    state.consistentHighRiskDistricts = state.malariaData
+                        .filter(d => eval(allMonthsHigh))
+                        .map(d => d.district);
+                }
+
                 updateDashboard();
 
             } catch (error) {
@@ -682,19 +788,21 @@
                 sum + state.predictionMonths.reduce((monthSum, month) => monthSum + (d.cases[month] || 0), 0), 0);
             animateCountUp(document.getElementById('totalCasesKPI'), totalCases);
 
-            const firstMonth = state.predictionMonths[0];
-            const lastMonth = state.predictionMonths[state.predictionMonths.length - 1];
+            // Get the most recent month and previous month
+            const months = state.predictionMonths;
+            const mostRecentMonth = months[months.length - 3];
+            const previousMonth = months.length > 1 ? months[months.length - 1] : months[0];
             
-            const highRiskFirst = state.malariaData.filter(d => d.status[firstMonth] === 'high').length;
-            const highRiskLast = state.malariaData.filter(d => d.status[lastMonth] === 'high').length;
-            const highRiskChange = highRiskFirst > 0 ? ((highRiskLast - highRiskFirst) / highRiskFirst) * 100 : 0;
+            const highRiskRecent = state.malariaData.filter(d => d.status[mostRecentMonth] === 'high').length;
+            const highRiskPrevious = state.malariaData.filter(d => d.status[previousMonth] === 'high').length;
+            const highRiskChange = highRiskPrevious > 0 ? ((highRiskRecent - highRiskPrevious) / highRiskPrevious) * 100 : 0;
             
-            animateCountUp(document.getElementById('highRiskKPI'), highRiskLast);
+            animateCountUp(document.getElementById('highRiskKPI'), highRiskRecent);
             const riskChangeElement = document.getElementById('riskChangeKPI');
             riskChangeElement.innerHTML = `<i class="fas fa-arrow-${highRiskChange >= 0 ? 'up' : 'down'}"></i> ${Math.abs(highRiskChange).toFixed(0)}%`;
             riskChangeElement.className = `kpi-change ${highRiskChange >= 0 ? 'positive' : 'negative'}`;
             
-            document.getElementById('casesChangeKPI').textContent = `${firstMonth} - ${lastMonth}`;
+            document.getElementById('casesChangeKPI').textContent = `${previousMonth} - ${mostRecentMonth}`;
 
             if (state.modelMetrics.length) {
                 const bestModel = state.modelMetrics.reduce((min, curr) => curr.mae_sum < min.mae_sum ? curr : min);
@@ -708,18 +816,18 @@
         }
 
         function renderOverviewContent() {
-            const firstMonth = state.predictionMonths[0];
-            const lastMonth = state.predictionMonths[state.predictionMonths.length - 1];
+            // Get the most recent month and previous month
+            const months = state.predictionMonths;
+            const mostRecentMonth = months[months.length - 3];
+            const previousMonth = months.length > 1 ? months[months.length - 1] : months[0];
             
-            const highRiskFirst = state.malariaData.filter(d => d.status[firstMonth] === 'high').length;
-            const highRiskLast = state.malariaData.filter(d => d.status[lastMonth] === 'high').length;
-            
-            const allMonthsHigh = state.predictionMonths.map(m => `d.status['${m}'] === 'high'`).join(' && ');
-            const consistentHigh = state.malariaData.filter(d => eval(allMonthsHigh));
+            const highRiskRecent = state.malariaData.filter(d => d.status[mostRecentMonth] === 'high').length;
+            const highRiskPrevious = state.malariaData.filter(d => d.status[previousMonth] === 'high').length;
             
             document.getElementById('keyInsightsContent').innerHTML = `
-                <p>Predictions indicate <strong>${highRiskLast}</strong> districts will be at <span class="status-high">High-risk</span> in ${lastMonth}, compared to <strong>${highRiskFirst}</strong> in ${firstMonth}.</p>
-                <p><strong>${consistentHigh.length} districts</strong> remain consistently at high risk throughout the forecast period: ${consistentHigh.length > 0 ? consistentHigh.map(d => d.district).slice(0, 3).join(', ') + (consistentHigh.length > 3 ? '...' : '') : 'None'}.</p>
+                <p>Predictions indicate <strong>${highRiskRecent}</strong> districts will be at <span class="status-high">High-risk</span> in ${mostRecentMonth}, compared to <strong>(${highRiskPrevious} districts)</strong> in ${previousMonth}.</p>
+                <p><strong>${state.consistentHighRiskDistricts.length} districts</strong> remain consistently at high risk throughout the forecast period: 
+                <a href="#" class="consistent-high-risk-link">${state.consistentHighRiskDistricts.length > 0 ? state.consistentHighRiskDistricts.slice(0, 3).join(', ') + (state.consistentHighRiskDistricts.length > 3 ? '...' : '') : 'None'}</a>.</p>
             `;
 
             // Top Districts Table
@@ -929,24 +1037,114 @@
         }
         
         function renderCorrelationPlots() {
-            const factors = [
-                { key: 'avg_temp_max', label: 'Max Temp', div: 'corrTempMax', color: getComputedStyle(document.body).getPropertyValue('--danger-color') },
-                { key: 'avg_humidity', label: 'Humidity', div: 'corrHumidity', color: getComputedStyle(document.body).getPropertyValue('--info-color') },
-                { key: 'sum_precipitation', label: 'Precipitation', div: 'corrPrecipitation', color: getComputedStyle(document.body).getPropertyValue('--primary-color') }
-            ];
+    const factors = [
+        { key: 'avg_temp_max', label: 'Max Temp', div: 'corrTempMax', color: getComputedStyle(document.body).getPropertyValue('--danger-color') },
+        { key: 'avg_humidity', label: 'Humidity', div: 'corrHumidity', color: getComputedStyle(document.body).getPropertyValue('--info-color') },
+        { key: 'sum_precipitation', label: 'Precipitation', div: 'corrPrecipitation', color: getComputedStyle(document.body).getPropertyValue('--primary-color') }
+    ];
 
-            factors.forEach(factor => {
-                const trace = {
-                    x: state.historicalData.correlations.map(d => d[factor.key]),
-                    y: state.historicalData.correlations.map(d => d.mal_cases),
-                    mode: 'markers', marker: { size: 6, color: factor.color, opacity: 0.7 }
-                };
-                const corr = state.historicalData.correlation_coeffs[factor.key];
-                const layout = getPlotlyLayout(`${factor.label} vs. Cases (r=${corr.toFixed(2)})`);
-                layout.xaxis.title = factor.label;
-                layout.yaxis.title = 'Malaria Cases';
-                Plotly.newPlot(factor.div, [trace], layout, { responsive: true, displayModeBar: false });
-            });
+    factors.forEach(factor => {
+        const xData = state.historicalData.correlations.map(d => d[factor.key]);
+        const yData = state.historicalData.correlations.map(d => d.mal_cases);
+        const corr = state.historicalData.correlation_coeffs[factor.key];
+        
+        // Create scatter trace
+        const scatterTrace = {
+            x: xData,
+            y: yData,
+            mode: 'markers',
+            name: 'Data Points',
+            marker: { size: 6, color: factor.color, opacity: 0.7 }
+        };
+
+        // Special handling for precipitation
+        if (factor.key === 'sum_precipitation') {
+            // Split data at 13k precipitation
+            const splitPoint = 13000;
+            const lowPrecipData = xData.map((x, i) => x <= splitPoint ? [x, yData[i]] : null).filter(Boolean);
+            const highPrecipData = xData.map((x, i) => x > splitPoint ? [x, yData[i]] : null).filter(Boolean);
+            
+            const lowPrecipX = lowPrecipData.map(d => d[0]);
+            const lowPrecipY = lowPrecipData.map(d => d[1]);
+            const highPrecipX = highPrecipData.map(d => d[0]);
+            const highPrecipY = highPrecipData.map(d => d[1]);
+            
+            // Calculate separate regression lines
+            const lowPrecipLine = calculateRegressionLine(lowPrecipX, lowPrecipY, 'linear');
+            const highPrecipLine = calculateRegressionLine(highPrecipX, highPrecipY, 'linear');
+            
+            const traces = [
+                scatterTrace,
+                {
+                    x: lowPrecipX,
+                    y: lowPrecipLine,
+                    mode: 'lines',
+                    name: 'Positive Relationship (<13k)',
+                    line: { color: factor.color, width: 2 }
+                },
+                {
+                    x: highPrecipX,
+                    y: highPrecipLine,
+                    mode: 'lines',
+                    name: 'Negative Relationship (>13k)',
+                    line: { color: factor.color, width: 2, dash: 'dash' }
+                }
+            ];
+            
+            const layout = getPlotlyLayout(`${factor.label} vs. Cases (r=${corr.toFixed(2)})`);
+            layout.xaxis.title = factor.label;
+            layout.yaxis.title = 'Malaria Cases';
+            layout.legend = { orientation: 'h', y: -0.3 };
+            Plotly.newPlot(factor.div, traces, layout, { responsive: true, displayModeBar: false });
+        } else {
+            // Standard linear regression for other factors
+            const regressionTrace = {
+                x: xData,
+                y: calculateRegressionLine(xData, yData, 'linear'),
+                mode: 'lines',
+                name: 'Trend Line',
+                line: { color: factor.color, width: 2 }
+            };
+            
+            const layout = getPlotlyLayout(`${factor.label} vs. Cases (r=${corr.toFixed(2)})`);
+            layout.xaxis.title = factor.label;
+            layout.yaxis.title = 'Malaria Cases';
+            Plotly.newPlot(factor.div, [scatterTrace, regressionTrace], layout, { responsive: true, displayModeBar: false });
+        }
+    });
+}
+        function calculateRegressionLine(xData, yData, type = 'linear') {
+            // Simple linear regression calculation
+            const n = xData.length;
+            const xSum = xData.reduce((a, b) => a + b, 0);
+            const ySum = yData.reduce((a, b) => a + b, 0);
+            const xySum = xData.reduce((sum, x, i) => sum + x * yData[i], 0);
+            const xSqSum = xData.reduce((sum, x) => sum + x * x, 0);
+            
+            if (type === 'linear') {
+                const slope = (n * xySum - xSum * ySum) / (n * xSqSum - xSum * xSum);
+                const intercept = (ySum - slope * xSum) / n;
+                return xData.map(x => slope * x + intercept);
+            } else {
+                // Quadratic regression
+                const x2Sum = xData.reduce((sum, x) => sum + x * x, 0);
+                const x3Sum = xData.reduce((sum, x) => sum + x * x * x, 0);
+                const x4Sum = xData.reduce((sum, x) => sum + x * x * x * x, 0);
+                const x2ySum = xData.reduce((sum, x, i) => sum + x * x * yData[i], 0);
+                
+                // Solve the system of equations for quadratic regression
+                // Using Cramer's rule for simplicity (not most efficient for large datasets)
+                const D = n * (x2Sum * x4Sum - x3Sum * x3Sum) - xSum * (xSum * x4Sum - x3Sum * x2Sum) + x2Sum * (xSum * x3Sum - x2Sum * x2Sum);
+                const Da = ySum * (x2Sum * x4Sum - x3Sum * x3Sum) - xSum * (xySum * x4Sum - x3Sum * x2ySum) + x2Sum * (xySum * x3Sum - x2Sum * x2ySum);
+                const Db = n * (xySum * x4Sum - x3Sum * x2ySum) - ySum * (xSum * x4Sum - x3Sum * x2Sum) + x2Sum * (xSum * x2ySum - xySum * x2Sum);
+                const Dc = n * (x2Sum * x2ySum - xySum * x3Sum) - xSum * (xSum * x2ySum - xySum * x2Sum) + ySum * (xSum * x3Sum - x2Sum * x2Sum);
+                
+                const a = Da / D;
+                const b = Db / D;
+                const c = Dc / D;
+                
+                return xData.map(x => a + b * x + c * x * x);
+            }
         }
         
         function renderStatusTrendChart() {

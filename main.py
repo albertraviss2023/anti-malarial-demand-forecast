@@ -58,67 +58,47 @@ def standardize_model_name(model_name):
         return 'transformer'
     return model_name
 
+from datetime import datetime
+
 def get_recent_prediction_months():
-    """Get the 3 most recent prediction months from the database"""
+    """Get the 3 most recent prediction months from the database."""
     try:
         conn = psycopg2.connect(**DB_CONFIG)
         cur = conn.cursor()
         cur.execute("""
             SELECT DISTINCT month FROM malaria_predictions
-            ORDER BY month DESC LIMIT 3
         """)
         months = [row[0] for row in cur.fetchall()]
-        return months if len(months) >= 3 else ['May', 'June', 'August']  # Fallback
+        
+        if not months:
+            logger.warning("No months found in the database.")
+            return []
+
+        # Convert month strings (e.g., 'September_2025') to datetime for sorting
+        def parse_month(month_str):
+            try:
+                return datetime.strptime(month_str, '%B_%Y')
+            except ValueError as e:
+                logger.error(f"Invalid month format: {month_str}, error: {str(e)}")
+                return None
+
+        # Filter out invalid months and sort by date
+        parsed_months = [(month, parse_month(month)) for month in months]
+        valid_months = [month for month, parsed in parsed_months if parsed is not None]
+        sorted_months = sorted(valid_months, key=lambda x: parse_month(x), reverse=True)
+        
+        # Return the 3 most recent months
+        recent_months = sorted_months[:3]
+        logger.info(f"Retrieved recent months: {recent_months}")
+        return recent_months if recent_months else []
+
     except Exception as e:
         logger.error(f"Error getting recent months: {str(e)}")
-        return ['May', 'June', 'August']  # Default if error
+        return []
     finally:
         if 'conn' in locals():
             conn.close()
-
-def load_predictions_to_db():
-    """Load prediction CSVs into PostgreSQL with standardized model names"""
-    try:
-        conn = psycopg2.connect(**DB_CONFIG)
-        cur = conn.cursor()
-        
-        # Create table if not exists
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS malaria_predictions (
-                district TEXT NOT NULL,
-                model TEXT NOT NULL,
-                month TEXT NOT NULL,
-                predicted_mal_cases FLOAT NOT NULL,
-                generated_on DATE NOT NULL,
-                PRIMARY KEY (district, model, month, generated_on)
-            );
-        """)
-        
-        # Process all prediction files
-        for file in glob.glob(os.path.join(RESULTS_DIR, "predictions_*.csv")):
-            df = pd.read_csv(file)
-            df['model'] = df['model'].apply(standardize_model_name)
-            df['generated_on'] = datetime.today().date()
             
-            for _, row in df.iterrows():
-                cur.execute("""
-                    INSERT INTO malaria_predictions 
-                    (district, model, month, predicted_mal_cases, generated_on)
-                    VALUES (%s, %s, %s, %s, %s)
-                    ON CONFLICT (district, model, month, generated_on) DO NOTHING;
-                """, (row['district'], row['model'], row['month'], 
-                     row['predicted_mal_cases'], row['generated_on']))
-        
-        conn.commit()
-        logger.info("Successfully loaded predictions into database")
-        
-    except Exception as e:
-        logger.error(f"Failed to load predictions: {str(e)}")
-        raise
-    finally:
-        if 'conn' in locals():
-            conn.close()
-
 # --------------------------
 # API Endpoints
 # --------------------------
@@ -150,9 +130,10 @@ async def get_malaria_predictions():
     try:
         # Get the 3 most recent prediction months
         months = get_recent_prediction_months()
-        if len(months) < 3:
-            raise ValueError("Need at least 3 months of prediction data")
-        
+        if not months:
+            logger.warning("No prediction months available in the database.")
+            raise HTTPException(status_code=404, detail="No prediction months available in the database.")
+
         # Get best model from metrics
         maes_df = pd.read_csv(os.path.join(DATA_DIR, "test_maes.csv"))
         maes_df['model_name'] = maes_df['model_name'].str.lower().str.strip()
@@ -178,23 +159,25 @@ async def get_malaria_predictions():
         df = pd.read_sql(query, conn, params=(best_model, tuple(months)))
         
         if df.empty:
-            raise ValueError(f"No predictions found for model {best_model}")
+            raise HTTPException(status_code=404, detail=f"No predictions found for model {best_model} in months {months}")
 
         # Format response
-        pivoted = df.pivot(index="district", columns="month", values="predicted_mal_cases")
+        pivoted = df.pivot(index="district", columns="month", values="predicted_mal_cases").fillna(0)
         threshold = 10000
         results = []
         
         for district, row in pivoted.iterrows():
+            cases = {month: float(row.get(month, 0)) for month in months}
+            status = {
+                month: "high" if row.get(month, 0) > threshold 
+                      else "medium" if row.get(month, 0) > threshold * 0.7 
+                      else "low"
+                for month in months
+            }
             results.append({
                 "district": district,
-                "cases": {month: float(row.get(month, 0)) for month in months},
-                "status": {
-                    month: "high" if row.get(month, 0) > threshold 
-                          else "medium" if row.get(month, 0) > threshold * 0.7 
-                          else "low"
-                    for month in months
-                }
+                "cases": cases,
+                "status": status
             })
 
         logger.info(f"Returned predictions for {len(results)} districts")
