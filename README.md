@@ -48,4 +48,25 @@ The workflows rely on two key model directories:
 - **Keras** used for saving deep learning models for forecasting  
 - Automated monthly prediction and dashboard refresh
 
-  
+ ## Branching Strategy for Prediction Solution Development
+
+To ensure **modularity, reproducibility, and production stability**, the development workflow for the prediction solution is structured around **independent feature branches**.  
+Each branch targets a specific functional component and is **integrated into the `main-production` branch** following validation.
+
+### GitHub Feature Branches
+
+| Branch | Purpose |
+|--------|---------|
+| `1-develop-and-validate-ddd-prediction-model` | Design, training, and refinement of DDD predictive models. |
+| `2-develop-malaria-cases-prediction-model` | Design, training, and refinement of malaria cases predictive models. |
+| `etl` | Automated data ingestion, transformation routines, and schema updates. |
+| `3-anti-malarial-ddd-prediction-dashboard` | Development of the DDD interactive decision dashboard. |
+| `4-malaria-cases-dashboard` | Development of the malaria cases interactive dashboard. |
+
+### Integration Workflow
+
+- Feature branches are **developed and tested in isolation** to ensure functional independence.  
+- Upon completion and validation, changes are merged into **`main-production`** via controlled pull requests.  
+- **CI/CD pipelines** may be configured to enforce automated workflows, testing, and data synchronization across branches.  
+
+This strategy allows parallel development of models, ETL pipelines, and dashboards while maintaining a stable production-ready branch.
