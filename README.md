@@ -18,7 +18,7 @@ GitHub Actions workflows are triggered on schedule to:
 
 ---
 
-## 📂 Repository Structure  
+## 📂 Branch Structure  
 
 The workflows rely on two key model directories:  
 
