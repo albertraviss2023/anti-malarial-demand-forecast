@@ -53,7 +53,7 @@ The workflows rely on two key model directories:
 To ensure **modularity, reproducibility, and production stability**, the development workflow for the prediction solution is structured around **independent feature branches**.  
 Each branch targets a specific functional component and is **integrated into the `main-production` branch** following validation.
 
-### GitHub Feature Branches
+### Project Feature Branches
 
 | Branch | Purpose |
 |--------|---------|
