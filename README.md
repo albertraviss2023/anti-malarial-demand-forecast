@@ -5,7 +5,7 @@ The dashboard can still be run locally for testing or development purposes.
 
 ---
 
-## 🚀 Features
+## 🚀 Features 
 
 - Interactive dashboard for tracking malaria cases.
 - Built with **FastAPI** and **Uvicorn**.
