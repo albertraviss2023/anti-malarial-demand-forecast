@@ -75,3 +75,4 @@ The Dashboard Applications Stack provides visualization services for the forecas
 ## Additional Notes
 - Ensure the ETL Stack is fully operational before starting the Dashboard Applications Stack, as the dashboards rely on the ETL pipeline for data.
 - For further assistance, refer to the repository's documentation or open an issue on GitHub.
+- Further instructions on docker usage are available here: https://docs.docker.com/manuals/
