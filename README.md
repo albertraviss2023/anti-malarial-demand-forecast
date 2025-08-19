@@ -1,4 +1,4 @@
-# CI/CD Branch 
+# This (CI/CD) Main Branch 
 
 This main branch hosts the pipeline for **automated forecasting of anti-malarial demand** and **district-level malaria cases**. The system is fully automated through **GitHub Actions**, which:  
 - Run monthly prediction jobs  
