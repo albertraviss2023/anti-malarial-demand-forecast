@@ -1,10 +1,11 @@
-# Anti-Malarial Demand Forecast  
+# CI/CD Branch 
 
-This repository hosts the pipeline for **automated forecasting of anti-malarial demand** and **district-level malaria cases**. The system is fully automated through **GitHub Actions**, which:  
+This main branch hosts the pipeline for **automated forecasting of anti-malarial demand** and **district-level malaria cases**. The system is fully automated through **GitHub Actions**, which:  
 - Run monthly prediction jobs  
 - Update the trained models’ outputs  
 - Merge results into the respective **dashboard branches** for deployment  
 
+For deployment of the full app stacks, we need to switch to main-production branch.
 ---
 
 ## 🔄 Automation Workflow  
@@ -45,4 +46,6 @@ The workflows rely on two key model directories:
 
 - **GitHub Actions** for CI/CD automation  
 - **Keras** used for saving deep learning models for forecasting  
-- Automated monthly prediction and dashboard refresh  
+- Automated monthly prediction and dashboard refresh
+
+  
