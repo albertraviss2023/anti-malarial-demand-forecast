@@ -14,8 +14,17 @@ The dashboard can still be run locally for testing or development purposes.
 
 ---
 
+
 ## 🛠️ Setup & Launch Instructions
 
 1. **Start the PostgreSQL Docker service** (required for the dashboard):
    ```bash
    docker-compose up -d postgres
+
+2. **Launch FastAPI server** :
+   ```bash
+   uvicorn app.main:app --reload
+
+3. **Access UI** :
+   via link : http://127.0.0.1:8000)
+
