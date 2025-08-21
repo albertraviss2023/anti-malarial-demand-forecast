@@ -62,6 +62,7 @@ Each branch targets a specific functional component and is **integrated into the
 | `etl` | Automated data ingestion, transformation routines, and schema updates. |
 | `3-anti-malarial-ddd-prediction-dashboard` | Development of the DDD interactive decision dashboard. |
 | `4-malaria-cases-dashboard` | Development of the malaria cases interactive dashboard. |
+| `main-production` | Main production ready branch with full working features. |
 
 ### Integration Workflow
 
