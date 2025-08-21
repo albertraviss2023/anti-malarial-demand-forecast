@@ -1,4 +1,4 @@
-# Anti-Malarial Demand Forecast
+# Production ready branch
 
 This repository contains a predictive application for anti-malarial demand forecasting, fully containerized using Docker for reliable dependency management and cross-platform deployment. The application consists of two independent Dockerized stacks: the ETL Stack and the Dashboard Applications Stack.
 
